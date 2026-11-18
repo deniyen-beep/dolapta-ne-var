@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Dolapta Ne Var">
+<meta name="theme-color" content="#FFF8F0">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/icon-192.png">
+<link rel="manifest" href="/manifest.json">
+<title>Dolapta Ne Var?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFF8F0; --card:#FFFFFF; --ink:#2B1D14; --muted:#8A7565;
+    --sweet:#E8618C; --sweet-bg:#FDE7EE; --salty:#E0892B; --salty-bg:#FDF0DF;
+    --line:#F0E4D6; --accent:#2F7D5B;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Nunito,system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding-bottom:80px}
+  .wrap{max-width:520px;margin:0 auto;padding:calc(20px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom))}
+  header{text-align:center;padding:12px 0 18px}
+  .logo{font-size:44px;line-height:1}
+  h1{font-family:Fraunces,serif;font-weight:800;font-size:30px;margin-top:6px;letter-spacing:-.5px}
+  .sub{color:var(--muted);font-size:15px;margin-top:4px}
+
+  .tabs{display:flex;gap:6px;background:var(--line);padding:4px;border-radius:14px;margin-bottom:16px}
+  .tabs button{flex:1;border:0;background:transparent;padding:10px;border-radius:10px;font:700 15px Nunito;color:var(--muted);cursor:pointer}
+  .tabs button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+
+  .card{background:var(--card);border-radius:18px;padding:18px;box-shadow:0 2px 12px rgba(80,50,20,.06);margin-bottom:14px}
+  label.t{display:block;font-weight:700;font-size:15px;margin-bottom:8px}
+  .inrow{display:flex;gap:8px}
+  input[type=text]{flex:1;border:2px solid var(--line);border-radius:12px;padding:12px 14px;font:600 16px Nunito;color:var(--ink);outline:none;min-width:0}
+  input[type=text]:focus{border-color:var(--salty)}
+  .add{border:0;background:var(--ink);color:#fff;border-radius:12px;padding:0 16px;font:700 22px Nunito;cursor:pointer}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;min-height:8px}
+  .chip{background:var(--bg);border:1.5px solid var(--line);border-radius:999px;padding:6px 8px 6px 12px;font-weight:600;font-size:14px;display:flex;align-items:center;gap:6px}
+  .chip button{border:0;background:var(--line);width:20px;height:20px;border-radius:50%;cursor:pointer;font-size:12px;color:var(--muted)}
+  .hint{color:var(--muted);font-size:13px;margin-top:10px}
+  .quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .quick button{border:1px dashed var(--line);background:none;border-radius:999px;padding:4px 10px;font:600 13px Nunito;color:var(--muted);cursor:pointer}
+
+  .types{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .type{border:2px solid var(--line);background:var(--card);border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;font:700 14px Nunito;color:var(--ink)}
+  .type .e{font-size:26px;display:block;margin-bottom:4px}
+  .type.on.s{border-color:var(--sweet);background:var(--sweet-bg)}
+  .type.on.t2{border-color:var(--salty);background:var(--salty-bg)}
+  .type.on.b{border-color:var(--accent);background:#E3F2EA}
+
+  .go{width:100%;border:0;border-radius:16px;padding:16px;font:800 18px Nunito;color:#fff;cursor:pointer;
+      background:linear-gradient(135deg,var(--salty),var(--sweet));box-shadow:0 6px 18px rgba(224,137,43,.3)}
+  .go:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+
+  .status{text-align:center;color:var(--muted);padding:24px 8px;font-weight:600}
+  .spin{display:inline-block;font-size:34px;animation:b 1s ease-in-out infinite}
+  @keyframes b{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-8px) rotate(8deg)}}
+  .err{background:#FFECEC;color:#9B2C2C;border-radius:12px;padding:12px;font-size:14px;margin-bottom:14px}
+
+  .recipe{padding:0;overflow:hidden}
+  .rhead{padding:16px 18px;display:flex;gap:12px;align-items:flex-start;cursor:pointer}
+  .remoji{font-size:34px;line-height:1}
+  .rtitle{font-family:Fraunces,serif;font-weight:600;font-size:19px;line-height:1.2}
+  .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+  .tag{font-size:12px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--bg);color:var(--muted)}
+  .tag.s{background:var(--sweet-bg);color:var(--sweet)} .tag.t2{background:var(--salty-bg);color:var(--salty)}
+  .fav{margin-left:auto;border:0;background:none;font-size:24px;cursor:pointer;flex-shrink:0}
+  .rbody{display:none;padding:0 18px 18px;border-top:1px solid var(--line)}
+  .recipe.open .rbody{display:block}
+  .rbody h3{font-size:14px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:14px 0 6px}
+  .rbody ul,.rbody ol{padding-left:20px;line-height:1.6;font-size:15px}
+  .rbody li{margin-bottom:4px}
+  .miss{color:var(--sweet);font-weight:700}
+  .desc{font-size:14px;color:var(--muted);margin-top:4px}
+  .empty{text-align:center;color:var(--muted);padding:40px 16px}
+  .empty .e{font-size:44px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">🍳</div>
+    <h1>Dolapta Ne Var?</h1>
+    <p class="sub">Malzemelerini yaz, ne pişireceğini biz düşünelim.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="on" data-tab="find">🔍 Tarif Bul</button>
+    <button data-tab="favs">❤️ Favorilerim <span id="favCount"></span></button>
+  </div>
+
+  <section id="find">
+    <div class="card">
+      <label class="t" for="ing">Elinde hangi malzemeler var?</label>
+      <form class="inrow" id="addForm">
+        <input type="text" id="ing" placeholder="örn. yumurta" autocomplete="off">
+        <button class="add" type="submit" aria-label="Ekle">+</button>
+      </form>
+      <div class="chips" id="chips"></div>
+      <div class="quick" id="quick"></div>
+      <p class="hint">İpucu: Virgülle birden fazla yazabilirsin (un, şeker, süt).</p>
+    </div>
+
+    <div class="card">
+      <label class="t">Canın ne çekiyor?</label>
+      <div class="types">
+        <button class="type s" data-type="tatlı"><span class="e">🍰</span>Tatlı</button>
+        <button class="type t2" data-type="tuzlu"><span class="e">🥘</span>Tuzlu</button>
+        <button class="type b on" data-type="ikisi de"><span class="e">✨</span>İkisi de</button>
+      </div>
+    </div>
+
+    <button class="go" id="go" disabled>Tarifleri Göster</button>
+    <div id="results" style="margin-top:18px"></div>
+  </section>
+
+  <section id="favs" hidden>
+    <div id="favList"></div>
+  </section>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+let ingredients = [];
+let type = "ikisi de";
+let lastRecipes = [];
+let favs = [];
+try { favs = JSON.parse(localStorage.getItem("tarif-favs") || "[]"); } catch(e) {}
+const saveFavs = () => { try { localStorage.setItem("tarif-favs", JSON.stringify(favs)); } catch(e) {} };
+
+const QUICK = ["yumurta","un","süt","şeker","domates","peynir","patates","tavuk","makarna","soğan"];
+
+function esc(s){ return String(s ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+function renderChips(){
+  $("#chips").innerHTML = ingredients.map((x,i)=>
+    `<span class="chip">${esc(x)}<button data-i="${i}" aria-label="Sil">✕</button></span>`).join("");
+  $("#quick").innerHTML = QUICK.filter(q=>!ingredients.includes(q))
+    .slice(0,6).map(q=>`<button data-q="${q}">+ ${q}</button>`).join("");
+  $("#go").disabled = ingredients.length === 0;
+}
+function addIng(text){
+  text.split(",").map(s=>s.trim().toLocaleLowerCase("tr")).filter(Boolean)
+    .forEach(s=>{ if(!ingredients.includes(s)) ingredients.push(s); });
+  renderChips();
+}
+$("#addForm").addEventListener("submit", e=>{ e.preventDefault(); addIng($("#ing").value); $("#ing").value=""; $("#ing").focus(); });
+$("#chips").addEventListener("click", e=>{ const i=e.target.dataset.i; if(i!==undefined){ ingredients.splice(+i,1); renderChips(); }});
+$("#quick").addEventListener("click", e=>{ if(e.target.dataset.q) addIng(e.target.dataset.q); });
+
+document.querySelectorAll(".type").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll(".type").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); type = b.dataset.type;
+}));
+
+document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on");
+  $("#find").hidden = b.dataset.tab!=="find";
+  $("#favs").hidden = b.dataset.tab!=="favs";
+  if(b.dataset.tab==="favs") renderFavs();
+}));
+
+function isFav(r){ return favs.some(f=>f.ad===r.ad); }
+function recipeCard(r, idx, src){
+  const kind = (r.tur||"").toLocaleLowerCase("tr").includes("tatl") ? "s" : "t2";
+  const miss = (r.eksik_malzemeler||[]).filter(Boolean);
+  return `<div class="card recipe" data-src="${src}" data-idx="${idx}">
+    <div class="rhead">
+      <div class="remoji">${esc(r.emoji||"🍽️")}</div>
+      <div style="flex:1">
+        <div class="rtitle">${esc(r.ad)}</div>
+        <div class="meta">
+          <span class="tag ${kind}">${kind==="s"?"Tatlı":"Tuzlu"}</span>
+          ${r.sure?`<span class="tag">⏱ ${esc(r.sure)}</span>`:""}
+          ${r.zorluk?`<span class="tag">${esc(r.zorluk)}</span>`:""}
+        </div>
+        ${r.aciklama?`<div class="desc">${esc(r.aciklama)}</div>`:""}
+      </div>
+      <button class="fav" data-fav>${isFav(r)?"❤️":"🤍"}</button>
+    </div>
+    <div class="rbody">
+      <h3>Malzemeler</h3>
+      <ul>${(r.malzemeler||[]).map(m=>`<li>${esc(m)}</li>`).join("")}</ul>
+      ${miss.length?`<p class="miss" style="margin-top:8px">🛒 Eksik: ${miss.map(esc).join(", ")}</p>`:""}
+      <h3>Yapılışı</h3>
+      <ol>${(r.adimlar||[]).map(a=>`<li>${esc(a)}</li>`).join("")}</ol>
+    </div>
+  </div>`;
+}
+function bindCards(container, list){
+  container.querySelectorAll(".recipe").forEach(el=>{
+    const r = list[+el.dataset.idx];
+    el.querySelector(".rhead").addEventListener("click", e=>{
+      if(e.target.closest("[data-fav]")){
+        if(isFav(r)) favs = favs.filter(f=>f.ad!==r.ad); else favs.push(r);
+        saveFavs(); updateFavCount();
+        e.target.textContent = isFav(r)?"❤️":"🤍";
+        if(el.dataset.src==="favs") renderFavs();
+        return;
+      }
+      el.classList.toggle("open");
+    });
+  });
+}
+function updateFavCount(){ $("#favCount").textContent = favs.length?`(${favs.length})`:""; }
+function renderFavs(){
+  const box = $("#favList");
+  if(!favs.length){ box.innerHTML = `<div class="empty"><div class="e">🤍</div><p>Henüz favorin yok.<br>Beğendiğin tariflerde kalbe dokun.</p></div>`; return; }
+  box.innerHTML = favs.map((r,i)=>recipeCard(r,i,"favs")).join("");
+  bindCards(box, favs);
+}
+
+$("#go").addEventListener("click", async ()=>{
+  const res = $("#results");
+  const btn = $("#go");
+  btn.disabled = true;
+  res.innerHTML = `<div class="status"><div class="spin">🥄</div><p>Şef düşünüyor...</p></div>`;
+  try{
+    const r = await fetch("/api/tarif", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ malzemeler: ingredients, tur: type })
+    });
+    const data = await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(data.hata || "Bir şeyler ters gitti, lütfen tekrar dene.");
+    lastRecipes = data.tarifler;
+    if(!Array.isArray(lastRecipes) || !lastRecipes.length) throw new Error("Tarif bulunamadı, başka malzemelerle dene.");
+    res.innerHTML = `<p class="hint" style="margin:0 0 10px">Tarifi açmak için üstüne dokun 👇</p>` +
+      lastRecipes.map((r,i)=>recipeCard(r,i,"find")).join("");
+    bindCards(res, lastRecipes);
+  }catch(e){
+    res.innerHTML = `<div class="err">${esc(e.message || "Bağlantı hatası, internetini kontrol et.")}</div>`;
+  }
+  btn.disabled = ingredients.length===0;
+});
+
+renderChips(); updateFavCount();
+</script>
+</body>
+</html>

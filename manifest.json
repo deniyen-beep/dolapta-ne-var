@@ -1,0 +1,14 @@
+{
+  "name": "Dolapta Ne Var?",
+  "short_name": "Dolapta Ne Var",
+  "description": "Elindeki malzemeleri yaz, yapay zeka sana tatlı ve tuzlu tarifler önersin.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF8F0",
+  "theme_color": "#E0892B",
+  "lang": "tr",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
