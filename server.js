@@ -3,19 +3,22 @@
 import http from "node:http";
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
-import handler from "./api/tarif.js";
+import tarif from "./api/tarif.js";
+import resim from "./api/resim.js";
 
 const PORT = process.env.PORT || 3000;
 const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".json": "application/json", ".png": "image/png" };
 
 http.createServer(async (req, res) => {
-  if (req.url.startsWith("/api/tarif")) {
+  const api = req.url.startsWith("/api/tarif") ? tarif : req.url.startsWith("/api/resim") ? resim : null;
+  if (api) {
+    req.query = Object.fromEntries(new URL(req.url, "http://x").searchParams);
     let raw = "";
     for await (const chunk of req) raw += chunk;
     try { req.body = raw ? JSON.parse(raw) : {}; } catch { req.body = {}; }
     res.status = code => { res.statusCode = code; return res; };
     res.json = obj => { res.setHeader("Content-Type", "application/json; charset=utf-8"); res.end(JSON.stringify(obj)); };
-    return handler(req, res);
+    return api(req, res);
   }
   const path = normalize(decodeURIComponent(new URL(req.url, "http://x").pathname)).replace(/^(\.\.[/\\])+/, "");
   const file = join(process.cwd(), path === "/" ? "index.html" : path);

@@ -17,6 +17,8 @@ Dolabındaki malzemeleri yaz, yapay zekâ sana **tatlı ve tuzlu tarifler** öne
 2. **Add New → Project** → `dolapta-ne-var` deposunu seç → **Import**.
 3. **Environment Variables** bölümüne ekle:
    - Ad: `GEMINI_API_KEY` — Değer: 1. adımda aldığın anahtar
+   - (İsteğe bağlı, önerilir) Ad: `PEXELS_API_KEY` — https://www.pexels.com/api/ adresinden ücretsiz alınan anahtar.
+     Tariflerde daha kaliteli yemek fotoğrafları gösterir; yoksa fotoğraflar Wikipedia'dan gelir.
 4. **Deploy**'a bas. Birkaç dakika sonra `https://dolapta-ne-var.vercel.app` gibi bir adresin olur. 🎉
 
 > Anahtarı sonradan eklediysen: Vercel → Project → Deployments → son dağıtım → **Redeploy**.

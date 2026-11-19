@@ -15,76 +15,115 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#FFF8F0; --card:#FFFFFF; --ink:#2B1D14; --muted:#8A7565;
-    --sweet:#E8618C; --sweet-bg:#FDE7EE; --salty:#E0892B; --salty-bg:#FDF0DF;
-    --line:#F0E4D6; --accent:#2F7D5B;
+    --bg:#FAF5EC; --card:#FFFDF8; --ink:#2A1E14; --muted:#8C7A64; --line:#EADFCB;
+    --gold:#B8862F; --gold2:#E9C77B; --gold-deep:#7A5418; --espresso:#1C140D;
+    --sweet:#A8566F; --sweet-bg:#F7E9EC; --salty:#8A6A2E; --salty-bg:#F3EAD6;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:Nunito,system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding-bottom:80px}
+  body{font-family:Nunito,system-ui,sans-serif;color:var(--ink);min-height:100vh;padding-bottom:80px;
+    background:radial-gradient(ellipse 120% 60% at 50% 0%,#FFFBF2 0%,var(--bg) 60%) fixed,var(--bg)}
   .wrap{max-width:520px;margin:0 auto;padding:calc(20px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom))}
-  header{text-align:center;padding:12px 0 18px}
-  .logo{width:96px;height:96px;border-radius:22px;box-shadow:0 6px 18px rgba(150,100,30,.25);display:block;margin:0 auto}
-  h1{font-family:Fraunces,serif;font-weight:800;font-size:32px;margin-top:14px;letter-spacing:-.5px;
+  header{text-align:center;padding:12px 0 22px}
+  .logo{width:96px;height:96px;border-radius:24px;display:block;margin:0 auto;
+    box-shadow:0 10px 28px rgba(122,84,24,.28),0 0 0 1px rgba(184,134,47,.35)}
+  h1{font-family:Fraunces,serif;font-weight:800;font-size:32px;margin-top:16px;letter-spacing:-.5px;
      background:linear-gradient(100deg,#7A5418 0%,#C9973B 35%,#E9C77B 50%,#B8862F 65%,#7A5418 100%);
      -webkit-background-clip:text;background-clip:text;color:transparent}
-  .orn{display:flex;align-items:center;justify-content:center;gap:10px;margin:8px auto 0;color:#C9973B;font-size:11px}
-  .orn::before,.orn::after{content:"";height:1px;width:56px;background:linear-gradient(90deg,transparent,#C9973B)}
-  .orn::after{background:linear-gradient(90deg,#C9973B,transparent)}
+  .orn{display:flex;align-items:center;justify-content:center;gap:10px;margin:8px auto 0;color:var(--gold);font-size:11px}
+  .orn::before,.orn::after{content:"";height:1px;width:56px;background:linear-gradient(90deg,transparent,var(--gold))}
+  .orn::after{background:linear-gradient(90deg,var(--gold),transparent)}
   .sub{font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;color:#7D6A55;font-size:19px;margin-top:6px}
 
-  .tabs{display:flex;gap:6px;background:var(--line);padding:4px;border-radius:14px;margin-bottom:16px}
-  .tabs button{flex:1;border:0;background:transparent;padding:10px;border-radius:10px;font:700 15px Nunito;color:var(--muted);cursor:pointer}
-  .tabs button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+  .tabs{display:flex;margin-bottom:18px;border-bottom:1px solid var(--line)}
+  .tabs button{flex:1;border:0;background:none;padding:12px 4px 13px;font:700 12px Nunito;letter-spacing:2.5px;text-transform:uppercase;
+    color:var(--muted);cursor:pointer;position:relative}
+  .tabs button.on{color:var(--ink)}
+  .tabs button.on::after{content:"";position:absolute;left:22%;right:22%;bottom:-1px;height:2px;border-radius:2px;
+    background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold))}
+  #favCount{color:var(--gold)}
 
-  .card{background:var(--card);border-radius:18px;padding:18px;box-shadow:0 2px 12px rgba(80,50,20,.06);margin-bottom:14px}
-  label.t{display:block;font-weight:700;font-size:15px;margin-bottom:8px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px;margin-bottom:14px;
+    box-shadow:0 1px 0 #fff inset,0 12px 30px -14px rgba(90,60,20,.18)}
+  label.t{display:block;font-family:Fraunces,serif;font-weight:600;font-size:18px;margin-bottom:12px}
   .inrow{display:flex;gap:8px}
-  input[type=text]{flex:1;border:2px solid var(--line);border-radius:12px;padding:12px 14px;font:600 16px Nunito;color:var(--ink);outline:none;min-width:0}
-  input[type=text]:focus{border-color:var(--salty)}
-  .add{border:0;background:var(--ink);color:#fff;border-radius:12px;padding:0 16px;font:700 22px Nunito;cursor:pointer}
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;min-height:8px}
-  .chip{background:var(--bg);border:1.5px solid var(--line);border-radius:999px;padding:6px 8px 6px 12px;font-weight:600;font-size:14px;display:flex;align-items:center;gap:6px}
-  .chip button{border:0;background:var(--line);width:20px;height:20px;border-radius:50%;cursor:pointer;font-size:12px;color:var(--muted)}
-  .hint{color:var(--muted);font-size:13px;margin-top:10px}
-  .quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-  .quick button{border:1px dashed var(--line);background:none;border-radius:999px;padding:4px 10px;font:600 13px Nunito;color:var(--muted);cursor:pointer}
+  input[type=text]{flex:1;border:1px solid var(--line);background:#fff;border-radius:14px;padding:13px 15px;font:600 16px Nunito;color:var(--ink);outline:none;min-width:0;
+    transition:border-color .2s,box-shadow .2s}
+  input[type=text]:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(233,199,123,.25)}
+  .add{border:0;background:var(--espresso);color:var(--gold2);border-radius:14px;width:50px;font:400 26px Nunito;cursor:pointer}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;min-height:4px}
+  .chip{background:linear-gradient(180deg,#FFF9EC,#F8EED9);border:1px solid #E6D3AC;border-radius:999px;padding:6px 7px 6px 13px;
+    font-weight:700;font-size:14px;display:flex;align-items:center;gap:7px;color:var(--gold-deep)}
+  .chip button{border:0;background:rgba(184,134,47,.15);width:20px;height:20px;border-radius:50%;cursor:pointer;font-size:10px;color:var(--gold-deep)}
+  .hint{color:var(--muted);font-size:13px;margin-top:12px}
+  .quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .quick button{border:1px solid var(--line);background:none;border-radius:999px;padding:5px 11px;font:600 13px Nunito;color:var(--muted);cursor:pointer}
 
-  .types{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-  .type{border:2px solid var(--line);background:var(--card);border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;font:700 14px Nunito;color:var(--ink)}
-  .type .e{font-size:26px;display:block;margin-bottom:4px}
-  .type.on.s{border-color:var(--sweet);background:var(--sweet-bg)}
-  .type.on.t2{border-color:var(--salty);background:var(--salty-bg)}
-  .type.on.b{border-color:var(--accent);background:#E3F2EA}
+  .types{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .type{border:1px solid var(--line);background:#fff;border-radius:16px;padding:14px 6px 12px;text-align:center;cursor:pointer;
+    font:700 12px Nunito;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);transition:all .2s}
+  .type .e{font-size:26px;display:block;margin-bottom:6px}
+  .type.on{border-color:var(--gold);color:var(--gold-deep);background:linear-gradient(180deg,#FFFBF1,#F7ECD4);
+    box-shadow:0 0 0 1px var(--gold) inset,0 8px 18px -10px rgba(184,134,47,.6)}
 
-  .go{width:100%;border:0;border-radius:16px;padding:16px;font:800 18px Nunito;color:#fff;cursor:pointer;
-      background:linear-gradient(135deg,#B8862F,#E0B25C 50%,#B8862F);box-shadow:0 6px 18px rgba(184,134,47,.35);letter-spacing:.3px}
-  .go:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+  .go{width:100%;border:0;border-radius:18px;padding:18px;font:800 14px Nunito;letter-spacing:3px;text-transform:uppercase;color:var(--espresso);cursor:pointer;
+      background:linear-gradient(135deg,#C9973B,#F1D48E 50%,#C9973B);box-shadow:0 12px 26px -10px rgba(184,134,47,.75),0 1px 0 rgba(255,255,255,.6) inset}
+  .go:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
 
-  .status{text-align:center;color:var(--muted);padding:24px 8px;font-weight:600}
-  .spin{display:inline-block;font-size:34px;animation:b 1s ease-in-out infinite}
-  @keyframes b{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-8px) rotate(8deg)}}
-  .err{background:#FFECEC;color:#9B2C2C;border-radius:12px;padding:12px;font-size:14px;margin-bottom:14px}
+  .status{text-align:center;color:var(--muted);padding:28px 8px;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:19px}
+  .spin{width:38px;height:38px;margin:0 auto 12px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--gold);animation:dn 1s linear infinite}
+  @keyframes dn{to{transform:rotate(360deg)}}
+  .err{background:#FBEFEA;border:1px solid #EBCFC3;color:#8A3A22;border-radius:14px;padding:13px;font-size:14px;margin-bottom:14px}
+  .lead{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--muted);font-size:18px;text-align:center;margin:4px 0 14px}
 
   .recipe{padding:0;overflow:hidden}
-  .rhead{padding:16px 18px;display:flex;gap:12px;align-items:flex-start;cursor:pointer}
-  .remoji{font-size:34px;line-height:1}
-  .rtitle{font-family:Fraunces,serif;font-weight:600;font-size:19px;line-height:1.2}
-  .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-  .tag{font-size:12px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--bg);color:var(--muted)}
+  .rhead{padding:18px;display:flex;gap:14px;align-items:flex-start;cursor:pointer}
+  .remoji{flex-shrink:0;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-size:28px;
+    background:radial-gradient(circle at 35% 30%,#FFFDF6,#F3E6C8);box-shadow:0 0 0 1px var(--gold2),0 6px 14px -6px rgba(122,84,24,.4)}
+  .rtitle{font-family:Fraunces,serif;font-weight:600;font-size:20px;line-height:1.2}
+  .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .tag{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:4px 9px;border-radius:999px;background:#F4EEE3;color:var(--muted)}
   .tag.s{background:var(--sweet-bg);color:var(--sweet)} .tag.t2{background:var(--salty-bg);color:var(--salty)}
-  .fav{margin-left:auto;border:0;background:none;font-size:24px;cursor:pointer;flex-shrink:0}
-  .rbody{display:none;padding:0 18px 18px;border-top:1px solid var(--line)}
-  .recipe.open .rbody{display:block}
-  .rbody h3{font-size:14px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:14px 0 6px}
-  .rbody ul,.rbody ol{padding-left:20px;line-height:1.6;font-size:15px}
-  .rbody li{margin-bottom:4px}
-  .miss{color:var(--sweet);font-weight:700}
-  .desc{font-size:14px;color:var(--muted);margin-top:4px}
-  .empty{text-align:center;color:var(--muted);padding:40px 16px}
-  .empty .e{font-size:44px}
-  .share{width:100%;margin-top:16px;border:0;border-radius:12px;padding:12px;font:700 15px Nunito;color:#fff;background:#25A35A;cursor:pointer}
-  .install{display:none;width:100%;margin-bottom:14px;border:2px dashed var(--salty);background:var(--salty-bg);color:var(--ink);
-      border-radius:14px;padding:12px;font:700 15px Nunito;cursor:pointer;text-align:center}
+  .fav{margin-left:auto;border:0;background:none;font-size:22px;cursor:pointer;flex-shrink:0;line-height:1}
+  .desc{font-size:14px;color:var(--muted);margin-top:8px;line-height:1.5}
+  .more{display:block;margin-top:10px;font:700 11px Nunito;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+  .recipe.open .more{display:none}
+  .rbody{display:none;padding:0 18px 20px}
+  .recipe.open .rbody{display:block;animation:open .35s ease}
+  @keyframes open{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+  .photo{position:relative;margin:0 -18px 6px;aspect-ratio:16/10;overflow:hidden;
+    background:linear-gradient(110deg,#F3E9D6 30%,#FBF5E8 50%,#F3E9D6 70%);background-size:200% 100%;animation:shim 1.4s linear infinite}
+  .photo img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .6s}
+  .photo.loaded{animation:none}
+  .photo.loaded img{opacity:1}
+  .photo::after{content:"";position:absolute;inset:auto 0 0 0;height:40%;background:linear-gradient(transparent,rgba(28,20,13,.55));pointer-events:none}
+  .photo figcaption{position:absolute;right:12px;bottom:9px;z-index:1;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,.85)}
+  .photo figcaption a{color:inherit}
+  .photo.none{display:none}
+  @keyframes shim{to{background-position:-200% 0}}
+
+  .rbody h3{display:flex;align-items:center;gap:10px;font:700 11px Nunito;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin:20px 0 10px}
+  .rbody h3::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--gold2),transparent)}
+  .ings{list-style:none;font-size:15px;line-height:1.5}
+  .ings li{padding:7px 0 7px 18px;border-bottom:1px dashed var(--line);position:relative}
+  .ings li:last-child{border-bottom:0}
+  .ings li::before{content:"";position:absolute;left:2px;top:15px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+  .steps{list-style:none;counter-reset:a;font-size:15px;line-height:1.6}
+  .steps li{counter-increment:a;position:relative;padding:0 0 14px 42px}
+  .steps li::before{content:counter(a);position:absolute;left:0;top:-1px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;
+    font:700 13px Fraunces,serif;color:var(--gold-deep);background:linear-gradient(180deg,#FFF9EC,#F3E2BB);box-shadow:0 0 0 1px var(--gold2)}
+  .miss{margin-top:10px;font-size:14px;color:var(--sweet);font-weight:700}
+
+  .share{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:10px;border:0;border-radius:999px;padding:15px;
+    font:700 12px Nunito;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);cursor:pointer;
+    background:linear-gradient(180deg,#2A1E14,#15100B);box-shadow:0 0 0 1px rgba(233,199,123,.45) inset,0 10px 22px -10px rgba(28,20,13,.7)}
+  .share svg{width:17px;height:17px}
+  .share:active{transform:scale(.98)}
+
+  .empty{text-align:center;color:var(--muted);padding:48px 16px;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:19px}
+  .empty .e{font-size:40px;color:var(--gold);font-style:normal;margin-bottom:8px}
+  .install{display:none;width:100%;margin-bottom:16px;border:1px solid var(--gold2);background:linear-gradient(180deg,#FFFBF1,#F7ECD4);color:var(--gold-deep);
+      border-radius:16px;padding:13px;font:700 14px Nunito;cursor:pointer;text-align:center}
   .install.show{display:block}
   .install small{display:block;font-weight:600;color:var(--muted);margin-top:4px}
 
@@ -110,7 +149,6 @@
   #intro button{margin-top:44px;border:1px solid #E9C77B;background:rgba(233,199,123,.08);color:#F6DFA4;
     font:600 13px Nunito;letter-spacing:4px;text-transform:uppercase;padding:14px 34px;border-radius:999px;cursor:pointer;
     animation:fade 1s 1.1s both}
-  #intro small{position:absolute;bottom:calc(24px + env(safe-area-inset-bottom));color:#7D6A55;font:600 10px Nunito;letter-spacing:3px;text-transform:uppercase}
   @keyframes rise{from{opacity:0;transform:translateY(18px) scale(.92)}to{opacity:1;transform:none}}
   @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
   @keyframes glow{0%,100%{opacity:.6;transform:scale(.95)}50%{opacity:1;transform:scale(1.05)}}
@@ -125,7 +163,6 @@
   <div class="line">✦</div>
   <p>Dolabındakiler, şefin elinde.</p>
   <button type="button">Mutfağa Gir</button>
-  <small>Yapay zekâ şefin</small>
 </div>
 <div class="wrap">
   <header>
@@ -138,8 +175,8 @@
   <button class="install" id="install">📲 Uygulamayı telefonuna yükle</button>
 
   <div class="tabs">
-    <button class="on" data-tab="find">🔍 Tarif Bul</button>
-    <button data-tab="favs">❤️ Favorilerim <span id="favCount"></span></button>
+    <button class="on" data-tab="find">Tarif Bul</button>
+    <button data-tab="favs">Favorilerim <span id="favCount"></span></button>
   </div>
 
   <section id="find">
@@ -163,7 +200,7 @@
       </div>
     </div>
 
-    <button class="go" id="go" disabled>Tarifleri Göster</button>
+    <button class="go" id="go" disabled>Tarifleri Göster ✦</button>
     <div id="results" style="margin-top:18px"></div>
   </section>
 
@@ -215,32 +252,59 @@ document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",
 }));
 
 function isFav(r){ return favs.some(f=>f.ad===r.ad); }
+const SHARE_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7.5 7.5 12 3l4.5 4.5"/><path d="M5 12v6.5A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V12"/></svg>`;
 function recipeCard(r, idx, src){
   const kind = (r.tur||"").toLocaleLowerCase("tr").includes("tatl") ? "s" : "t2";
   const miss = (r.eksik_malzemeler||[]).filter(Boolean);
   return `<div class="card recipe" data-src="${src}" data-idx="${idx}">
     <div class="rhead">
       <div class="remoji">${esc(r.emoji||"🍽️")}</div>
-      <div style="flex:1">
+      <div style="flex:1;min-width:0">
         <div class="rtitle">${esc(r.ad)}</div>
         <div class="meta">
           <span class="tag ${kind}">${kind==="s"?"Tatlı":"Tuzlu"}</span>
-          ${r.sure?`<span class="tag">⏱ ${esc(r.sure)}</span>`:""}
+          ${r.sure?`<span class="tag">${esc(r.sure)}</span>`:""}
           ${r.zorluk?`<span class="tag">${esc(r.zorluk)}</span>`:""}
         </div>
         ${r.aciklama?`<div class="desc">${esc(r.aciklama)}</div>`:""}
+        <span class="more">Tarifi gör ›</span>
       </div>
-      <button class="fav" data-fav>${isFav(r)?"❤️":"🤍"}</button>
+      <button class="fav" data-fav aria-label="Favori">${isFav(r)?"❤️":"🤍"}</button>
     </div>
     <div class="rbody">
+      <figure class="photo"></figure>
       <h3>Malzemeler</h3>
-      <ul>${(r.malzemeler||[]).map(m=>`<li>${esc(m)}</li>`).join("")}</ul>
-      ${miss.length?`<p class="miss" style="margin-top:8px">🛒 Eksik: ${miss.map(esc).join(", ")}</p>`:""}
+      <ul class="ings">${(r.malzemeler||[]).map(m=>`<li>${esc(m)}</li>`).join("")}</ul>
+      ${miss.length?`<p class="miss">Eksik olabilir: ${miss.map(esc).join(", ")}</p>`:""}
       <h3>Yapılışı</h3>
-      <ol>${(r.adimlar||[]).map(a=>`<li>${esc(a)}</li>`).join("")}</ol>
-      <button class="share" data-share>📤 Tarifi Paylaş</button>
+      <ol class="steps">${(r.adimlar||[]).map(a=>`<li>${esc(a)}</li>`).join("")}</ol>
+      <button class="share" data-share>${SHARE_ICON}<span>Tarifi Paylaş</span></button>
     </div>
   </div>`;
+}
+// Tarif açılınca yemeğin gerçek fotoğrafını getir
+async function loadPhoto(el, r){
+  const fig = el.querySelector(".photo");
+  if (!fig || fig.dataset.done) return;
+  fig.dataset.done = "1";
+  if (r.resim === undefined) {
+    try {
+      const q = r.gorsel || r.ad;
+      const d = await (await fetch("/api/resim?q=" + encodeURIComponent(q))).json();
+      r.resim = d && d.url ? d : null;
+    } catch { r.resim = null; }
+    const f = favs.find(f=>f.ad===r.ad);
+    if (f && f !== r) { f.resim = r.resim; }
+    if (f) saveFavs();
+  }
+  if (!r.resim) { fig.classList.add("none"); return; }
+  const m = r.resim;
+  const kredi = m.kredi ? `${esc(m.kredi)} / ${esc(m.kaynak)}` : esc(m.kaynak);
+  fig.innerHTML = `<img alt="${esc(r.ad)}" referrerpolicy="no-referrer"><figcaption>Temsili fotoğraf · <a href="${esc(m.link)}" target="_blank" rel="noopener">${kredi}</a></figcaption>`;
+  const img = fig.querySelector("img");
+  img.onload = () => fig.classList.add("loaded");
+  img.onerror = () => fig.classList.add("none");
+  img.src = m.url;
 }
 function bindCards(container, list){
   container.querySelectorAll(".recipe").forEach(el=>{
@@ -255,6 +319,7 @@ function bindCards(container, list){
         return;
       }
       el.classList.toggle("open");
+      if(el.classList.contains("open")) loadPhoto(el, r);
     });
   });
 }
@@ -277,7 +342,7 @@ async function shareRecipe(r){
 function updateFavCount(){ $("#favCount").textContent = favs.length?`(${favs.length})`:""; }
 function renderFavs(){
   const box = $("#favList");
-  if(!favs.length){ box.innerHTML = `<div class="empty"><div class="e">🤍</div><p>Henüz favorin yok.<br>Beğendiğin tariflerde kalbe dokun.</p></div>`; return; }
+  if(!favs.length){ box.innerHTML = `<div class="empty"><div class="e">✦</div><p>Henüz favorin yok.<br>Beğendiğin tariflerde kalbe dokun.</p></div>`; return; }
   box.innerHTML = favs.map((r,i)=>recipeCard(r,i,"favs")).join("");
   bindCards(box, favs);
 }
@@ -286,7 +351,7 @@ $("#go").addEventListener("click", async ()=>{
   const res = $("#results");
   const btn = $("#go");
   btn.disabled = true;
-  res.innerHTML = `<div class="status"><div class="spin">🥄</div><p>Şef düşünüyor... (10-30 saniye sürebilir, sayfadan çıkma)</p></div>`;
+  res.innerHTML = `<div class="status"><div class="spin"></div><p>Şef sizin için düşünüyor…<br><small style="font-size:14px">10-30 saniye sürebilir, sayfadan çıkma</small></p></div>`;
   try{
     const istek = () => fetch("/api/tarif", {
       method: "POST",
@@ -306,7 +371,7 @@ $("#go").addEventListener("click", async ()=>{
     if(!r.ok) throw new Error(data.hata || "Bir şeyler ters gitti, lütfen tekrar dene.");
     lastRecipes = data.tarifler;
     if(!Array.isArray(lastRecipes) || !lastRecipes.length) throw new Error("Tarif bulunamadı, başka malzemelerle dene.");
-    res.innerHTML = `<p class="hint" style="margin:0 0 10px">Tarifi açmak için üstüne dokun 👇</p>` +
+    res.innerHTML = `<p class="lead">Şefin önerileri</p>` +
       lastRecipes.map((r,i)=>recipeCard(r,i,"find")).join("");
     bindCards(res, lastRecipes);
   }catch(e){
