@@ -77,6 +77,7 @@
   .desc{font-size:14px;color:var(--muted);margin-top:4px}
   .empty{text-align:center;color:var(--muted);padding:40px 16px}
   .empty .e{font-size:44px}
+  .share{width:100%;margin-top:16px;border:0;border-radius:12px;padding:12px;font:700 15px Nunito;color:#fff;background:#25A35A;cursor:pointer}
   .install{display:none;width:100%;margin-bottom:14px;border:2px dashed var(--salty);background:var(--salty-bg);color:var(--ink);
       border-radius:14px;padding:12px;font:700 15px Nunito;cursor:pointer;text-align:center}
   .install.show{display:block}
@@ -194,12 +195,14 @@ function recipeCard(r, idx, src){
       ${miss.length?`<p class="miss" style="margin-top:8px">🛒 Eksik: ${miss.map(esc).join(", ")}</p>`:""}
       <h3>Yapılışı</h3>
       <ol>${(r.adimlar||[]).map(a=>`<li>${esc(a)}</li>`).join("")}</ol>
+      <button class="share" data-share>📤 Tarifi Paylaş</button>
     </div>
   </div>`;
 }
 function bindCards(container, list){
   container.querySelectorAll(".recipe").forEach(el=>{
     const r = list[+el.dataset.idx];
+    el.querySelector("[data-share]").addEventListener("click", ()=>shareRecipe(r));
     el.querySelector(".rhead").addEventListener("click", e=>{
       if(e.target.closest("[data-fav]")){
         if(isFav(r)) favs = favs.filter(f=>f.ad!==r.ad); else favs.push(r);
@@ -211,6 +214,22 @@ function bindCards(container, list){
       el.classList.toggle("open");
     });
   });
+}
+function recipeText(r){
+  const lines = [`${r.emoji||"🍽️"} ${r.ad}`];
+  if(r.sure||r.zorluk) lines.push([r.sure&&`⏱ ${r.sure}`, r.zorluk].filter(Boolean).join(" · "));
+  lines.push("", "Malzemeler:", ...(r.malzemeler||[]).map(m=>`• ${m}`));
+  lines.push("", "Yapılışı:", ...(r.adimlar||[]).map((a,i)=>`${i+1}. ${a}`));
+  lines.push("", `Bu tarifi "Dolapta Ne Var?" buldu 👉 ${location.origin}`);
+  return lines.join("\n");
+}
+async function shareRecipe(r){
+  const text = recipeText(r);
+  if(navigator.share){
+    try { await navigator.share({ title: r.ad, text }); return; }
+    catch(e){ if(e && e.name==="AbortError") return; }
+  }
+  window.open("https://wa.me/?text="+encodeURIComponent(text), "_blank");
 }
 function updateFavCount(){ $("#favCount").textContent = favs.length?`(${favs.length})`:""; }
 function renderFavs(){
