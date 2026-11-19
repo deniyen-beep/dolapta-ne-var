@@ -1,0 +1,5 @@
+{
+  "functions": {
+    "api/tarif.js": { "maxDuration": 60 }
+  }
+}

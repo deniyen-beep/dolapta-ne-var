@@ -224,14 +224,23 @@ $("#go").addEventListener("click", async ()=>{
   const res = $("#results");
   const btn = $("#go");
   btn.disabled = true;
-  res.innerHTML = `<div class="status"><div class="spin">🥄</div><p>Şef düşünüyor...</p></div>`;
+  res.innerHTML = `<div class="status"><div class="spin">🥄</div><p>Şef düşünüyor... (10-30 saniye sürebilir, sayfadan çıkma)</p></div>`;
   try{
-    const r = await fetch("/api/tarif", {
+    const istek = () => fetch("/api/tarif", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ malzemeler: ingredients, tur: type })
     });
+    let r;
+    try { r = await istek(); }
+    catch(_) {
+      // Bağlantı koptuysa bir kez daha dene
+      res.querySelector("p").textContent = "Bağlantı koptu, tekrar deniyorum...";
+      try { r = await istek(); }
+      catch(_) { throw new Error("Bağlantı koptu. İnternetini kontrol et; tarif hazırlanırken uygulamadan çıkma ve tekrar dene."); }
+    }
     const data = await r.json().catch(()=>({}));
+    if(!r.ok && !data.hata) throw new Error(`Sunucu hatası (${r.status}). Biraz sonra tekrar dene.`);
     if(!r.ok) throw new Error(data.hata || "Bir şeyler ters gitti, lütfen tekrar dene.");
     lastRecipes = data.tarifler;
     if(!Array.isArray(lastRecipes) || !lastRecipes.length) throw new Error("Tarif bulunamadı, başka malzemelerle dene.");
