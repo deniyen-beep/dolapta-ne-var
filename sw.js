@@ -1,7 +1,7 @@
 // Dolapta Ne Var? — service worker
 // Uygulama kabuğunu önbelleğe alır; böylece telefona "yüklenebilir" ve çevrimdışı da açılır.
-const CACHE = "dnv-v1";
-const SHELL = ["/", "/index.html", "/manifest.json", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"];
+const CACHE = "dnv-v2";
+const SHELL = ["/", "/index.html", "/manifest.json", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/logo.png"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
