@@ -91,16 +91,6 @@
   .recipe.open .rbody{display:block;animation:open .35s ease}
   @keyframes open{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 
-  .photo{position:relative;margin:0 -18px 6px;aspect-ratio:16/10;overflow:hidden;
-    background:linear-gradient(110deg,#F3E9D6 30%,#FBF5E8 50%,#F3E9D6 70%);background-size:200% 100%;animation:shim 1.4s linear infinite}
-  .photo img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .6s}
-  .photo.loaded{animation:none}
-  .photo.loaded img{opacity:1}
-  .photo::after{content:"";position:absolute;inset:auto 0 0 0;height:40%;background:linear-gradient(transparent,rgba(28,20,13,.55));pointer-events:none}
-  .photo figcaption{position:absolute;right:12px;bottom:9px;z-index:1;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,.85)}
-  .photo figcaption a{color:inherit}
-  .photo.none{display:none}
-  @keyframes shim{to{background-position:-200% 0}}
 
   .rbody h3{display:flex;align-items:center;gap:10px;font:700 11px Nunito;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin:20px 0 10px}
   .rbody h3::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--gold2),transparent)}
@@ -276,7 +266,6 @@ function recipeCard(r, idx, src){
       <button class="fav" data-fav aria-label="Favori">${isFav(r)?"❤️":"🤍"}</button>
     </div>
     <div class="rbody">
-      <figure class="photo"></figure>
       <h3>Malzemeler</h3>
       <ul class="ings">${(r.malzemeler||[]).map(m=>`<li>${esc(m)}</li>`).join("")}</ul>
       ${miss.length?`<p class="miss">Eksik olabilir: ${miss.map(esc).join(", ")}</p>`:""}
@@ -285,62 +274,6 @@ function recipeCard(r, idx, src){
       <button class="share" data-share>${SHARE_ICON}<span>Tarifi Paylaş</span></button>
     </div>
   </div>`;
-}
-// --- Yemek fotoğrafı: internetten gerçek fotoğraf bul, bulamazsan gösterme ---
-const okFoto = u => /\.(jpe?g|png|webp)(\/|$|\?)/i.test(u||"") && !/\.svg/i.test(u||"");
-async function wikiOzet(dil, baslik){
-  if(!baslik) return null;
-  const r = await fetch(`https://${dil}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(baslik.replace(/ /g,"_"))}?redirect=true`);
-  if(!r.ok) return null;
-  const d = await r.json();
-  if(d.type==="disambiguation") return null;
-  const url = d.thumbnail?.source || d.originalimage?.source;
-  if(!okFoto(url)) return null;
-  return { url: url.replace(/\/\d+px-/, "/800px-"), yedek: url, kredi:null, kaynak:"Wikipedia", link: d.content_urls?.mobile?.page || `https://${dil}.wikipedia.org` };
-}
-async function wikiAra(dil, q){
-  if(!q) return null;
-  const api = `https://${dil}.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrlimit=1&gsrnamespace=0` +
-    `&prop=pageimages&piprop=thumbnail&pithumbsize=800&gsrsearch=${encodeURIComponent(q)}`;
-  const r = await fetch(api); if(!r.ok) return null;
-  const p = Object.values((await r.json())?.query?.pages || {})[0];
-  if(!p || !okFoto(p.thumbnail?.source)) return null;
-  return { url: p.thumbnail.source, kredi:null, kaynak:"Wikipedia", link:`https://${dil}.wikipedia.org/?curid=${p.pageid}` };
-}
-async function fotoBul(r){
-  const dene = [
-    async () => { const d = await (await fetch("/api/resim?q=" + encodeURIComponent(r.gorsel || r.ad))).json(); return d && d.url ? d : null; },
-    () => wikiOzet("tr", r.wiki),
-    () => wikiOzet("en", r.gorsel),
-    () => wikiOzet("tr", r.ad),
-    () => wikiAra("tr", r.wiki || r.ad),
-    () => wikiAra("en", r.gorsel),
-  ];
-  for (const f of dene) {
-    try { const sonuc = await f(); if (sonuc) return sonuc; } catch(e) {}
-  }
-  return null;
-}
-async function loadPhoto(el, r){
-  const fig = el.querySelector(".photo");
-  if (!fig || fig.dataset.done) return;
-  fig.dataset.done = "1";
-  if (!r.resim) {
-    r.resim = await fotoBul(r);
-    const f = favs.find(f=>f.ad===r.ad);
-    if (f) { f.resim = r.resim; saveFavs(); }
-  }
-  if (!r.resim) { fig.classList.add("none"); return; }
-  const m = r.resim;
-  const kredi = m.kredi ? `${esc(m.kredi)} / ${esc(m.kaynak)}` : esc(m.kaynak);
-  fig.innerHTML = `<img alt="${esc(r.ad)}" referrerpolicy="no-referrer"><figcaption>Temsili fotoğraf · <a href="${esc(m.link)}" target="_blank" rel="noopener">${kredi}</a></figcaption>`;
-  const img = fig.querySelector("img");
-  img.onload = () => fig.classList.add("loaded");
-  img.onerror = () => {
-    if (m.yedek && img.src !== m.yedek) { img.src = m.yedek; return; }
-    fig.classList.add("none");
-  };
-  img.src = m.url;
 }
 function bindCards(container, list){
   container.querySelectorAll(".recipe").forEach(el=>{
@@ -355,7 +288,6 @@ function bindCards(container, list){
         return;
       }
       el.classList.toggle("open");
-      if(el.classList.contains("open")) loadPhoto(el, r);
     });
   });
 }
