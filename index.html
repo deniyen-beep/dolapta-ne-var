@@ -77,6 +77,10 @@
   .desc{font-size:14px;color:var(--muted);margin-top:4px}
   .empty{text-align:center;color:var(--muted);padding:40px 16px}
   .empty .e{font-size:44px}
+  .install{display:none;width:100%;margin-bottom:14px;border:2px dashed var(--salty);background:var(--salty-bg);color:var(--ink);
+      border-radius:14px;padding:12px;font:700 15px Nunito;cursor:pointer;text-align:center}
+  .install.show{display:block}
+  .install small{display:block;font-weight:600;color:var(--muted);margin-top:4px}
 </style>
 </head>
 <body>
@@ -86,6 +90,8 @@
     <h1>Dolapta Ne Var?</h1>
     <p class="sub">Malzemelerini yaz, ne pişireceğini biz düşünelim.</p>
   </header>
+
+  <button class="install" id="install">📲 Uygulamayı telefonuna yükle</button>
 
   <div class="tabs">
     <button class="on" data-tab="find">🔍 Tarif Bul</button>
@@ -239,6 +245,30 @@ $("#go").addEventListener("click", async ()=>{
 });
 
 renderChips(); updateFavCount();
+
+// --- Telefona yükleme (PWA) ---
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(()=>{}));
+}
+const installBtn = $("#install");
+const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+let deferredPrompt = null;
+window.addEventListener("beforeinstallprompt", e => {
+  e.preventDefault(); deferredPrompt = e;
+  if (!standalone) installBtn.classList.add("show");
+});
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+if (isIOS && !standalone) {
+  installBtn.innerHTML = `📲 Ana ekrana ekle<small>Safari'de alttaki Paylaş ⬆️ düğmesine, sonra “Ana Ekrana Ekle”ye dokun.</small>`;
+  installBtn.classList.add("show");
+}
+installBtn.addEventListener("click", async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice.catch(()=>{});
+  deferredPrompt = null; installBtn.classList.remove("show");
+});
+window.addEventListener("appinstalled", () => installBtn.classList.remove("show"));
 </script>
 </body>
 </html>
