@@ -16,13 +16,13 @@ export default async function handler(req, res) {
   const prompt = `Sen yaratıcı ama pratik bir Türk ev aşçısısın.
 Kullanıcının elindeki malzemeler: ${temiz}.
 İstenen tür: ${secilenTur}.
-Bu malzemelerle yapılabilecek 4 tarif öner. ${secilenTur === "ikisi de" ? "2 tatlı, 2 tuzlu olsun." : ""}
+Bu malzemelerle yapılabilecek 4 tarif öner. Kısa ve öz yaz. ${secilenTur === "ikisi de" ? "2 tatlı, 2 tuzlu olsun." : ""}
 Tarifler mümkün olduğunca sadece bu malzemeleri kullansın; tuz, yağ, su, karabiber gibi temel mutfak malzemeleri her evde var say. Gerçekten şart olan başka bir şey varsa "eksik_malzemeler" listesine yaz (en fazla 2 tane).
 SADECE geçerli bir JSON dizisi döndür. Her öğe şu alanlara sahip olsun:
 {"ad": string, "emoji": tek bir yemek emojisi, "tur": "tatlı" ya da "tuzlu", "sure": "20 dk" gibi, "zorluk": "Kolay"|"Orta"|"Zor", "aciklama": tek cümlelik iştah açıcı tanım, "malzemeler": miktarlı string listesi, "eksik_malzemeler": string listesi, "adimlar": kısa ve net adım listesi (4-7 adım)}
 Hepsi Türkçe olsun.`;
 
-  const model = process.env.GEMINI_MODEL || "gemini-flash-latest";
+  const model = process.env.GEMINI_MODEL || "gemini-flash-lite-latest";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
 
   const sor = (hizli) => fetch(url, {
@@ -34,7 +34,8 @@ Hepsi Türkçe olsun.`;
       generationConfig: {
         responseMimeType: "application/json",
         temperature: 0.9,
-        ...(hizli ? { thinkingConfig: { thinkingLevel: "low" } } : {})
+        maxOutputTokens: 4096,
+        ...(hizli ? { thinkingConfig: { thinkingLevel: "minimal" } } : {})
       }
     })
   });
