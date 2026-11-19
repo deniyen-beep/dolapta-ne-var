@@ -25,15 +25,24 @@ Hepsi Türkçe olsun.`;
   const model = process.env.GEMINI_MODEL || "gemini-flash-latest";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
 
+  const sor = (hizli) => fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+    signal: AbortSignal.timeout(40000),
+    body: JSON.stringify({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig: {
+        responseMimeType: "application/json",
+        temperature: 0.9,
+        ...(hizli ? { thinkingConfig: { thinkingLevel: "low" } } : {})
+      }
+    })
+  });
+
   try {
-    const r = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
-      body: JSON.stringify({
-        contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: { responseMimeType: "application/json", temperature: 0.9 }
-      })
-    });
+    let r = await sor(true);
+    if (r.status === 400) r = await sor(false);
+
     if (r.status === 429) {
       return res.status(429).json({ hata: "Çok fazla istek geldi, biraz bekleyip tekrar dene." });
     }
@@ -48,6 +57,9 @@ Hepsi Türkçe olsun.`;
     return res.status(200).json({ tarifler });
   } catch (e) {
     console.error(e);
+    if (e && e.name === "TimeoutError") {
+      return res.status(504).json({ hata: "Şef çok uzun düşündü, lütfen tekrar dene." });
+    }
     return res.status(500).json({ hata: "Bir şeyler ters gitti, tekrar dene." });
   }
 }
