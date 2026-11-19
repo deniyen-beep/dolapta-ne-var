@@ -29,7 +29,7 @@ ${istek}
 Bu malzemelerle yapılabilecek 4 tarif öner. Kısa ve öz yaz.
 Tarifler mümkün olduğunca sadece bu malzemeleri kullansın; tuz, yağ, su, karabiber gibi temel mutfak malzemeleri her evde var say. Gerçekten şart olan başka bir şey varsa "eksik_malzemeler" listesine yaz (en fazla 2 tane).
 SADECE geçerli bir JSON dizisi döndür. Her öğe şu alanlara sahip olsun:
-{"ad": string, "emoji": tek bir yemek emojisi, "tur": "tatlı" ya da "tuzlu", "ogun": "Kahvaltı"|"Öğle Yemeği"|"Akşam Yemeği"|"Atıştırmalık"|"Tatlı", "sure": "20 dk" gibi, "zorluk": "Kolay"|"Orta"|"Zor", "aciklama": tek cümlelik iştah açıcı tanım, "wiki": yemeğin Türkçe Wikipedia'daki bilinen genel adı (örn. "Menemen", "Sütlaç", "Krep", "Poğaça", "Omlet"), "gorsel": yemeğin İngilizce Wikipedia'daki genel adı (örn. "Menemen", "Crêpe", "Rice pudding", "Omelette", "Cookie"), "malzemeler": miktarlı string listesi, "eksik_malzemeler": string listesi, "adimlar": kısa ve net adım listesi (4-7 adım)}
+{"ad": string, "emoji": tek bir yemek emojisi, "tur": "tatlı" ya da "tuzlu", "ogun": "Kahvaltı"|"Öğle Yemeği"|"Akşam Yemeği"|"Atıştırmalık"|"Tatlı", "sure": "20 dk" gibi, "zorluk": "Kolay"|"Orta"|"Zor", "aciklama": tek cümlelik iştah açıcı tanım, "malzemeler": miktarlı string listesi, "eksik_malzemeler": string listesi, "adimlar": kısa ve net adım listesi (4-7 adım)}
 Hepsi Türkçe olsun.`;
 
   const model = process.env.GEMINI_MODEL || "gemini-flash-lite-latest";
