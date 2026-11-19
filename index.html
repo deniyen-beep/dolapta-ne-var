@@ -60,7 +60,7 @@
 
   .types{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
   .type{border:1px solid var(--line);background:#fff;border-radius:16px;padding:14px 6px 12px;text-align:center;cursor:pointer;
-    font:700 12px Nunito;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);transition:all .2s}
+    font:700 11px Nunito;letter-spacing:1px;text-transform:uppercase;color:var(--muted);transition:all .2s;min-width:0}
   .type .e{font-size:26px;display:block;margin-bottom:6px}
   .type.on{border-color:var(--gold);color:var(--gold-deep);background:linear-gradient(180deg,#FFFBF1,#F7ECD4);
     box-shadow:0 0 0 1px var(--gold) inset,0 8px 18px -10px rgba(184,134,47,.6)}
@@ -194,9 +194,12 @@
     <div class="card">
       <label class="t">Canın ne çekiyor?</label>
       <div class="types">
-        <button class="type s" data-type="tatlı"><span class="e">🍰</span>Tatlı</button>
-        <button class="type t2" data-type="tuzlu"><span class="e">🥘</span>Tuzlu</button>
-        <button class="type b on" data-type="ikisi de"><span class="e">✨</span>İkisi de</button>
+        <button class="type" data-type="kahvaltı"><span class="e">🍳</span>Kahvaltı</button>
+        <button class="type" data-type="öğle yemeği"><span class="e">🥗</span>Öğle</button>
+        <button class="type" data-type="akşam yemeği"><span class="e">🍲</span>Akşam</button>
+        <button class="type" data-type="atıştırmalık"><span class="e">🥨</span>Atıştırmalık</button>
+        <button class="type" data-type="tatlı"><span class="e">🍰</span>Tatlı</button>
+        <button class="type on" data-type="fark etmez"><span class="e">✨</span>Fark Etmez</button>
       </div>
     </div>
 
@@ -212,7 +215,7 @@
 <script>
 const $ = s => document.querySelector(s);
 let ingredients = [];
-let type = "ikisi de";
+let type = "fark etmez";
 let lastRecipes = [];
 let favs = [];
 try { favs = JSON.parse(localStorage.getItem("tarif-favs") || "[]"); } catch(e) {}
@@ -254,7 +257,8 @@ document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",
 function isFav(r){ return favs.some(f=>f.ad===r.ad); }
 const SHARE_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7.5 7.5 12 3l4.5 4.5"/><path d="M5 12v6.5A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V12"/></svg>`;
 function recipeCard(r, idx, src){
-  const kind = (r.tur||"").toLocaleLowerCase("tr").includes("tatl") ? "s" : "t2";
+  const kind = (r.tur||r.ogun||"").toLocaleLowerCase("tr").includes("tatl") ? "s" : "t2";
+  const etiket = r.ogun || (kind==="s"?"Tatlı":"Tuzlu");
   const miss = (r.eksik_malzemeler||[]).filter(Boolean);
   return `<div class="card recipe" data-src="${src}" data-idx="${idx}">
     <div class="rhead">
@@ -262,7 +266,7 @@ function recipeCard(r, idx, src){
       <div style="flex:1;min-width:0">
         <div class="rtitle">${esc(r.ad)}</div>
         <div class="meta">
-          <span class="tag ${kind}">${kind==="s"?"Tatlı":"Tuzlu"}</span>
+          <span class="tag ${kind}">${esc(etiket)}</span>
           ${r.sure?`<span class="tag">${esc(r.sure)}</span>`:""}
           ${r.zorluk?`<span class="tag">${esc(r.zorluk)}</span>`:""}
         </div>
@@ -282,20 +286,49 @@ function recipeCard(r, idx, src){
     </div>
   </div>`;
 }
-// Tarif açılınca yemeğin gerçek fotoğrafını getir
+// --- Yemek fotoğrafı: internetten gerçek fotoğraf bul, bulamazsan gösterme ---
+const okFoto = u => /\.(jpe?g|png|webp)(\/|$|\?)/i.test(u||"") && !/\.svg/i.test(u||"");
+async function wikiOzet(dil, baslik){
+  if(!baslik) return null;
+  const r = await fetch(`https://${dil}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(baslik.replace(/ /g,"_"))}?redirect=true`);
+  if(!r.ok) return null;
+  const d = await r.json();
+  if(d.type==="disambiguation") return null;
+  const url = d.thumbnail?.source || d.originalimage?.source;
+  if(!okFoto(url)) return null;
+  return { url: url.replace(/\/\d+px-/, "/800px-"), yedek: url, kredi:null, kaynak:"Wikipedia", link: d.content_urls?.mobile?.page || `https://${dil}.wikipedia.org` };
+}
+async function wikiAra(dil, q){
+  if(!q) return null;
+  const api = `https://${dil}.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrlimit=1&gsrnamespace=0` +
+    `&prop=pageimages&piprop=thumbnail&pithumbsize=800&gsrsearch=${encodeURIComponent(q)}`;
+  const r = await fetch(api); if(!r.ok) return null;
+  const p = Object.values((await r.json())?.query?.pages || {})[0];
+  if(!p || !okFoto(p.thumbnail?.source)) return null;
+  return { url: p.thumbnail.source, kredi:null, kaynak:"Wikipedia", link:`https://${dil}.wikipedia.org/?curid=${p.pageid}` };
+}
+async function fotoBul(r){
+  const dene = [
+    async () => { const d = await (await fetch("/api/resim?q=" + encodeURIComponent(r.gorsel || r.ad))).json(); return d && d.url ? d : null; },
+    () => wikiOzet("tr", r.wiki),
+    () => wikiOzet("en", r.gorsel),
+    () => wikiOzet("tr", r.ad),
+    () => wikiAra("tr", r.wiki || r.ad),
+    () => wikiAra("en", r.gorsel),
+  ];
+  for (const f of dene) {
+    try { const sonuc = await f(); if (sonuc) return sonuc; } catch(e) {}
+  }
+  return null;
+}
 async function loadPhoto(el, r){
   const fig = el.querySelector(".photo");
   if (!fig || fig.dataset.done) return;
   fig.dataset.done = "1";
-  if (r.resim === undefined) {
-    try {
-      const q = r.gorsel || r.ad;
-      const d = await (await fetch("/api/resim?q=" + encodeURIComponent(q))).json();
-      r.resim = d && d.url ? d : null;
-    } catch { r.resim = null; }
+  if (!r.resim) {
+    r.resim = await fotoBul(r);
     const f = favs.find(f=>f.ad===r.ad);
-    if (f && f !== r) { f.resim = r.resim; }
-    if (f) saveFavs();
+    if (f) { f.resim = r.resim; saveFavs(); }
   }
   if (!r.resim) { fig.classList.add("none"); return; }
   const m = r.resim;
@@ -303,7 +336,10 @@ async function loadPhoto(el, r){
   fig.innerHTML = `<img alt="${esc(r.ad)}" referrerpolicy="no-referrer"><figcaption>Temsili fotoğraf · <a href="${esc(m.link)}" target="_blank" rel="noopener">${kredi}</a></figcaption>`;
   const img = fig.querySelector("img");
   img.onload = () => fig.classList.add("loaded");
-  img.onerror = () => fig.classList.add("none");
+  img.onerror = () => {
+    if (m.yedek && img.src !== m.yedek) { img.src = m.yedek; return; }
+    fig.classList.add("none");
+  };
   img.src = m.url;
 }
 function bindCards(container, list){

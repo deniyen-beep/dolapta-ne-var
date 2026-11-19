@@ -11,15 +11,25 @@ export default async function handler(req, res) {
     return res.status(400).json({ hata: "Malzeme listesi geçersiz." });
   }
   const temiz = malzemeler.map(m => String(m).slice(0, 40)).join(", ");
-  const secilenTur = ["tatlı", "tuzlu", "ikisi de"].includes(tur) ? tur : "ikisi de";
+  const OGUNLER = {
+    "kahvaltı": "kahvaltılık tarifler (ör. menemen, omlet, pankek, gözleme, kahvaltılık börek, yumurtalı ekmek)",
+    "öğle yemeği": "öğle yemeği için pratik ve hafif tarifler (ör. çorba, makarna, salata, sandviç, tavada pratik yemekler)",
+    "akşam yemeği": "akşam yemeği için doyurucu ana yemekler (ör. fırın yemekleri, sulu yemekler, et/tavuk yemekleri, pilav yanında yemekler)",
+    "atıştırmalık": "tuzlu atıştırmalıklar (ör. tuzlu kurabiye, poğaça, kraker, peynirli çubuk, mini börek, çıtır atıştırmalıklar); tatlı OLMASIN",
+    "tatlı": "tatlılar (ör. kek, kurabiye, sütlü tatlılar, şerbetli tatlılar, pasta)"
+  };
+  const secilenTur = OGUNLER[tur] ? tur : "fark etmez";
+  const istek = OGUNLER[tur]
+    ? `İstenen kategori: ${secilenTur} → ${OGUNLER[tur]}. 4 tarifin hepsi bu kategoriden olsun.`
+    : "4 tarif farklı kategorilerden olsun: 1 kahvaltı, 1 öğle ya da akşam yemeği, 1 tuzlu atıştırmalık, 1 tatlı.";
 
   const prompt = `Sen yaratıcı ama pratik bir Türk ev aşçısısın.
 Kullanıcının elindeki malzemeler: ${temiz}.
-İstenen tür: ${secilenTur}.
-Bu malzemelerle yapılabilecek 4 tarif öner. Kısa ve öz yaz. ${secilenTur === "ikisi de" ? "2 tatlı, 2 tuzlu olsun." : ""}
+${istek}
+Bu malzemelerle yapılabilecek 4 tarif öner. Kısa ve öz yaz.
 Tarifler mümkün olduğunca sadece bu malzemeleri kullansın; tuz, yağ, su, karabiber gibi temel mutfak malzemeleri her evde var say. Gerçekten şart olan başka bir şey varsa "eksik_malzemeler" listesine yaz (en fazla 2 tane).
 SADECE geçerli bir JSON dizisi döndür. Her öğe şu alanlara sahip olsun:
-{"ad": string, "emoji": tek bir yemek emojisi, "tur": "tatlı" ya da "tuzlu", "sure": "20 dk" gibi, "zorluk": "Kolay"|"Orta"|"Zor", "aciklama": tek cümlelik iştah açıcı tanım, "gorsel": yemeğin fotoğrafını aramak için İngilizce 1-3 kelimelik genel adı (örn. "menemen", "crepes", "rice pudding", "omelette"), "malzemeler": miktarlı string listesi, "eksik_malzemeler": string listesi, "adimlar": kısa ve net adım listesi (4-7 adım)}
+{"ad": string, "emoji": tek bir yemek emojisi, "tur": "tatlı" ya da "tuzlu", "ogun": "Kahvaltı"|"Öğle Yemeği"|"Akşam Yemeği"|"Atıştırmalık"|"Tatlı", "sure": "20 dk" gibi, "zorluk": "Kolay"|"Orta"|"Zor", "aciklama": tek cümlelik iştah açıcı tanım, "wiki": yemeğin Türkçe Wikipedia'daki bilinen genel adı (örn. "Menemen", "Sütlaç", "Krep", "Poğaça", "Omlet"), "gorsel": yemeğin İngilizce Wikipedia'daki genel adı (örn. "Menemen", "Crêpe", "Rice pudding", "Omelette", "Cookie"), "malzemeler": miktarlı string listesi, "eksik_malzemeler": string listesi, "adimlar": kısa ve net adım listesi (4-7 adım)}
 Hepsi Türkçe olsun.`;
 
   const model = process.env.GEMINI_MODEL || "gemini-flash-lite-latest";
