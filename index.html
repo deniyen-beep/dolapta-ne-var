@@ -35,10 +35,10 @@
   .sub{font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;color:#7D6A55;font-size:19px;margin-top:6px}
 
   .tabs{display:flex;margin-bottom:18px;border-bottom:1px solid var(--line)}
-  .tabs button{flex:1;border:0;background:none;padding:12px 4px 13px;font:700 12px Nunito;letter-spacing:2.5px;text-transform:uppercase;
+  .tabs button{flex:1;border:0;background:none;padding:12px 2px 13px;font:700 11px Nunito;letter-spacing:1.4px;text-transform:uppercase;
     color:var(--muted);cursor:pointer;position:relative}
   .tabs button.on{color:var(--ink)}
-  .tabs button.on::after{content:"";position:absolute;left:22%;right:22%;bottom:-1px;height:2px;border-radius:2px;
+  .tabs button.on::after{content:"";position:absolute;left:14%;right:14%;bottom:-1px;height:2px;border-radius:2px;
     background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold))}
   #favCount{color:var(--gold)}
 
@@ -46,7 +46,7 @@
     box-shadow:0 1px 0 #fff inset,0 12px 30px -14px rgba(90,60,20,.18)}
   label.t{display:block;font-family:Fraunces,serif;font-weight:600;font-size:18px;margin-bottom:12px}
   .inrow{display:flex;gap:8px}
-  input[type=text]{flex:1;border:1px solid var(--line);background:#fff;border-radius:14px;padding:13px 15px;font:600 16px Nunito;color:var(--ink);outline:none;min-width:0;
+  input[type=text]{flex:1;border:1px solid var(--line);background:var(--field);border-radius:14px;padding:13px 15px;font:600 16px Nunito;color:var(--ink);outline:none;min-width:0;
     transition:border-color .2s,box-shadow .2s}
   input[type=text]:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(233,199,123,.25)}
   .add{border:0;background:var(--espresso);color:var(--gold2);border-radius:14px;width:50px;font:400 26px Nunito;cursor:pointer}
@@ -182,6 +182,71 @@
   #cook .prev:disabled{opacity:.3}
   #cook .wake{text-align:center;font-size:11px;color:#8C7A64;margin-top:12px;letter-spacing:1px}
 
+  /* --- Yeni özellikler --- */
+  header{position:relative}
+  .themebtn{position:absolute;right:0;top:4px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--gold-deep);font-size:17px;cursor:pointer}
+  .mic{background:var(--card);color:var(--gold-deep);box-shadow:0 0 0 1px var(--line) inset;display:grid;place-items:center}
+  .mic svg{width:21px;height:21px}
+  .mic.live{background:#B3402A;color:#fff;box-shadow:none;animation:nabiz 1.2s ease-in-out infinite}
+  @keyframes nabiz{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+  .clearall{border:0;background:none;color:var(--muted);font:700 12px Nunito;text-decoration:underline;cursor:pointer;padding:6px 4px}
+  .ghost.wide{width:100%;flex:none;margin:4px 0 14px;padding:14px;border-color:var(--gold2);color:var(--gold-deep)}
+  .besin{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+  .besin div{border:1px solid var(--line);border-radius:14px;padding:9px 4px;text-align:center;background:var(--soft)}
+  .besin b{display:block;font:700 17px Fraunces,serif;color:var(--gold-deep)}
+  .besin b small{font-size:11px;margin-left:1px}
+  .besin span{font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .besinnot{font-size:11px;color:var(--muted);margin-top:6px;text-align:center}
+  .uyarla .opt{font-size:12px;padding:6px 11px}
+  .uyarla .opt:disabled{opacity:.55}
+  .chat{display:flex;flex-direction:column;gap:8px}
+  .msg{max-width:88%;padding:10px 13px;border-radius:16px;font-size:14px;line-height:1.5;white-space:pre-wrap}
+  .msg.sef{align-self:flex-start;background:var(--soft);border:1px solid var(--line);border-bottom-left-radius:5px}
+  .msg.ben{align-self:flex-end;background:var(--espresso);color:#F6EBD3;border-bottom-right-radius:5px}
+  .msg.hata{color:#8A3A22}
+  .msg.yaziyor{color:var(--muted);font-style:italic}
+  .askrow{margin-top:10px}
+  .askrow input{font-size:15px;padding:11px 14px}
+  .askrow .add{font-size:24px}
+  .hist{display:block;width:100%;text-align:left;border:0;border-bottom:1px dashed var(--line);background:none;padding:12px 2px;cursor:pointer;color:var(--ink);font-family:Nunito}
+  .hist:last-child{border-bottom:0}
+  .hist .hd{display:block;font:700 11px Nunito;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold)}
+  .hist .hm{display:block;font-weight:700;font-size:14px;margin-top:3px}
+  .hist .hr{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+  .day{padding:14px 16px}
+  .dname{font:600 18px Fraunces,serif;margin:2px 4px 6px}
+  .mrow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;border-top:1px dashed var(--line);background:none;padding:12px 4px;cursor:pointer;color:var(--ink);font-family:Nunito}
+  .mrow .me{font-size:26px;width:36px;text-align:center}
+  .mrow .mt{flex:1;min-width:0}
+  .mrow small{display:block;font:700 10px Nunito;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold)}
+  .mrow b{display:block;font-size:15px}
+  .mrow em{display:block;font-style:normal;font-size:13px;color:var(--muted)}
+  .mrow .mx{color:var(--gold);font-size:22px;transition:transform .2s}
+  .mrow.on .mx{transform:rotate(90deg)}
+  .mdet .recipe{margin:6px -6px 8px;box-shadow:none}
+  .mdet .status{padding:14px}
+
+  /* --- Gece modu --- */
+  :root{--soft:#FBF6EC;--field:#fff}
+  [data-theme="dark"]{--bg:#120D09;--card:#1C1510;--ink:#F3E8D3;--muted:#A8957A;--line:#3A2D20;--gold-deep:#E9C77B;
+    --sweet:#E8A2B8;--sweet-bg:#3A1F28;--salty:#E0B86A;--salty-bg:#33281A;--soft:#241B13;--field:#241B13}
+  [data-theme="dark"] body{background:radial-gradient(ellipse 120% 60% at 50% 0%,#24190F 0%,var(--bg) 60%) fixed,var(--bg)}
+  [data-theme="dark"] .card{box-shadow:0 12px 30px -14px rgba(0,0,0,.7)}
+  [data-theme="dark"] input[type=text],[data-theme="dark"] .type,[data-theme="dark"] .opt,[data-theme="dark"] .stepper,
+  [data-theme="dark"] .ghost,[data-theme="dark"] .shop .box{background:var(--field);color:var(--ink)}
+  [data-theme="dark"] .type,[data-theme="dark"] .opt{color:var(--muted)}
+  [data-theme="dark"] .chip,[data-theme="dark"] .type.on,[data-theme="dark"] .opt.on,[data-theme="dark"] .install,
+  [data-theme="dark"] .cam,[data-theme="dark"] .cookbtn,[data-theme="dark"] .tolist{background:linear-gradient(180deg,#2E2216,#241A10);color:var(--gold2)}
+  [data-theme="dark"] .chip{border-color:#5A4426}
+  [data-theme="dark"] .remoji,[data-theme="dark"] .steps li::before{background:radial-gradient(circle at 35% 30%,#3A2C1C,#241A10);color:var(--gold2)}
+  [data-theme="dark"] .tag{background:#2A2017}
+  [data-theme="dark"] .sub{color:#B8A58A}
+  [data-theme="dark"] .add{background:#2E2216;box-shadow:0 0 0 1px #5A4426 inset}
+  [data-theme="dark"] .msg.ben{background:#3A2C1C}
+  [data-theme="dark"] .err{background:#2E1810;border-color:#5A2E1E;color:#F0B7A0}
+  [data-theme="dark"] .shop li.done .box{background:var(--gold)}
+  [data-theme="dark"] .logo{box-shadow:0 10px 28px rgba(0,0,0,.6),0 0 0 1px rgba(233,199,123,.35)}
+
   /* --- Lüks giriş ekranı --- */
   #intro{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;
     padding:24px;text-align:center;cursor:pointer;
@@ -223,6 +288,7 @@
 </div>
 <div class="wrap">
   <header>
+    <button class="themebtn" id="themeBtn" type="button" aria-label="Gece modu">☾</button>
     <img class="logo" src="/logo.png" alt="Dolapta Ne Var? logosu" width="96" height="96">
     <h1>Dolapta Ne Var?</h1>
     <div class="orn">✦</div>
@@ -233,6 +299,7 @@
 
   <div class="tabs">
     <button class="on" data-tab="find">Tarif Bul</button>
+    <button data-tab="menu">Menü</button>
     <button data-tab="favs">Favoriler <span id="favCount"></span></button>
     <button data-tab="shop">Alışveriş <span id="shopCount"></span></button>
   </div>
@@ -242,6 +309,9 @@
       <label class="t" for="ing">Elinde hangi malzemeler var?</label>
       <form class="inrow" id="addForm">
         <input type="text" id="ing" placeholder="örn. yumurta" autocomplete="off">
+        <button class="add mic" type="button" id="mic" aria-label="Sesle ekle" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>
+        </button>
         <button class="add" type="submit" aria-label="Ekle">+</button>
       </form>
       <button class="cam" id="cam" type="button">
@@ -281,6 +351,20 @@
 
     <button class="go" id="go" disabled>Tarifleri Göster ✦</button>
     <div id="results" style="margin-top:18px"></div>
+
+    <details class="card prefs" id="histBox" hidden>
+      <summary><span class="t">Son aramalarım</span></summary>
+      <div class="pbody" id="histList"></div>
+    </details>
+  </section>
+
+  <section id="menu" hidden>
+    <div class="card">
+      <label class="t">Haftalık menü</label>
+      <p class="hint" style="margin:0 0 14px">Dolabındaki malzemelere ve tercihlerine göre 7 günlük kahvaltı ve akşam yemeği planı. Bir yemeğe dokununca tarifi açılır.</p>
+      <button class="go" id="menuGo" type="button">Menü Oluştur ✦</button>
+    </div>
+    <div id="menuOut"></div>
   </section>
 
   <section id="favs" hidden>
@@ -318,6 +402,8 @@
 <script>
 const $ = s => document.querySelector(s);
 let ingredients = [];
+try { ingredients = JSON.parse(localStorage.getItem("dolabim") || "[]"); } catch(e) {}
+const saveDolap = () => { try { localStorage.setItem("dolabim", JSON.stringify(ingredients)); } catch(e) {} };
 let type = "fark etmez";
 let lastRecipes = [];
 let favs = [];
@@ -333,7 +419,9 @@ function renderChips(){
     `<span class="chip">${esc(x)}<button data-i="${i}" aria-label="Sil">✕</button></span>`).join("");
   $("#quick").innerHTML = QUICK.filter(q=>!ingredients.includes(q))
     .slice(0,6).map(q=>`<button data-q="${q}">+ ${q}</button>`).join("");
+  if (ingredients.length > 1) $("#chips").insertAdjacentHTML("beforeend", `<button class="clearall" data-clear>Tümünü temizle</button>`);
   $("#go").disabled = ingredients.length === 0;
+  saveDolap();
 }
 function addIng(text){
   text.split(",").map(s=>s.trim().toLocaleLowerCase("tr")).filter(Boolean)
@@ -341,7 +429,10 @@ function addIng(text){
   renderChips();
 }
 $("#addForm").addEventListener("submit", e=>{ e.preventDefault(); addIng($("#ing").value); $("#ing").value=""; $("#ing").focus(); });
-$("#chips").addEventListener("click", e=>{ const i=e.target.dataset.i; if(i!==undefined){ ingredients.splice(+i,1); renderChips(); }});
+$("#chips").addEventListener("click", e=>{
+  if (e.target.dataset.clear !== undefined) { ingredients = []; renderChips(); return; }
+  const i=e.target.dataset.i; if(i!==undefined){ ingredients.splice(+i,1); renderChips(); }
+});
 $("#quick").addEventListener("click", e=>{ if(e.target.dataset.q) addIng(e.target.dataset.q); });
 
 document.querySelectorAll(".type").forEach(b=>b.addEventListener("click",()=>{
@@ -352,18 +443,44 @@ document.querySelectorAll(".type").forEach(b=>b.addEventListener("click",()=>{
 document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>{
   document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("on"));
   b.classList.add("on");
-  ["find","favs","shop"].forEach(id => $("#"+id).hidden = b.dataset.tab!==id);
+  ["find","menu","favs","shop"].forEach(id => $("#"+id).hidden = b.dataset.tab!==id);
   if(b.dataset.tab==="favs") renderFavs();
   if(b.dataset.tab==="shop") renderShop();
 }));
 
 function isFav(r){ return favs.some(f=>f.ad===r.ad); }
 const SHARE_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7.5 7.5 12 3l4.5 4.5"/><path d="M5 12v6.5A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V12"/></svg>`;
-function recipeCard(r, idx, src){
+const UYARLA = [["kolay","Daha kolay"],["saglikli","Daha sağlıklı"],["firinsiz","Fırınsız"],["hizli","Daha hızlı"],["vejetaryen","Vejetaryen"]];
+
+// Sunucuya istek: bağlantı koparsa bir kez daha dener, hata mesajını Türkçe verir
+async function api(yol, govde){
+  const istek = () => fetch(yol, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(govde) });
+  let r;
+  try { r = await istek(); }
+  catch(_) {
+    try { r = await istek(); }
+    catch(_) { throw new Error("Bağlantı koptu. İnternetini kontrol et; işlem sürerken uygulamadan çıkma ve tekrar dene."); }
+  }
+  const d = await r.json().catch(()=>({}));
+  if (!r.ok) throw new Error(d.hata || `Sunucu hatası (${r.status}). Biraz sonra tekrar dene.`);
+  return d;
+}
+
+function besinKutusu(b){
+  if (!b || !b.kalori) return "";
+  const k = (ad, v, birim) => v || v === 0 ? `<div><b>${esc(Math.round(+v) || v)}<small>${birim}</small></b><span>${ad}</span></div>` : "";
+  return `<div class="besin">${k("Kalori", b.kalori, "")}${k("Protein", b.protein, "g")}${k("Karb.", b.karbonhidrat, "g")}${k("Yağ", b.yag, "g")}</div>
+    <p class="besinnot">Porsiyon başı, yaklaşık değerlerdir.</p>`;
+}
+function sohbetHTML(r){
+  return (r._sohbet||[]).map(m => `<div class="msg ${m.kim}">${esc(m.metin)}</div>`).join("");
+}
+function recipeCard(r, idx, src, acik){
   const kind = (r.tur||r.ogun||"").toLocaleLowerCase("tr").includes("tatl") ? "s" : "t2";
   const etiket = r.ogun || (kind==="s"?"Tatlı":"Tuzlu");
   const miss = (r.eksik_malzemeler||[]).filter(Boolean);
-  return `<div class="card recipe" data-src="${src}" data-idx="${idx}">
+  const kal = r.besin && r.besin.kalori ? `<span class="tag">≈ ${esc(Math.round(+r.besin.kalori) || r.besin.kalori)} kcal</span>` : "";
+  return `<div class="card recipe ${acik?"open":""}" data-src="${src}" data-idx="${idx}">
     <div class="rhead">
       <div class="remoji">${esc(r.emoji||"🍽️")}</div>
       <div style="flex:1;min-width:0">
@@ -372,6 +489,7 @@ function recipeCard(r, idx, src){
           <span class="tag ${kind}">${esc(etiket)}</span>
           ${r.sure?`<span class="tag">${esc(r.sure)}</span>`:""}
           ${r.zorluk?`<span class="tag">${esc(r.zorluk)}</span>`:""}
+          ${kal}
         </div>
         ${r.aciklama?`<div class="desc">${esc(r.aciklama)}</div>`:""}
         <span class="more">Tarifi gör ›</span>
@@ -379,37 +497,92 @@ function recipeCard(r, idx, src){
       <button class="fav" data-fav aria-label="Favori">${isFav(r)?"❤️":"🤍"}</button>
     </div>
     <div class="rbody">
+      ${besinKutusu(r.besin)}
       <h3>Malzemeler</h3>
       <ul class="ings">${(r.malzemeler||[]).map(m=>`<li>${esc(m)}</li>`).join("")}</ul>
       ${miss.length?`<div class="missrow"><p class="miss">Eksik olabilir: ${miss.map(esc).join(", ")}</p><button class="tolist" data-tolist>🛒 Listeye ekle</button></div>`:""}
       <h3>Yapılışı</h3>
       <ol class="steps">${(r.adimlar||[]).map(a=>`<li>${esc(a)}</li>`).join("")}</ol>
       <button class="cookbtn" data-cook>Pişirmeye Başla ✦</button>
+      <h3>Tarifi uyarla</h3>
+      <div class="opts uyarla">${UYARLA.map(([k,t])=>`<button type="button" class="opt" data-nasil="${k}">${t}</button>`).join("")}</div>
+      <p class="camnote" data-unote></p>
+      <h3>Şefe sor</h3>
+      <div class="chat" data-chat>${sohbetHTML(r) || `<div class="msg sef">Bu tarifle ilgili ne merak ediyorsan sor: malzeme yerine ne koyarım, fırın yerine tava olur mu…</div>`}</div>
+      <form class="inrow askrow" data-ask>
+        <input type="text" placeholder="Şefe sor…" maxlength="300" autocomplete="off">
+        <button class="add" type="submit" aria-label="Gönder">›</button>
+      </form>
       <button class="share" data-share>${SHARE_ICON}<span>Tarifi Paylaş</span></button>
     </div>
   </div>`;
 }
-function bindCards(container, list){
-  container.querySelectorAll(".recipe").forEach(el=>{
-    const r = list[+el.dataset.idx];
-    el.querySelector("[data-share]").addEventListener("click", ()=>shareRecipe(r));
-    el.querySelector("[data-cook]").addEventListener("click", ()=>pisir(r));
-    const tl = el.querySelector("[data-tolist]");
-    if (tl) tl.addEventListener("click", ()=>{
-      const n = listeyeEkle(r.eksik_malzemeler||[], r.ad);
-      tl.textContent = n ? `✓ ${n} ürün eklendi` : "✓ Zaten listede"; tl.disabled = true;
-    });
-    el.querySelector(".rhead").addEventListener("click", e=>{
-      if(e.target.closest("[data-fav]")){
-        if(isFav(r)) favs = favs.filter(f=>f.ad!==r.ad); else favs.push(r);
-        saveFavs(); updateFavCount();
-        e.target.textContent = isFav(r)?"❤️":"🤍";
-        if(el.dataset.src==="favs") renderFavs();
-        return;
-      }
-      el.classList.toggle("open");
-    });
+function bindCard(el, list){
+  const idx = +el.dataset.idx, src = el.dataset.src;
+  const r = () => list[idx];
+  el.querySelector("[data-share]").addEventListener("click", ()=>shareRecipe(r()));
+  el.querySelector("[data-cook]").addEventListener("click", ()=>pisir(r()));
+  const tl = el.querySelector("[data-tolist]");
+  if (tl) tl.addEventListener("click", ()=>{
+    const n = listeyeEkle(r().eksik_malzemeler||[], r().ad);
+    tl.textContent = n ? `✓ ${n} ürün eklendi` : "✓ Zaten listede"; tl.disabled = true;
   });
+  el.querySelector(".rhead").addEventListener("click", e=>{
+    if(e.target.closest("[data-fav]")){
+      if(isFav(r())) favs = favs.filter(f=>f.ad!==r().ad); else favs.push(r());
+      saveFavs(); updateFavCount();
+      e.target.textContent = isFav(r())?"❤️":"🤍";
+      if(src==="favs") renderFavs();
+      return;
+    }
+    el.classList.toggle("open");
+  });
+  // Tarifi uyarla (daha kolay, daha sağlıklı…)
+  el.querySelector(".uyarla").addEventListener("click", async e=>{
+    const nasil = e.target.dataset.nasil; if(!nasil) return;
+    const not = el.querySelector("[data-unote]"), btns = el.querySelectorAll(".uyarla .opt");
+    btns.forEach(x=>x.disabled = true); e.target.classList.add("on");
+    not.className = "camnote"; not.textContent = "Şef tarifi uyarlıyor…";
+    try {
+      const d = await api("/api/sef", { islem:"degistir", nasil, tarif: r(), tercih: prefs });
+      if (!d.tarif || !d.tarif.ad) throw new Error("Tarif uyarlanamadı, tekrar dene.");
+      const eskiFav = isFav(r());
+      if (eskiFav) { favs = favs.map(f => f.ad === r().ad ? d.tarif : f); saveFavs(); }
+      list[idx] = d.tarif;
+      if (src === "find") gecmisGuncelle();
+      const yeni = document.createElement("div");
+      yeni.innerHTML = recipeCard(d.tarif, idx, src, true);
+      const kart = yeni.firstElementChild; el.replaceWith(kart); bindCard(kart, list);
+      const n = kart.querySelector("[data-unote]"); n.className = "camnote ok"; n.textContent = "✓ Tarif uyarlandı.";
+      kart.scrollIntoView({ behavior:"smooth", block:"start" });
+    } catch(err) {
+      not.className = "camnote err"; not.textContent = err.message;
+      btns.forEach(x=>x.disabled = false); e.target.classList.remove("on");
+    }
+  });
+  // Şefe sor
+  el.querySelector("[data-ask]").addEventListener("submit", async e=>{
+    e.preventDefault();
+    const inp = e.target.querySelector("input"), soru = inp.value.trim(); if(!soru) return;
+    const t = r(); t._sohbet = t._sohbet || [];
+    const gecmis = t._sohbet.slice(-6);
+    t._sohbet.push({ kim:"ben", metin: soru }); inp.value = "";
+    const chat = el.querySelector("[data-chat]");
+    chat.innerHTML = sohbetHTML(t) + `<div class="msg sef yaziyor">Şef yazıyor…</div>`;
+    inp.disabled = true;
+    try {
+      const d = await api("/api/sef", { islem:"sor", soru, tarif: t, gecmis });
+      t._sohbet.push({ kim:"sef", metin: d.cevap || "Bunu şu an cevaplayamadım, tekrar sorar mısın?" });
+    } catch(err) {
+      t._sohbet.push({ kim:"sef hata", metin: err.message });
+    }
+    if (isFav(t)) saveFavs();
+    chat.innerHTML = sohbetHTML(t); inp.disabled = false;
+    chat.lastElementChild && chat.lastElementChild.scrollIntoView({ behavior:"smooth", block:"nearest" });
+  });
+}
+function bindCards(container, list){
+  container.querySelectorAll(".recipe").forEach(el=>bindCard(el, list));
 }
 function recipeText(r){
   const lines = [`${r.emoji||"🍽️"} ${r.ad}`];
@@ -435,38 +608,63 @@ function renderFavs(){
   bindCards(box, favs);
 }
 
-$("#go").addEventListener("click", async ()=>{
+// --- Son aramalar (bu telefonda en fazla 10 arama) ---
+let gecmis = [];
+try { gecmis = JSON.parse(localStorage.getItem("gecmis") || "[]"); } catch(e) {}
+let aktifGecmis = -1;
+const saveGecmis = () => { try { localStorage.setItem("gecmis", JSON.stringify(gecmis)); } catch(e) {} };
+const TUR_AD = { "kahvaltı":"Kahvaltı", "öğle yemeği":"Öğle", "akşam yemeği":"Akşam", "atıştırmalık":"Atıştırmalık", "tatlı":"Tatlı", "fark etmez":"Karışık" };
+function gecmisGuncelle(){ if (aktifGecmis === 0 && gecmis[0]) { gecmis[0].tarifler = lastRecipes; saveGecmis(); } }
+function renderGecmis(){
+  $("#histBox").hidden = !gecmis.length;
+  $("#histList").innerHTML = gecmis.map((g,i) => {
+    const t = new Date(g.t);
+    const tarih = t.toLocaleDateString("tr-TR", { day:"numeric", month:"short" }) + " " + t.toLocaleTimeString("tr-TR", { hour:"2-digit", minute:"2-digit" });
+    return `<button type="button" class="hist" data-h="${i}"><span class="hd">${esc(tarih)} · ${esc(TUR_AD[g.tur] || "Karışık")}</span>
+      <span class="hm">${esc(g.malzemeler.join(", "))}</span><span class="hr">${esc(g.tarifler.map(x=>x.ad).join(" · "))}</span></button>`;
+  }).join("");
+}
+$("#histList").addEventListener("click", e => {
+  const b = e.target.closest("[data-h]"); if (!b) return;
+  const g = gecmis[+b.dataset.h];
+  ingredients = [...g.malzemeler]; saveDolap(); renderChips();
+  type = g.tur; document.querySelectorAll(".type").forEach(x => x.classList.toggle("on", x.dataset.type === type));
+  lastRecipes = g.tarifler; aktifGecmis = +b.dataset.h;
+  sonuclariGoster();
+  $("#histBox").open = false;
+  $("#results").scrollIntoView({ behavior:"smooth", block:"start" });
+});
+
+function sonuclariGoster(){
   const res = $("#results");
-  const btn = $("#go");
+  res.innerHTML = `<p class="lead">Şefin önerileri</p>` + lastRecipes.map((r,i)=>recipeCard(r,i,"find")).join("") +
+    `<button class="ghost wide" id="more" type="button">↻ Başka tarifler öner</button>`;
+  bindCards(res, lastRecipes);
+  $("#more").addEventListener("click", () => tarifAra(lastRecipes.map(x=>x.ad)));
+}
+async function tarifAra(haric){
+  const res = $("#results"), btn = $("#go");
   btn.disabled = true;
-  res.innerHTML = `<div class="status"><div class="spin"></div><p>Şef sizin için düşünüyor…<br><small style="font-size:14px">10-30 saniye sürebilir, sayfadan çıkma</small></p></div>`;
-  try{
-    const istek = () => fetch("/api/tarif", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ malzemeler: ingredients, tur: type, tercih: prefs })
-    });
-    let r;
-    try { r = await istek(); }
-    catch(_) {
-      // Bağlantı koptuysa bir kez daha dene
-      res.querySelector("p").textContent = "Bağlantı koptu, tekrar deniyorum...";
-      try { r = await istek(); }
-      catch(_) { throw new Error("Bağlantı koptu. İnternetini kontrol et; tarif hazırlanırken uygulamadan çıkma ve tekrar dene."); }
-    }
-    const data = await r.json().catch(()=>({}));
-    if(!r.ok && !data.hata) throw new Error(`Sunucu hatası (${r.status}). Biraz sonra tekrar dene.`);
-    if(!r.ok) throw new Error(data.hata || "Bir şeyler ters gitti, lütfen tekrar dene.");
+  const yukleme = `<div class="status"><div class="spin"></div><p>Şef sizin için düşünüyor…<br><small style="font-size:14px">10-30 saniye sürebilir, sayfadan çıkma</small></p></div>`;
+  if (haric && haric.length) { $("#more").outerHTML = yukleme; } else { res.innerHTML = yukleme; }
+  try {
+    const data = await api("/api/tarif", { malzemeler: ingredients, tur: type, tercih: prefs, haric: haric || [] });
+    if(!Array.isArray(data.tarifler) || !data.tarifler.length) throw new Error("Tarif bulunamadı, başka malzemelerle dene.");
     lastRecipes = data.tarifler;
-    if(!Array.isArray(lastRecipes) || !lastRecipes.length) throw new Error("Tarif bulunamadı, başka malzemelerle dene.");
-    res.innerHTML = `<p class="lead">Şefin önerileri</p>` +
-      lastRecipes.map((r,i)=>recipeCard(r,i,"find")).join("");
-    bindCards(res, lastRecipes);
-  }catch(e){
-    res.innerHTML = `<div class="err">${esc(e.message || "Bağlantı hatası, internetini kontrol et.")}</div>`;
+    gecmis.unshift({ t: Date.now(), malzemeler: [...ingredients], tur: type, tarifler: lastRecipes });
+    gecmis = gecmis.slice(0, 10); aktifGecmis = 0; saveGecmis(); renderGecmis();
+    sonuclariGoster();
+    if (haric && haric.length) res.scrollIntoView({ behavior:"smooth", block:"start" });
+  } catch(e) {
+    const hata = `<div class="err">${esc(e.message || "Bağlantı hatası, internetini kontrol et.")}</div>`;
+    const st = res.querySelector(".status");
+    if (st) st.outerHTML = hata + (haric && haric.length ? `<button class="ghost wide" id="more" type="button">↻ Tekrar dene</button>` : "");
+    else res.innerHTML = hata;
+    const m = $("#more"); if (m) m.addEventListener("click", () => tarifAra(haric));
   }
   btn.disabled = ingredients.length===0;
-});
+}
+$("#go").addEventListener("click", () => tarifAra([]));
 
 // --- Tercihler (bu telefonda hatırlanır) ---
 const DIYET = ["vejetaryen","vegan","glütensiz","şekersiz","laktozsuz","çocuk dostu"];
@@ -581,6 +779,107 @@ $("#cookX").addEventListener("click", cookKapat);
 $("#cookPrev").addEventListener("click", () => { if (cook.i > 0) { cook.i--; cookGoster(); } });
 $("#cookNext").addEventListener("click", () => { if (cook.i < cook.r.adimlar.length - 1) { cook.i++; cookGoster(); } else cookKapat(); });
 
+// --- Sesle malzeme ekleme ---
+(function(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const mic = $("#mic");
+  if (!SR) return;
+  mic.hidden = false;
+  let dinle = null;
+  mic.addEventListener("click", () => {
+    if (dinle) { dinle.stop(); return; }
+    const note = $("#camNote");
+    dinle = new SR(); dinle.lang = "tr-TR"; dinle.interimResults = false; dinle.maxAlternatives = 1;
+    mic.classList.add("live"); note.className = "camnote"; note.textContent = "Dinliyorum… malzemeleri söyle (ör. yumurta, domates ve peynir)";
+    dinle.onresult = e => {
+      const metin = Array.from(e.results).map(x => x[0].transcript).join(" ").toLocaleLowerCase("tr");
+      let parca = metin.split(/,|\s+ve\s+|\s+ile\s+|\s+bir de\s+/).map(x => x.trim()).filter(Boolean);
+      // Virgülsüz söylenmiş tek uzun cümleyi kelimelere böl
+      if (parca.length === 1 && parca[0].split(/\s+/).length > 2) parca = parca[0].split(/\s+/);
+      const once = ingredients.length; addIng(parca.join(","));
+      const n = ingredients.length - once;
+      note.className = "camnote ok"; note.textContent = n ? `✓ ${n} malzeme eklendi: “${metin}”` : `Duyduğum: “${metin}” (zaten listede)`;
+    };
+    dinle.onerror = e => {
+      note.className = "camnote err";
+      note.textContent = e.error === "not-allowed" ? "Mikrofon izni verilmedi. Ayarlardan izin verip tekrar dene." : "Duyamadım, tekrar dene.";
+    };
+    dinle.onend = () => { mic.classList.remove("live"); dinle = null; };
+    try { dinle.start(); } catch(e) { mic.classList.remove("live"); dinle = null; }
+  });
+})();
+
+// --- Haftalık menü ---
+let menu = null;
+try { menu = JSON.parse(localStorage.getItem("menu") || "null"); } catch(e) {}
+const saveMenu = () => { try { localStorage.setItem("menu", JSON.stringify(menu)); } catch(e) {} };
+function ogunSatiri(o, g, tur){
+  if (!o || !o.ad) return "";
+  return `<button type="button" class="mrow" data-g="${g}" data-o="${tur}">
+    <span class="me">${esc(o.emoji||"🍽️")}</span>
+    <span class="mt"><small>${tur==="kahvalti"?"Kahvaltı":"Akşam"}</small><b>${esc(o.ad)}</b>${o.kisa?`<em>${esc(o.kisa)}</em>`:""}</span>
+    <span class="mx">›</span></button><div class="mdet" data-det="${g}-${tur}"></div>`;
+}
+function renderMenu(){
+  const out = $("#menuOut");
+  if (!menu || !Array.isArray(menu.gunler)) { out.innerHTML = ""; return; }
+  out.innerHTML = menu.gunler.map((d,g) => `<div class="card day"><p class="dname">${esc(d.gun || "")}</p>${ogunSatiri(d.kahvalti,g,"kahvalti")}${ogunSatiri(d.aksam,g,"aksam")}</div>`).join("") +
+    ((menu.alisveris||[]).length ? `<div class="card"><label class="t">Menü için alınacaklar</label><p class="miss" style="color:var(--muted);font-weight:600">${esc(menu.alisveris.join(", "))}</p>
+      <button class="cookbtn" id="menuShop" type="button" style="margin-top:14px">🛒 Alışveriş listesine ekle</button></div>` : "");
+  const ms = $("#menuShop");
+  if (ms) ms.addEventListener("click", () => { const n = listeyeEkle(menu.alisveris, "Haftalık menü"); ms.textContent = n ? `✓ ${n} ürün eklendi` : "✓ Zaten listede"; ms.disabled = true; });
+}
+$("#menuOut").addEventListener("click", async e => {
+  const b = e.target.closest(".mrow"); if (!b) return;
+  const g = +b.dataset.g, tur = b.dataset.o, o = menu.gunler[g][tur];
+  const kutu = $(`[data-det="${g}-${tur}"]`);
+  if (kutu.innerHTML) { kutu.innerHTML = ""; b.classList.remove("on"); return; }
+  b.classList.add("on");
+  const goster = () => { const liste = [o.tarif]; kutu.innerHTML = recipeCard(o.tarif, 0, "menu", true); bindCards(kutu, liste); };
+  if (o.tarif) return goster();
+  kutu.innerHTML = `<div class="status"><div class="spin"></div><p>Tarif hazırlanıyor…</p></div>`;
+  try {
+    const d = await api("/api/sef", { islem:"detay", ad: o.ad, malzemeler: ingredients, tercih: prefs });
+    if (!d.tarif || !d.tarif.ad) throw new Error("Tarif hazırlanamadı, tekrar dene.");
+    o.tarif = d.tarif; saveMenu(); goster();
+  } catch(err) { kutu.innerHTML = `<div class="err">${esc(err.message)}</div>`; b.classList.remove("on"); }
+});
+$("#menuGo").addEventListener("click", async () => {
+  const btn = $("#menuGo"), out = $("#menuOut");
+  btn.disabled = true;
+  out.innerHTML = `<div class="status"><div class="spin"></div><p>Şef haftanı planlıyor…<br><small style="font-size:14px">20-40 saniye sürebilir, sayfadan çıkma</small></p></div>`;
+  try {
+    const d = await api("/api/sef", { islem:"menu", malzemeler: ingredients, tercih: prefs });
+    if (!d.menu || !Array.isArray(d.menu.gunler) || !d.menu.gunler.length) throw new Error("Menü hazırlanamadı, tekrar dene.");
+    menu = d.menu; saveMenu(); renderMenu();
+    btn.textContent = "Yeni Menü Oluştur ✦";
+  } catch(err) { out.innerHTML = `<div class="err">${esc(err.message)}</div>`; }
+  btn.disabled = false;
+});
+
+// --- Gece modu ---
+(function(){
+  const kok = document.documentElement, btn = $("#themeBtn");
+  const sistem = matchMedia("(prefers-color-scheme: dark)");
+  let secim = null; try { secim = localStorage.getItem("tema"); } catch(e) {}
+  const uygula = () => {
+    const koyu = secim ? secim === "dark" : sistem.matches;
+    kok.dataset.theme = koyu ? "dark" : "light";
+    btn.textContent = koyu ? "☀︎" : "☾";
+    btn.setAttribute("aria-label", koyu ? "Gündüz modu" : "Gece modu");
+    if (!$("#intro")) document.querySelector('meta[name="theme-color"]').content = koyu ? "#120D09" : "#FFF8F0";
+  };
+  btn.addEventListener("click", () => {
+    secim = kok.dataset.theme === "dark" ? "light" : "dark";
+    try { localStorage.setItem("tema", secim); } catch(e) {}
+    uygula();
+  });
+  sistem.addEventListener && sistem.addEventListener("change", uygula);
+  window.temaUygula = uygula;
+  uygula();
+})();
+
+renderGecmis(); if (menu) { renderMenu(); $("#menuGo").textContent = "Yeni Menü Oluştur ✦"; }
 renderPrefs(); updateShopCount();
 renderChips(); updateFavCount();
 
@@ -635,8 +934,7 @@ $("#camFile").addEventListener("change", async e => {
   const kapat = () => {
     if (done) return; done = true;
     intro.classList.add("gone");
-    document.querySelector('meta[name="theme-color"]').content = "#FFF8F0";
-    setTimeout(() => intro.remove(), 900);
+    setTimeout(() => { intro.remove(); window.temaUygula && window.temaUygula(); }, 900);
   };
   intro.addEventListener("click", kapat);
   setTimeout(kapat, 3500);

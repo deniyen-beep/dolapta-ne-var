@@ -5,6 +5,8 @@ Dolabındaki malzemeleri yaz, yapay zekâ sana **tatlı ve tuzlu tarifler** öne
 - Ön yüz: `index.html` (tek sayfa, telefona yüklenebilir uygulama / PWA)
 - Tarif servisi: `api/tarif.js` (Google Gemini yapay zekâsını kullanır)
 - Fotoğraftan malzeme tanıma: `api/malzeme.js` (dolabın fotoğrafındaki malzemeleri Gemini bulur)
+- Şef servisi: `api/sef.js` (tarif hakkında soru, tarifi uyarlama, haftalık menü, menüden tarif)
+- Ortak yapay zekâ kodu: `api/_gemini.js`
 - Kullanım sınırı: `api/_limit.js` (kişi başına günde 30 tarif, 15 fotoğraf; dakikada en fazla 6 tarif, 4 fotoğraf)
 - `sw.js` + `manifest.json` + ikonlar: uygulamanın telefona "yüklenebilmesi" için
 
