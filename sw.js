@@ -1,10 +1,15 @@
 // Dolapta Ne Var? — service worker
-// Uygulama kabuğunu önbelleğe alır; böylece telefona "yüklenebilir" ve çevrimdışı da açılır.
-const CACHE = "dnv-v8";
+// Uygulama kabuğunu önbelleğe alır; böylece telefona "yüklenebilir" ve internet yokken de açılır.
+// Kural: her zaman önce internetteki EN YENİ sürüm; internet yoksa son kaydedilen sürüm.
+const CACHE = "dnv-v9";
 const SHELL = ["/", "/index.html", "/manifest.json", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/logo.png"];
 
 self.addEventListener("install", e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  e.waitUntil(
+    caches.open(CACHE)
+      .then(c => c.addAll(SHELL.map(u => new Request(u, { cache: "reload" }))))
+      .then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener("activate", e => {
@@ -17,14 +22,17 @@ self.addEventListener("activate", e => {
 self.addEventListener("fetch", e => {
   const req = e.request;
   const url = new URL(req.url);
-  // Tarif isteklerini (API) ve başka sitelere giden istekleri önbelleğe alma
+  // API, istatistik ve başka sitelere giden isteklere karışma
   if (req.method !== "GET" || url.origin !== location.origin || url.pathname.startsWith("/api/") || url.pathname.startsWith("/_vercel/")) return;
-  // Önce internet, olmazsa önbellek
+  const sayfa = req.mode === "navigate" || url.pathname === "/" || url.pathname.endsWith(".html");
   e.respondWith(
-    fetch(req).then(res => {
-      const copy = res.clone();
-      caches.open(CACHE).then(c => c.put(req, copy));
+    // Sayfanın kendisi tarayıcı önbelleğini de atlayarak her seferinde taze indirilir
+    fetch(sayfa ? new Request(req, { cache: "no-store" }) : req).then(res => {
+      if (res.ok) {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(sayfa ? "/" : req, copy));
+      }
       return res;
-    }).catch(() => caches.match(req).then(r => r || caches.match("/index.html")))
+    }).catch(() => caches.match(sayfa ? "/" : req).then(r => r || caches.match("/")))
   );
 });

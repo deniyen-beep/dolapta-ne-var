@@ -3,5 +3,10 @@
     "api/tarif.js": { "maxDuration": 60 },
     "api/malzeme.js": { "maxDuration": 60 },
     "api/sef.js": { "maxDuration": 60 }
-  }
+  },
+  "headers": [
+    { "source": "/sw.js", "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }] },
+    { "source": "/", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] },
+    { "source": "/index.html", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }
+  ]
 }
