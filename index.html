@@ -942,7 +942,19 @@ $("#camFile").addEventListener("change", async e => {
 
 // --- Telefona yükleme (PWA) ---
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(()=>{}));
+  // Yeni sürüm yayınlanınca uygulama kendini otomatik yeniler
+  const ilkKurulum = !navigator.serviceWorker.controller;
+  let yenilendi = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (ilkKurulum || yenilendi) return;
+    yenilendi = true; location.reload();
+  });
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js", { updateViaCache: "none" }).then(reg => {
+      reg.update().catch(()=>{});
+      document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") reg.update().catch(()=>{}); });
+    }).catch(()=>{});
+  });
 }
 const installBtn = $("#install");
 const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
