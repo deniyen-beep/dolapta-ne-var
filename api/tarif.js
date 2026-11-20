@@ -1,3 +1,5 @@
+import { sinirKontrol } from "./_limit.js";
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ hata: "Sadece POST isteği kabul edilir." });
@@ -6,6 +8,8 @@ export default async function handler(req, res) {
   if (!apiKey) {
     return res.status(500).json({ hata: "Sunucuda GEMINI_API_KEY ayarlanmamış." });
   }
+  const sinir = sinirKontrol(req, "tarif", 30, 6);
+  if (sinir) return res.status(429).json({ hata: sinir });
   const { malzemeler, tur } = req.body || {};
   if (!Array.isArray(malzemeler) || malzemeler.length === 0 || malzemeler.length > 30) {
     return res.status(400).json({ hata: "Malzeme listesi geçersiz." });
