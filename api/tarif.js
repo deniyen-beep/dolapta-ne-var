@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   }
   const sinir = sinirKontrol(req, "tarif", 30, 6);
   if (sinir) return res.status(429).json({ hata: sinir });
-  const { malzemeler, tur } = req.body || {};
+  const { malzemeler, tur, tercih } = req.body || {};
   if (!Array.isArray(malzemeler) || malzemeler.length === 0 || malzemeler.length > 30) {
     return res.status(400).json({ hata: "Malzeme listesi geçersiz." });
   }
@@ -27,9 +27,28 @@ export default async function handler(req, res) {
     ? `İstenen kategori: ${secilenTur} → ${OGUNLER[tur]}. 4 tarifin hepsi bu kategoriden olsun.`
     : "4 tarif farklı kategorilerden olsun: 1 kahvaltı, 1 öğle ya da akşam yemeği, 1 tuzlu atıştırmalık, 1 tatlı.";
 
+  // Kullanıcı tercihleri (diyet, kişi sayısı, süre)
+  const DIYETLER = {
+    "vejetaryen": "vejetaryen (et, tavuk, balık yok)",
+    "vegan": "vegan (hiçbir hayvansal ürün yok: et, süt, yumurta, bal, tereyağı yok)",
+    "glütensiz": "glütensiz (buğday unu, irmik, bulgur, arpa, normal ekmek yok)",
+    "şekersiz": "rafine şekersiz (şeker yerine meyve, bal ya da pekmez gibi doğal tatlandırıcılar)",
+    "laktozsuz": "laktozsuz (süt, peynir, yoğurt, tereyağı, krema yok)",
+    "çocuk dostu": "çocuklar için uygun (acısız, kolay yenir, sevimli)"
+  };
+  const diyet = (Array.isArray(tercih?.diyet) ? tercih.diyet : []).filter(d => DIYETLER[d]);
+  const kisi = Math.min(12, Math.max(1, parseInt(tercih?.kisi) || 2));
+  const sure = [15, 30, 60].includes(+tercih?.sure) ? +tercih.sure : 0;
+  const kurallar = [
+    `Malzeme miktarları ${kisi} kişilik olsun.`,
+    diyet.length ? `Diyet kuralları, KESİNLİKLE uy: ${diyet.map(d => DIYETLER[d]).join("; ")}. Kullanıcının malzemelerinden bu kurallara uymayanları kullanma.` : "",
+    sure ? `Her tarifin toplam hazırlama ve pişirme süresi en fazla ${sure} dakika olsun.` : ""
+  ].filter(Boolean).join("\n");
+
   const prompt = `Sen yaratıcı ama pratik bir Türk ev aşçısısın.
 Kullanıcının elindeki malzemeler: ${temiz}.
 ${istek}
+${kurallar}
 Bu malzemelerle yapılabilecek 4 tarif öner. Kısa ve öz yaz.
 Tarifler mümkün olduğunca sadece bu malzemeleri kullansın; tuz, yağ, su, karabiber gibi temel mutfak malzemeleri her evde var say. Gerçekten şart olan başka bir şey varsa "eksik_malzemeler" listesine yaz (en fazla 2 tane).
 SADECE geçerli bir JSON dizisi döndür. Her öğe şu alanlara sahip olsun:
