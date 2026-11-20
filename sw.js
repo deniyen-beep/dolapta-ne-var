@@ -1,6 +1,6 @@
 // Dolapta Ne Var? — service worker
 // Uygulama kabuğunu önbelleğe alır; böylece telefona "yüklenebilir" ve çevrimdışı da açılır.
-const CACHE = "dnv-v5";
+const CACHE = "dnv-v6";
 const SHELL = ["/", "/index.html", "/manifest.json", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/logo.png"];
 
 self.addEventListener("install", e => {
@@ -18,7 +18,7 @@ self.addEventListener("fetch", e => {
   const req = e.request;
   const url = new URL(req.url);
   // Tarif isteklerini (API) ve başka sitelere giden istekleri önbelleğe alma
-  if (req.method !== "GET" || url.origin !== location.origin || url.pathname.startsWith("/api/")) return;
+  if (req.method !== "GET" || url.origin !== location.origin || url.pathname.startsWith("/api/") || url.pathname.startsWith("/_vercel/")) return;
   // Önce internet, olmazsa önbellek
   e.respondWith(
     fetch(req).then(res => {
