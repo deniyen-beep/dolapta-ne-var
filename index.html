@@ -124,6 +124,64 @@
   .install.show{display:block}
   .install small{display:block;font-weight:600;color:var(--muted);margin-top:4px}
 
+  /* --- Tercihler --- */
+  details.prefs{padding:0}
+  details.prefs summary{list-style:none;cursor:pointer;padding:18px 20px;display:flex;align-items:center;gap:10px}
+  details.prefs summary::-webkit-details-marker{display:none}
+  details.prefs summary .t{margin:0;flex:1;font-family:Fraunces,serif;font-weight:600;font-size:18px}
+  details.prefs summary .ozet{font-size:12px;color:var(--gold-deep);font-weight:700;text-align:right}
+  details.prefs summary::after{content:"›";color:var(--gold);font-size:22px;transition:transform .2s}
+  details.prefs[open] summary::after{transform:rotate(90deg)}
+  .pbody{padding:0 20px 20px}
+  .plabel{font:700 11px Nunito;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:14px 0 8px}
+  .plabel:first-child{margin-top:0}
+  .opts{display:flex;flex-wrap:wrap;gap:8px}
+  .opt{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;font:700 13px Nunito;color:var(--muted);cursor:pointer}
+  .opt.on{border-color:var(--gold);color:var(--gold-deep);background:linear-gradient(180deg,#FFFBF1,#F7ECD4);box-shadow:0 0 0 1px var(--gold) inset}
+  .stepper{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;background:#fff;overflow:hidden}
+  .stepper button{border:0;background:none;width:44px;height:40px;font:400 22px Nunito;color:var(--gold-deep);cursor:pointer}
+  .stepper span{min-width:70px;text-align:center;font:700 15px Nunito}
+
+  /* --- Alışveriş listesi --- */
+  .missrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .missrow .miss{margin:0;flex:1;min-width:150px}
+  .tolist{border:1px solid var(--gold2);background:#FFFBF1;color:var(--gold-deep);border-radius:999px;padding:7px 12px;font:700 12px Nunito;cursor:pointer;white-space:nowrap}
+  .tolist:disabled{opacity:.7;cursor:default}
+  .shop li{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px dashed var(--line);list-style:none}
+  .shop li:last-child{border-bottom:0}
+  .shop .box{flex-shrink:0;width:24px;height:24px;border-radius:7px;border:1.5px solid var(--gold);background:#fff;cursor:pointer;display:grid;place-items:center;color:#fff;font-size:14px}
+  .shop li.done .box{background:var(--gold)}
+  .shop .nm{flex:1;font-size:15px;cursor:pointer}
+  .shop .nm small{display:block;color:var(--muted);font-size:12px}
+  .shop li.done .nm{text-decoration:line-through;color:var(--muted)}
+  .shop .del{border:0;background:none;color:var(--muted);font-size:14px;cursor:pointer;padding:4px}
+  .shopbar{display:flex;gap:8px;margin-top:14px}
+  .ghost{flex:1;border:1px solid var(--line);background:#fff;border-radius:999px;padding:11px;font:700 12px Nunito;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);cursor:pointer}
+
+  /* --- Pişirme modu --- */
+  .cookbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:6px;border:1px solid var(--gold);border-radius:999px;padding:14px;
+    font:700 12px Nunito;letter-spacing:3px;text-transform:uppercase;color:var(--gold-deep);cursor:pointer;background:linear-gradient(180deg,#FFFBF1,#F3E2BB)}
+  #cook{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;color:#F6EBD3;
+    padding:calc(18px + env(safe-area-inset-top)) 22px calc(22px + env(safe-area-inset-bottom));
+    background:radial-gradient(ellipse at 50% 20%,#3A2A18 0%,#1C140D 55%,#0D0906 100%)}
+  #cook[hidden]{display:none}
+  #cook .top{display:flex;align-items:center;gap:12px}
+  #cook .top b{flex:1;font:600 17px Fraunces,serif;color:var(--gold2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #cook .x{border:1px solid rgba(233,199,123,.4);background:none;color:var(--gold2);width:40px;height:40px;border-radius:50%;font-size:16px;cursor:pointer}
+  #cook .bar{height:3px;border-radius:3px;background:rgba(233,199,123,.18);margin-top:16px;overflow:hidden}
+  #cook .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .35s}
+  #cook .mid{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:20px 4px}
+  #cook .no{font:700 12px Nunito;letter-spacing:4px;text-transform:uppercase;color:var(--gold)}
+  #cook .txt{font:500 27px/1.4 Fraunces,serif;margin-top:16px}
+  #cook .timer{align-self:center;margin-top:26px;border:1px solid var(--gold2);background:rgba(233,199,123,.08);color:var(--gold2);border-radius:999px;padding:11px 20px;font:700 15px Nunito;cursor:pointer}
+  #cook .timer.run{background:var(--gold2);color:var(--espresso)}
+  #cook .nav{display:flex;gap:10px}
+  #cook .nav button{flex:1;border-radius:999px;padding:16px;font:700 12px Nunito;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer}
+  #cook .prev{border:1px solid rgba(233,199,123,.4);background:none;color:var(--gold2)}
+  #cook .next{border:0;color:var(--espresso);background:linear-gradient(135deg,#C9973B,#F1D48E 50%,#C9973B)}
+  #cook .prev:disabled{opacity:.3}
+  #cook .wake{text-align:center;font-size:11px;color:#8C7A64;margin-top:12px;letter-spacing:1px}
+
   /* --- Lüks giriş ekranı --- */
   #intro{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;
     padding:24px;text-align:center;cursor:pointer;
@@ -175,7 +233,8 @@
 
   <div class="tabs">
     <button class="on" data-tab="find">Tarif Bul</button>
-    <button data-tab="favs">Favorilerim <span id="favCount"></span></button>
+    <button data-tab="favs">Favoriler <span id="favCount"></span></button>
+    <button data-tab="shop">Alışveriş <span id="shopCount"></span></button>
   </div>
 
   <section id="find">
@@ -208,6 +267,18 @@
       </div>
     </div>
 
+    <details class="card prefs" id="prefs">
+      <summary><span class="t">Tercihlerim</span><span class="ozet" id="prefOzet"></span></summary>
+      <div class="pbody">
+        <p class="plabel">Kaç kişilik?</p>
+        <div class="stepper"><button type="button" id="kisiAz" aria-label="Azalt">−</button><span id="kisiSay"></span><button type="button" id="kisiCok" aria-label="Artır">+</button></div>
+        <p class="plabel">Beslenme</p>
+        <div class="opts" id="diyetler"></div>
+        <p class="plabel">En fazla ne kadar sürsün?</p>
+        <div class="opts" id="sureler"></div>
+      </div>
+    </details>
+
     <button class="go" id="go" disabled>Tarifleri Göster ✦</button>
     <div id="results" style="margin-top:18px"></div>
   </section>
@@ -215,6 +286,33 @@
   <section id="favs" hidden>
     <div id="favList"></div>
   </section>
+
+  <section id="shop" hidden>
+    <div class="card">
+      <label class="t" for="shopIn">Alışveriş listem</label>
+      <form class="inrow" id="shopForm">
+        <input type="text" id="shopIn" placeholder="örn. tereyağı" autocomplete="off">
+        <button class="add" type="submit" aria-label="Ekle">+</button>
+      </form>
+      <ul class="shop" id="shopList"></ul>
+      <div class="shopbar" id="shopBar">
+        <button class="ghost" id="shopClear" type="button">Alınanları sil</button>
+        <button class="ghost" id="shopShare" type="button">Paylaş</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div id="cook" hidden role="dialog" aria-label="Pişirme modu">
+  <div class="top"><b id="cookAd"></b><button class="x" id="cookX" aria-label="Kapat">✕</button></div>
+  <div class="bar"><i id="cookBar"></i></div>
+  <div class="mid">
+    <p class="no" id="cookNo"></p>
+    <p class="txt" id="cookTxt"></p>
+    <button class="timer" id="cookTimer" hidden></button>
+  </div>
+  <div class="nav"><button class="prev" id="cookPrev">‹ Geri</button><button class="next" id="cookNext">İleri ›</button></div>
+  <p class="wake" id="cookWake"></p>
 </div>
 
 <script>
@@ -254,9 +352,9 @@ document.querySelectorAll(".type").forEach(b=>b.addEventListener("click",()=>{
 document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>{
   document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("on"));
   b.classList.add("on");
-  $("#find").hidden = b.dataset.tab!=="find";
-  $("#favs").hidden = b.dataset.tab!=="favs";
+  ["find","favs","shop"].forEach(id => $("#"+id).hidden = b.dataset.tab!==id);
   if(b.dataset.tab==="favs") renderFavs();
+  if(b.dataset.tab==="shop") renderShop();
 }));
 
 function isFav(r){ return favs.some(f=>f.ad===r.ad); }
@@ -283,9 +381,10 @@ function recipeCard(r, idx, src){
     <div class="rbody">
       <h3>Malzemeler</h3>
       <ul class="ings">${(r.malzemeler||[]).map(m=>`<li>${esc(m)}</li>`).join("")}</ul>
-      ${miss.length?`<p class="miss">Eksik olabilir: ${miss.map(esc).join(", ")}</p>`:""}
+      ${miss.length?`<div class="missrow"><p class="miss">Eksik olabilir: ${miss.map(esc).join(", ")}</p><button class="tolist" data-tolist>🛒 Listeye ekle</button></div>`:""}
       <h3>Yapılışı</h3>
       <ol class="steps">${(r.adimlar||[]).map(a=>`<li>${esc(a)}</li>`).join("")}</ol>
+      <button class="cookbtn" data-cook>Pişirmeye Başla ✦</button>
       <button class="share" data-share>${SHARE_ICON}<span>Tarifi Paylaş</span></button>
     </div>
   </div>`;
@@ -294,6 +393,12 @@ function bindCards(container, list){
   container.querySelectorAll(".recipe").forEach(el=>{
     const r = list[+el.dataset.idx];
     el.querySelector("[data-share]").addEventListener("click", ()=>shareRecipe(r));
+    el.querySelector("[data-cook]").addEventListener("click", ()=>pisir(r));
+    const tl = el.querySelector("[data-tolist]");
+    if (tl) tl.addEventListener("click", ()=>{
+      const n = listeyeEkle(r.eksik_malzemeler||[], r.ad);
+      tl.textContent = n ? `✓ ${n} ürün eklendi` : "✓ Zaten listede"; tl.disabled = true;
+    });
     el.querySelector(".rhead").addEventListener("click", e=>{
       if(e.target.closest("[data-fav]")){
         if(isFav(r)) favs = favs.filter(f=>f.ad!==r.ad); else favs.push(r);
@@ -339,7 +444,7 @@ $("#go").addEventListener("click", async ()=>{
     const istek = () => fetch("/api/tarif", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ malzemeler: ingredients, tur: type })
+      body: JSON.stringify({ malzemeler: ingredients, tur: type, tercih: prefs })
     });
     let r;
     try { r = await istek(); }
@@ -363,6 +468,120 @@ $("#go").addEventListener("click", async ()=>{
   btn.disabled = ingredients.length===0;
 });
 
+// --- Tercihler (bu telefonda hatırlanır) ---
+const DIYET = ["vejetaryen","vegan","glütensiz","şekersiz","laktozsuz","çocuk dostu"];
+const SURE = [[0,"Fark etmez"],[15,"15 dk"],[30,"30 dk"],[60,"1 saat"]];
+let prefs = { kisi: 2, diyet: [], sure: 0 };
+try { prefs = Object.assign(prefs, JSON.parse(localStorage.getItem("tercihler") || "{}")); } catch(e) {}
+const savePrefs = () => { try { localStorage.setItem("tercihler", JSON.stringify(prefs)); } catch(e) {} };
+const buyukHarf = t => t.charAt(0).toLocaleUpperCase("tr") + t.slice(1);
+function renderPrefs(){
+  $("#kisiSay").textContent = prefs.kisi + " kişi";
+  $("#diyetler").innerHTML = DIYET.map(d => `<button type="button" class="opt ${prefs.diyet.includes(d)?"on":""}" data-d="${d}">${buyukHarf(d)}</button>`).join("");
+  $("#sureler").innerHTML = SURE.map(([v,t]) => `<button type="button" class="opt ${prefs.sure===v?"on":""}" data-s="${v}">${t}</button>`).join("");
+  const oz = [prefs.kisi + " kişi", ...prefs.diyet.map(buyukHarf), prefs.sure ? `≤ ${prefs.sure} dk` : ""].filter(Boolean);
+  $("#prefOzet").textContent = oz.slice(0,3).join(" · ") + (oz.length > 3 ? " …" : "");
+}
+$("#kisiAz").addEventListener("click", () => { prefs.kisi = Math.max(1, prefs.kisi - 1); savePrefs(); renderPrefs(); });
+$("#kisiCok").addEventListener("click", () => { prefs.kisi = Math.min(12, prefs.kisi + 1); savePrefs(); renderPrefs(); });
+$("#diyetler").addEventListener("click", e => {
+  const d = e.target.dataset.d; if (!d) return;
+  prefs.diyet = prefs.diyet.includes(d) ? prefs.diyet.filter(x => x !== d) : [...prefs.diyet, d];
+  savePrefs(); renderPrefs();
+});
+$("#sureler").addEventListener("click", e => {
+  if (e.target.dataset.s === undefined) return;
+  prefs.sure = +e.target.dataset.s; savePrefs(); renderPrefs();
+});
+
+// --- Alışveriş listesi ---
+let shop = [];
+try { shop = JSON.parse(localStorage.getItem("alisveris") || "[]"); } catch(e) {}
+const saveShop = () => { try { localStorage.setItem("alisveris", JSON.stringify(shop)); } catch(e) {} updateShopCount(); };
+function updateShopCount(){ const n = shop.filter(x => !x.ok).length; $("#shopCount").textContent = n ? `(${n})` : ""; }
+function listeyeEkle(adlar, tarif){
+  let n = 0;
+  adlar.map(a => String(a).trim()).filter(Boolean).forEach(a => {
+    if (!shop.some(x => x.ad.toLocaleLowerCase("tr") === a.toLocaleLowerCase("tr") && !x.ok)) { shop.push({ ad: a, tarif: tarif || "", ok: false }); n++; }
+  });
+  saveShop(); return n;
+}
+function renderShop(){
+  const ul = $("#shopList");
+  ul.innerHTML = shop.length ? shop.map((x,i) => `<li class="${x.ok?"done":""}">
+      <button class="box" data-i="${i}" aria-label="Alındı">${x.ok?"✓":""}</button>
+      <span class="nm" data-i="${i}">${esc(x.ad)}${x.tarif?`<small>${esc(x.tarif)} için</small>`:""}</span>
+      <button class="del" data-del="${i}" aria-label="Sil">✕</button></li>`).join("")
+    : `<li style="justify-content:center;color:var(--muted);border:0">Listen boş. Tariflerdeki eksikleri 🛒 ile ekleyebilirsin.</li>`;
+  $("#shopBar").hidden = !shop.length;
+}
+$("#shopList").addEventListener("click", e => {
+  const d = e.target.closest("[data-del]"), t = e.target.closest("[data-i]");
+  if (d) shop.splice(+d.dataset.del, 1);
+  else if (t) shop[+t.dataset.i].ok = !shop[+t.dataset.i].ok;
+  else return;
+  saveShop(); renderShop();
+});
+$("#shopForm").addEventListener("submit", e => {
+  e.preventDefault(); listeyeEkle($("#shopIn").value.split(","), ""); $("#shopIn").value = ""; renderShop();
+});
+$("#shopClear").addEventListener("click", () => { shop = shop.filter(x => !x.ok); saveShop(); renderShop(); });
+$("#shopShare").addEventListener("click", async () => {
+  const text = "🛒 Alışveriş listem\n\n" + shop.filter(x => !x.ok).map(x => "• " + x.ad).join("\n") + `\n\n"Dolapta Ne Var?" ile hazırlandı 👉 ${location.origin}`;
+  if (navigator.share) { try { await navigator.share({ title: "Alışveriş listem", text }); return; } catch(e) { if (e && e.name === "AbortError") return; } }
+  window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank");
+});
+
+// --- Adım adım pişirme modu ---
+let cook = null, kilit = null, sayac = null;
+async function ekranAcik(){
+  try { if ("wakeLock" in navigator) { kilit = await navigator.wakeLock.request("screen"); $("#cookWake").textContent = "Ekran açık kalacak ☀︎"; return; } } catch(e) {}
+  $("#cookWake").textContent = "";
+}
+document.addEventListener("visibilitychange", () => { if (cook && document.visibilityState === "visible") ekranAcik(); });
+function dakikaBul(t){
+  const m = String(t).match(/(\d+)\s*(?:-\s*\d+\s*)?(dakika|dk|saat)/i);
+  if (!m) return 0;
+  return (+m[1]) * (/saat/i.test(m[2]) ? 60 : 1);
+}
+function zamanlayiciDurdur(){ clearInterval(sayac); sayac = null; }
+function cookGoster(){
+  const { r, i } = cook, adim = r.adimlar || [];
+  $("#cookAd").textContent = r.ad;
+  $("#cookNo").textContent = `Adım ${i+1} / ${adim.length}`;
+  $("#cookTxt").textContent = adim[i] || "";
+  $("#cookBar").style.width = ((i+1) / adim.length * 100) + "%";
+  $("#cookPrev").disabled = i === 0;
+  $("#cookNext").textContent = i === adim.length - 1 ? "Afiyet olsun ✦" : "İleri ›";
+  zamanlayiciDurdur();
+  const dk = dakikaBul(adim[i]); const t = $("#cookTimer");
+  t.hidden = !dk || dk > 240; t.classList.remove("run");
+  t.textContent = `⏱ ${dk} dakikalık zamanlayıcı`; t.dataset.dk = dk;
+}
+$("#cookTimer").addEventListener("click", () => {
+  const t = $("#cookTimer");
+  if (sayac) { zamanlayiciDurdur(); t.classList.remove("run"); t.textContent = `⏱ ${t.dataset.dk} dakikalık zamanlayıcı`; return; }
+  let kalan = +t.dataset.dk * 60; t.classList.add("run");
+  const yaz = () => t.textContent = `${String(Math.floor(kalan/60)).padStart(2,"0")}:${String(kalan%60).padStart(2,"0")} · durdur`;
+  yaz();
+  sayac = setInterval(() => {
+    kalan--; yaz();
+    if (kalan <= 0) { zamanlayiciDurdur(); t.classList.remove("run"); t.textContent = "🔔 Süre doldu!"; try { navigator.vibrate && navigator.vibrate([400,200,400,200,400]); } catch(e) {} }
+  }, 1000);
+});
+function pisir(r){
+  if (!(r.adimlar||[]).length) return;
+  cook = { r, i: 0 }; cookGoster(); $("#cook").hidden = false; document.body.style.overflow = "hidden"; ekranAcik();
+}
+function cookKapat(){
+  zamanlayiciDurdur(); cook = null; $("#cook").hidden = true; document.body.style.overflow = "";
+  try { kilit && kilit.release(); } catch(e) {} kilit = null;
+}
+$("#cookX").addEventListener("click", cookKapat);
+$("#cookPrev").addEventListener("click", () => { if (cook.i > 0) { cook.i--; cookGoster(); } });
+$("#cookNext").addEventListener("click", () => { if (cook.i < cook.r.adimlar.length - 1) { cook.i++; cookGoster(); } else cookKapat(); });
+
+renderPrefs(); updateShopCount();
 renderChips(); updateFavCount();
 
 // --- Fotoğraftan malzeme tanıma ---

@@ -47,7 +47,5 @@ GEMINI_API_KEY=anahtarın npm run dev
 ```
 
 ## Sonraki geliştirme fikirleri
-- Diyet filtreleri: vejetaryen, glütensiz, şekersiz
 - Tarifi WhatsApp'ta paylaş düğmesi
-- Kişi sayısı / porsiyon ayarı
 - Gemini ücretsiz kotası dolarsa: kullanıcı başına günlük istek sınırı
