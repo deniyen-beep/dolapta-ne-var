@@ -1,7 +1,7 @@
 // Dolapta Ne Var? — service worker
 // Uygulama kabuğunu önbelleğe alır; böylece telefona "yüklenebilir" ve internet yokken de açılır.
 // Kural: her zaman önce internetteki EN YENİ sürüm; internet yoksa son kaydedilen sürüm.
-const CACHE = "dnv-v9";
+const CACHE = "dnv-v10";
 const SHELL = ["/", "/index.html", "/manifest.json", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/logo.png"];
 
 self.addEventListener("install", e => {
