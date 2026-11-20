@@ -5,12 +5,13 @@ import { readFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
 import tarif from "./api/tarif.js";
 import malzeme from "./api/malzeme.js";
+import sef from "./api/sef.js";
 
 const PORT = process.env.PORT || 3000;
 const TYPES = { ".jpg": "image/jpeg", ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".json": "application/json", ".png": "image/png" };
 
 http.createServer(async (req, res) => {
-  const api = req.url.startsWith("/api/tarif") ? tarif : req.url.startsWith("/api/malzeme") ? malzeme : null;
+  const api = req.url.startsWith("/api/tarif") ? tarif : req.url.startsWith("/api/malzeme") ? malzeme : req.url.startsWith("/api/sef") ? sef : null;
   if (api) {
     req.query = Object.fromEntries(new URL(req.url, "http://x").searchParams);
     let raw = "";

@@ -1,6 +1,7 @@
 {
   "functions": {
     "api/tarif.js": { "maxDuration": 60 },
-    "api/malzeme.js": { "maxDuration": 60 }
+    "api/malzeme.js": { "maxDuration": 60 },
+    "api/sef.js": { "maxDuration": 60 }
   }
 }
