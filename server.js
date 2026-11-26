@@ -9,12 +9,13 @@ import sef from "./api/sef.js";
 import hediye from "./api/hediye.js";
 import kart from "./api/kart.js";
 import ilgi from "./api/ilgi.js";
+import takvim from "./api/takvim.js";
 
 const PORT = process.env.PORT || 3000;
 const TYPES = { ".jpg": "image/jpeg", ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".json": "application/json", ".png": "image/png" };
 
 http.createServer(async (req, res) => {
-  const api = req.url.startsWith("/api/tarif") ? tarif : req.url.startsWith("/api/malzeme") ? malzeme : req.url.startsWith("/api/sef") ? sef : req.url.startsWith("/api/hediye") ? hediye : req.url.startsWith("/api/kart") ? kart : req.url.startsWith("/api/ilgi") ? ilgi : null;
+  const api = req.url.startsWith("/api/tarif") ? tarif : req.url.startsWith("/api/malzeme") ? malzeme : req.url.startsWith("/api/sef") ? sef : req.url.startsWith("/api/hediye") ? hediye : req.url.startsWith("/api/kart") ? kart : req.url.startsWith("/api/ilgi") ? ilgi : req.url.startsWith("/api/takvim") ? takvim : null;
   if (api) {
     req.query = Object.fromEntries(new URL(req.url, "http://x").searchParams);
     let raw = "";
@@ -25,7 +26,7 @@ http.createServer(async (req, res) => {
     return api(req, res);
   }
   const path = normalize(decodeURIComponent(new URL(req.url, "http://x").pathname)).replace(/^(\.\.[/\\])+/, "");
-  const file = join(process.cwd(), path === "/" ? "index.html" : path);
+  const file = join(process.cwd(), path.endsWith("/") ? path + "index.html" : path);
   try {
     const data = await readFile(file);
     res.writeHead(200, { "Content-Type": TYPES[extname(file)] || "application/octet-stream" });

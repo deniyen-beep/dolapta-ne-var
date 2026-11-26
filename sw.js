@@ -1,7 +1,7 @@
 // Dolapta Ne Var? — service worker
 // Uygulama kabuğunu önbelleğe alır; böylece telefona "yüklenebilir" ve internet yokken de açılır.
 // Kural: her zaman önce internetteki EN YENİ sürüm; internet yoksa son kaydedilen sürüm.
-const CACHE = "dnv-v10";
+const CACHE = "dnv-v11";
 const SHELL = ["/", "/index.html", "/manifest.json", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/logo.png"];
 
 self.addEventListener("install", e => {
@@ -14,7 +14,7 @@ self.addEventListener("install", e => {
 
 self.addEventListener("activate", e => {
   e.waitUntil(
-    caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+    caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE && !k.startsWith("ilac-")).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
@@ -22,8 +22,8 @@ self.addEventListener("activate", e => {
 self.addEventListener("fetch", e => {
   const req = e.request;
   const url = new URL(req.url);
-  // API, istatistik ve başka sitelere giden isteklere karışma
-  if (req.method !== "GET" || url.origin !== location.origin || url.pathname.startsWith("/api/") || url.pathname.startsWith("/_vercel/")) return;
+  // API, istatistik, İlaç Saatim (kendi service worker'ı var) ve başka sitelere giden isteklere karışma
+  if (req.method !== "GET" || url.origin !== location.origin || url.pathname.startsWith("/api/") || url.pathname.startsWith("/_vercel/") || url.pathname.startsWith("/ilac")) return;
   const sayfa = req.mode === "navigate" || url.pathname === "/" || url.pathname.endsWith(".html");
   e.respondWith(
     // Sayfanın kendisi tarayıcı önbelleğini de atlayarak her seferinde taze indirilir

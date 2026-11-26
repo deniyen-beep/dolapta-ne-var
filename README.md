@@ -51,3 +51,16 @@ GEMINI_API_KEY=anahtarın npm run dev
 ## Sonraki geliştirme fikirleri
 - Tarifi WhatsApp'ta paylaş düğmesi
 - Gemini ücretsiz kotası dolarsa: kullanıcı başına günlük istek sınırı
+
+---
+
+# 💊 İlaç Saatim
+
+İlaçlarını ekle, saati gelince hatırlatsın. Adres: `https://<site-adresin>/ilac/`
+
+- Ön yüz: `ilac/index.html` (ayrı bir telefona yüklenebilir uygulama; kendi ikonu, `manifest.json` ve `sw.js` dosyası var)
+- Takvim servisi: `api/takvim.js` — ilaç listesinden telefonun takvimine eklenebilen, alarmlı ve her gün tekrarlayan bir takvim dosyası üretir. Böylece uygulama kapalıyken de telefon hatırlatır. Hiçbir bilgi sunucuda saklanmaz.
+- Yapay zekâ anahtarı gerekmez. Bütün bilgiler sadece kişinin kendi telefonunda durur (Ayarlar → Yedek ile taşınabilir).
+
+Özellikler: günde birkaç saat, belirli günler, bitiş tarihi (kür), aç/tok bilgisi, "İçtim / 10 dk ertele / Atla",
+içilmezse 15 dk sonra bir daha hatırlatma, kutuda kalan doz takibi, son 7 günün geçmişi, gece modu.
