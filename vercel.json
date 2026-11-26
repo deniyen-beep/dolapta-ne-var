@@ -2,7 +2,9 @@
   "functions": {
     "api/tarif.js": { "maxDuration": 60 },
     "api/malzeme.js": { "maxDuration": 60 },
-    "api/sef.js": { "maxDuration": 60 }
+    "api/sef.js": { "maxDuration": 60 },
+    "api/hediye.js": { "maxDuration": 60 },
+    "api/kart.js": { "maxDuration": 30 }
   },
   "headers": [
     { "source": "/sw.js", "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }] },
