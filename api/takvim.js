@@ -21,7 +21,7 @@ function katla(satir) {
 const iki = n => String(n).padStart(2, "0");
 
 export default function handler(req, res) {
-  let liste, randevular;
+  let liste, randevular, once = [];
   try {
     const v = String(req.query?.v || "").replace(/-/g, "+").replace(/_/g, "/");
     if (v.length > 12000) throw 0;
@@ -29,6 +29,7 @@ export default function handler(req, res) {
     // Eski sürüm: sadece ilaç dizisi. Yeni sürüm: { m: ilaçlar, r: randevular }
     liste = Array.isArray(veri) ? veri : Array.isArray(veri?.m) ? veri.m : [];
     randevular = Array.isArray(veri?.r) ? veri.r : [];
+    once = (Array.isArray(veri?.o) ? veri.o : []).map(n => parseInt(n, 10)).filter(n => n > 0 && n <= 240).slice(0, 4);
     if (!liste.length && !randevular.length) throw 0;
   } catch {
     res.statusCode = 400;
@@ -73,9 +74,20 @@ export default function handler(req, res) {
         `DESCRIPTION:${ics("💊 " + ad + " zamanı")}`,
         "TRIGGER:PT0M",
         "END:VALARM",
+        // İlaç saatinden önce (örn. 60, 30, 5 dk) ek hatırlatmalar
+        ...once.flatMap(n => ["BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:${ics(n + " dk sonra: " + ad)}`, `TRIGGER:-PT${n}M`, "END:VALARM"]),
         "END:VEVENT"
       );
     }
+  }
+  // Reçete bitişleri: 7 gün ve 1 gün önce hatırlatır
+  for (const m of liste.slice(0, 40)) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(m?.rc || "")) continue;
+    const ad = temiz(m.a, 40) || "İlaç", id = temiz(m.i, 12).replace(/[^a-z0-9]/gi, "") || "x";
+    satirlar.push("BEGIN:VEVENT", `UID:recete-${id}@ilac-saatim`, `DTSTAMP:${damga}`, `DTSTART:${m.rc.replace(/-/g, "")}T100000`, "DURATION:PT15M",
+      `SUMMARY:${ics("Reçete bitiyor: " + ad)}`, `DESCRIPTION:${ics("Doktorundan yeni reçete almayı unutma (MediTime)")}`, "TRANSP:TRANSPARENT",
+      "BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:${ics("7 gün sonra reçete bitiyor: " + ad)}`, "TRIGGER:-P7D", "END:VALARM",
+      "BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:${ics("Yarın reçete bitiyor: " + ad)}`, "TRIGGER:-P1D", "END:VALARM", "END:VEVENT");
   }
   // Doktor randevuları: bir gün önce ve bir saat önce hatırlatır
   for (const r of randevular.slice(0, 30)) {
