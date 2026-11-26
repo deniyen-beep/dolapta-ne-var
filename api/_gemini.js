@@ -48,10 +48,10 @@ export function cors(req, res) {
 }
 
 // Gemini'ye sorar; json=true ise ayrıştırılmış JSON döndürür, değilse düz metin
-export async function gemini({ parts, json = true, temperature = 0.9, maxTokens = 4096, timeout = 50000 }) {
+export async function gemini({ parts, json = true, temperature = 0.9, maxTokens = 4096, timeout = 50000, model: istenenModel }) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Hata(500, "Sunucuda GEMINI_API_KEY ayarlanmamış.");
-  const model = process.env.GEMINI_MODEL || "gemini-flash-lite-latest";
+  const model = istenenModel || process.env.GEMINI_MODEL || "gemini-flash-lite-latest";
   const sor = (hizli) => fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
