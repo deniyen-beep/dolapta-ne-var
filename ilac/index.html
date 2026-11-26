@@ -473,6 +473,12 @@ textarea.inp{min-height:4.5rem;resize:vertical;border:1px solid var(--line);bord
 .stat span,.tile .tn,.dhero p,.preview span,.heat .h-head,.legend,.appt .ad small{letter-spacing:0;text-transform:none;font-size:.8rem}
 .chips button{font-size:.95rem}
 .sec .sc{letter-spacing:.02em;font-size:.85rem}
+.chips button .i{display:inline-block;vertical-align:-3px;margin-right:.3rem}
+.et{padding:1rem 0;border-bottom:1px solid var(--line2)}
+.et b{display:block;font-family:var(--serif);font-weight:500;font-size:1.15rem;margin:.45rem 0 .25rem}
+.et p{color:var(--ink2);font-size:.93rem;margin-top:.2rem}
+.et strong{font-weight:600;color:var(--ink)}
+a.pill-btn{text-decoration:none}
 .alarm .eyebrow{letter-spacing:.06em;text-transform:none;font-size:.95rem}
 .opts{display:grid;gap:.5rem}
 .opt{display:flex;gap:.8rem;align-items:flex-start;text-align:left;border:1px solid var(--line);border-radius:14px;padding:.85rem 1rem;width:100%}
@@ -576,7 +582,8 @@ const IK = {
   text: P("M4 7V4h16v3M9 20h6M12 4v16"),
   contrast: C(12, 12, 9) + P("M12 3v18a9 9 0 0 0 0-18z"),
   phone: P("M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"),
-  shield: P("M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z")
+  shield: P("M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"),
+  konus: P("M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2zM8 9h8M8 13h5")
 };
 const ic = (n, s = 22, w = 1.5) => `<svg class="i" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${IK[n] || ""}</svg>`;
 
@@ -1055,6 +1062,13 @@ function bugunCiz() {
     }
     const yakin = p.randevular.filter(r => { const fr = (new Date(r.t) - Date.now()) / 36e5; return fr > 0 && fr < 72; }).sort((a, b) => a.t.localeCompare(b.t))[0];
     if (yakin) h += `<div class="notice n-em" onclick="randevuFormu('${yakin.id}')"><div class="ni">${ic("steth", 18, 1.4)}</div><div class="nt"><b>${esc(yakin.doktor || yakin.bolum || "Doktor randevusu")}</b><span>${randevuZaman(yakin)}${yakin.yer ? " · " + esc(yakin.yer) : ""}</span></div>${ic("chevR", 16, 1.4)}</div>`;
+    for (const d of aileGeciken(p.id))
+      h += `<div class="notice n-warn"><div class="ni">${ic("users", 18, 1.4)}</div><div class="nt"><b>${esc(d.m.ad)} · ${esc(d.saat)} dozu gecikti</b><span>WhatsApp'tan ${esc(yonelme(p.aile.ad))} haber ver</span></div><a class="pill-btn" target="_blank" rel="noopener" href="${waLink(p.aile.tel, gecikmeMetni(d))}" onclick="aileTik('${p.id}','${d.key}')">Haber ver</a></div>`;
+    for (const m of p.ilaclar.filter(aktifIlac)) {
+      const k = receteKalan(m);
+      if (k != null && k <= 7 && k >= -30)
+        h += `<div class="notice n-gold"><div class="ni">${ic("note", 18, 1.4)}</div><div class="nt"><b>${esc(m.ad)} reçetesi ${receteYaz(k)}</b><span>Doktorundan yeni reçete almayı unutma</span></div><button class="pill-btn" onclick="randevuFormu()">Randevu</button></div>`;
+    }
   }
 
   if (ds.length) {
@@ -1100,7 +1114,7 @@ function dozKart(d) {
   const s = durum(d), [et] = ETIKET[s], m = d.m;
   const gelecek = d.gun > bugun();
   const k = kayitAl(d);
-  const alt = [miktarYaz(m), m.nasil && m.nasil !== NASIL[0] ? m.nasil : "", k && k.d === "ok" && !d.prn ? new Date(k.t).toTimeString().slice(0, 5) + "'te alındı" : ""].filter(Boolean).join(" · ");
+  const alt = [miktarYaz(m), m.nasil && m.nasil !== NASIL[0] ? m.nasil : "", k && k.d === "ok" && !d.prn ? "alındı (" + new Date(k.t).toTimeString().slice(0, 5) + ")" : ""].filter(Boolean).join(" · ");
   return `<div class="tl-row st-${s}"><div class="tl-t"><b>${esc(d.saat)}</b><small>${d.prn ? "Gerektiğinde" : et}</small></div><div class="tl-n"></div>
     <div class="dz" onclick="dozAc('${d.pid}','${d.key}','${d.gun}')">
       <div class="dz-pill">${hap(m.form, m.renk1, m.renk2, 40)}</div>
@@ -1192,6 +1206,7 @@ function ilaclarCiz() {
   const p = prof();
   let h = ustBolum("İlaçlarım", `${p.ilaclar.filter(aktifIlac).length} ilaç kullanılıyor`);
   const seg = [["aktif", "Kullanılan"], ["gerekirse", "Gerektiğinde"], ["bitti", "Biten"]];
+  if (p.ilaclar.filter(aktifIlac).length >= 2) h += `<div class="notice n-em" onclick="etkilesimKontrol()" style="border-top:0"><div class="ni">${ic("shield", 18, 1.4)}</div><div class="nt"><b>İlaç etkileşimi kontrolü</b><span>${p.etkilesim ? (riskli(p.etkilesim.sonuc) ? "Dikkat edilmesi gereken etkileşim var" : "Son kontrolde önemli etkileşim bulunmadı") : "İlaçlarının birlikte kullanımını kontrol et"}</span></div><button class="pill-btn">Kontrol et</button></div>`;
   h += `<div class="seg">${seg.map(([k, a]) => `<button class="${ui.ilacSeg === k ? "on" : ""}" onclick="ui.ilacSeg='${k}';ciz()">${a}</button>`).join("")}</div>`;
   const liste = p.ilaclar.filter(m => ui.ilacSeg === "bitti" ? !aktifIlac(m) : aktifIlac(m) && (ui.ilacSeg === "gerekirse" ? m.plan === "gerekirse" : m.plan !== "gerekirse"));
   if (!liste.length) {
@@ -1236,6 +1251,7 @@ function ilacDetay(id) {
       ${m.plan !== "gerekirse" ? `<div class="kv"><span>Saatler</span><b>${esc(m.saatler.join(", "))}</b></div>` : `<div class="kv"><span>En kısa ara</span><b>${m.minAra || "—"} saat</b></div><div class="kv"><span>Günde en fazla</span><b>${m.gunlukMax || "—"} kez</b></div>`}
       <div class="kv"><span>Başlangıç</span><b>${m.baslangic ? tarihYaz(m.baslangic, true) : "—"}</b></div>
       <div class="kv"><span>Bitiş</span><b>${m.bitis ? tarihYaz(m.bitis, true) : "Sürekli"}</b></div>
+      ${m.receteBitis ? `<div class="kv"><span>Reçete bitişi</span><b>${tarihYaz(m.receteBitis, true)} · ${receteYaz(receteKalan(m))}</b></div>` : ""}
       ${stokH}</div>
     ${m.not ? `<div class="notice n-gold"><div class="ni">${ic("note")}</div><div class="nt"><b>Doktorumun notu</b><span>${esc(m.not)}</span></div></div>` : ""}
     <div class="btns" style="margin-bottom:.8rem"><button class="btn soft" onclick="stokEkle('${m.id}')">${ic("box", 18)} Kutu ekle</button>
@@ -1318,6 +1334,8 @@ function ilacFormu(id, tara) {
     <div class="fg"><label>Ne kadar süre kullanacaksın?</label><span class="ac">Antibiyotik gibi belli bir süre kullanacaksan gün sayısını seç; bitince hatırlatmalar durur. Sürekli kullanıyorsan “Sürekli” kalsın.</span><div class="chips" id="fSure"></div>
       <div class="btns" style="margin-top:.7rem"><div><span class="lbl2" style="margin-top:0">Başlangıç</span><input type="date" class="inp" value="${esc(F.baslangic)}" onchange="F.baslangic=this.value||bugun();sureCiz()"></div>
       <div><span class="lbl2" style="margin-top:0">Bitiş</span><input type="date" class="inp" id="fBitis" value="${esc(F.bitis)}" onchange="F.bitis=this.value;sureCiz()"></div></div></div>
+    <div class="fg"><label>Reçetenin bitiş tarihi</label><span class="ac">İsteğe bağlı. E-reçetenin geçerlilik tarihi ya da yeni reçete için doktora gitmen gereken gün. Bitmesine 7 gün kala hatırlatırım.</span>
+      <input type="date" class="inp" value="${esc(F.receteBitis || "")}" onchange="F.receteBitis=this.value"></div>
     <div class="fg"><label>Elinde kaç tane var?</label><span class="ac">İstersen yaz. Her “Aldım” dediğinde azalır, bitmeye yaklaşınca seni uyarırım.</span>
       <input class="inp" id="fStok" type="number" inputmode="decimal" min="0" placeholder="Elinde kaç ${esc(F.birim)} var? (isteğe bağlı)" value="${F.stok ?? ""}" oninput="F.stok=this.value===''?null:Math.max(0,parseFloat(this.value)||0)">
       <span class="lbl2">Bitmesine kaç gün kala uyarayım?</span><div class="chips" id="fUyari"></div></div>
@@ -1394,13 +1412,15 @@ function ilacKaydet() {
   if (F.plan === "gunler" && F.gunler.length === 7) F.plan = "her";
   if (F.bitis && F.bitis < F.baslangic) { toast("Bitiş tarihi başlangıçtan önce olamaz"); return; }
   const p = prof(), yeni = F._yeni;
+  let adDegisti = false;
   delete F._yeni;
   if (yeni) p.ilaclar.push({ ...F, id: yeniId() });
-  else { const i = p.ilaclar.findIndex(x => x.id === F.id); if (i >= 0) { const eskiAd = p.ilaclar[i].ad; if (eskiAd !== F.ad) delete F.bilgi; p.ilaclar[i] = F; } }
+  else { const i = p.ilaclar.findIndex(x => x.id === F.id); if (i >= 0) { const eskiAd = p.ilaclar[i].ad; if (eskiAd !== F.ad) { delete F.bilgi; adDegisti = true; } p.ilaclar[i] = F; } }
   kaydet(); sheetKapat(true); ciz();
   toast(yeni ? `${F.ad} eklendi` : "Değişiklikler kaydedildi");
   if (yeni && "Notification" in window && Notification.permission === "default") setTimeout(bildirimIzni, 900);
   if (yeni && S.ayar.takvimVar) setTimeout(() => toast("İlaçlar değişti; takvimi güncellemek için Ayarlar → Takvime ekle"), 2800);
+  if ((yeni || adDegisti) && p.ilaclar.filter(aktifIlac).length >= 2) setTimeout(() => etkilesimKontrol(true), 1500);
 }
 
 // Fotoğraftan ilaç tanıma
@@ -1622,7 +1642,10 @@ function raporCiz() {
   const rz = rozetler(p.id);
   h += `<div class="sec"><div class="si">${ic("trophy", 18)}</div><h3>Başarılar</h3><span class="sc">${rz.filter(r => r.ok).length}/${rz.length}</span></div><div class="badges">`;
   h += rz.map(r => `<div class="badge ${r.ok ? "" : "lock"}"><div class="md">${r.e}</div><b>${r.ad}</b><span>${r.ac}</span></div>`).join("") + `</div>`;
-  h += `<div class="sec"><div class="si">${ic("steth", 18)}</div><h3>Doktoruma göster</h3></div>
+  h += `<div class="sec"><h3>Aileme haber ver</h3></div>
+    <div class="card"><p class="muted" style="margin-bottom:.8rem">Bugün hangi ilaçların alındığını WhatsApp'tan tek mesajla gönder.</p>
+    ${p.aile?.tel ? `<a class="btn gold" target="_blank" rel="noopener" href="${waLink(p.aile.tel, gunOzetMetni(p.id))}">${esc(yonelme(p.aile.ad))} bugünün özetini gönder</a>` : `<button class="btn line" onclick="aileFormu()">Aile bildirimini ayarla</button>`}</div>
+  <div class="sec"><div class="si">${ic("steth", 18)}</div><h3>Doktoruma göster</h3></div>
     <div class="card"><p class="muted" style="font-weight:500;margin-bottom:.8rem">İlaç listeni, uyum oranını, son ölçümlerini ve randevularını tek sayfalık şık bir rapora dönüştür. PDF olarak kaydedebilir ya da yazdırabilirsin.</p>
     <div class="btns"><button class="btn gold" onclick="doktorRaporu()">${ic("note", 20)} Rapor oluştur</button><button class="btn soft" onclick="ozetPaylas()">${ic("share", 20)} Paylaş</button></div></div>`;
   return h;
@@ -1638,7 +1661,7 @@ function doktorRaporu() {
       <div style="text-align:right"><div style="font-family:var(--serif);font-size:26px;color:#1E2A55">%${u30.oran == null ? "—" : Math.round(u30.oran * 100)}</div><div style="font-size:11px;color:#666">30 günlük ilaç uyumu</div></div></div>
     <h2>Kullandığım ilaçlar</h2>
     ${ilac.length ? `<table><tr><th>İlaç</th><th>Doz</th><th>Sıklık</th><th>Saatler</th><th>Nasıl</th><th>Başlangıç</th><th>30 gün</th></tr>
-      ${ilac.map(m => { const u = uyum(p.id, 30, m.id); return `<tr><td><b>${esc(m.ad)}</b> ${esc(m.guc || "")}<br><span style="color:#777">${esc((FORMLAR.find(f => f.k === m.form) || FORMLAR[0]).ad)}</span></td><td>${esc(miktarYaz(m))}</td><td>${esc(planYaz(m))}</td><td>${m.plan === "gerekirse" ? "—" : esc(m.saatler.join(", "))}</td><td>${esc(m.nasil)}</td><td>${m.baslangic ? tarihYaz(m.baslangic, true) : "—"}${m.bitis ? "<br>→ " + tarihYaz(m.bitis, true) : ""}</td><td>${u.oran == null ? "—" : "%" + Math.round(u.oran * 100)}</td></tr>`; }).join("")}</table>` : "<p>Kayıtlı ilaç yok.</p>"}
+      ${ilac.map(m => { const u = uyum(p.id, 30, m.id); return `<tr><td><b>${esc(m.ad)}</b> ${esc(m.guc || "")}<br><span style="color:#777">${esc((FORMLAR.find(f => f.k === m.form) || FORMLAR[0]).ad)}</span></td><td>${esc(miktarYaz(m))}</td><td>${esc(planYaz(m))}</td><td>${m.plan === "gerekirse" ? "—" : esc(m.saatler.join(", "))}</td><td>${esc(m.nasil)}</td><td>${m.baslangic ? tarihYaz(m.baslangic, true) : "—"}${m.receteBitis ? "<br>Reçete: " + tarihYaz(m.receteBitis, true) : ""}${m.bitis ? "<br>→ " + tarihYaz(m.bitis, true) : ""}</td><td>${u.oran == null ? "—" : "%" + Math.round(u.oran * 100)}</td></tr>`; }).join("")}</table>` : "<p>Kayıtlı ilaç yok.</p>"}
     ${olc.length ? `<h2>Son ölçümler</h2><table><tr><th>Ölçüm</th><th>Değerler (en yeniden eskiye)</th></tr>${olc.map(([o, l]) => `<tr><td><b>${o.ad}</b><br><span style="color:#777">${o.birim}</span></td><td>${l.map(x => { const t = new Date(x.t); return `${esc(olcumDeger(x))} <span style="color:#888">(${t.getDate()} ${AY_K[t.getMonth()]}${x.baglam ? ", " + esc(x.baglam) : ""})</span>`; }).join(" · ")}</td></tr>`).join("")}</table>` : ""}
     ${rv.length ? `<h2>Yaklaşan randevular</h2><table>${rv.map(r => `<tr><td>${randevuZaman(r)}</td><td><b>${esc(r.doktor || "")}</b> ${esc(r.bolum || "")}</td><td>${esc(r.yer || "")}</td></tr>`).join("")}</table>` : ""}
     <h2>Notlarım</h2><div style="min-height:70px;border:1px dashed #ccc;border-radius:8px;padding:8px;color:#666">${ilac.filter(m => m.not).map(m => `<div><b>${esc(m.ad)}:</b> ${esc(m.not)}</div>`).join("") || "&nbsp;"}</div>
@@ -1656,6 +1679,119 @@ async function ozetPaylas() {
 }
 
 // ---------- Ekle menüsü, profiller, ayarlar ----------
+// ---------- Önceden hatırlatma ----------
+const ONCE_SECENEK = [60, 30, 15, 5];
+const onceListe = () => Array.isArray(S.ayar.once) ? S.ayar.once : [60, 30, 5];
+function onceTog(n, el) {
+  const l = onceListe().slice(), i = l.indexOf(n);
+  i >= 0 ? l.splice(i, 1) : l.push(n);
+  S.ayar.once = l.sort((a, b) => b - a); kaydet(); el.classList.toggle("on");
+  if (S.ayar.takvimVar) toast("Takvimdeki uyarıların da değişmesi için Takvimime ekle'ye tekrar bas");
+}
+
+// ---------- Aile bildirimi (WhatsApp) ----------
+function telDuzelt(t) {
+  let d = String(t || "").replace(/\D/g, "");
+  if (d.startsWith("00")) d = d.slice(2);
+  if (d.startsWith("0")) d = "90" + d.slice(1);
+  if (d.length === 10 && d.startsWith("5")) d = "90" + d;
+  return d.length >= 11 && d.length <= 15 ? d : "";
+}
+// Türkçe yönelme eki: Ayşe → Ayşe'ye, Deniz → Deniz'e, Ali → Ali'ye, Murat → Murat'a
+function yonelme(ad) {
+  const t = String(ad || "").trim(), k = t.toLocaleLowerCase("tr"), sesliler = k.match(/[aeıioöuü]/g);
+  const son = sesliler ? sesliler[sesliler.length - 1] : "e";
+  return `${t}'${/[aeıioöuü]$/.test(k) ? "y" : ""}${"aıou".includes(son) ? "a" : "e"}`;
+}
+const waLink = (tel, metin) => `https://wa.me/${telDuzelt(tel)}?text=${encodeURIComponent(metin)}`;
+const benMi = pid => pid === S.profiller[0].id;
+function gecikmeMetni(d) {
+  const p = prof(d.pid), a = p.aile || {};
+  return benMi(d.pid)
+    ? `Merhaba ${a.ad || ""}, ${d.m.ad} ilacımın saat ${d.saat} dozunu henüz almadım. (MediTime)`
+    : `Merhaba ${a.ad || ""}, ${gorunenAd(p)}, ${d.m.ad} ilacının saat ${d.saat} dozunu henüz almadı. (MediTime)`;
+}
+function gunOzetMetni(pid) {
+  const p = prof(pid), g = bugun(), ds = dozlar(pid, g, false);
+  const ok = ds.filter(d => durum(d) === "ok").length;
+  const satir = ds.map(d => { const s = durum(d);
+    return `${s === "ok" ? "✓" : s === "late" ? "✗" : "•"} ${d.saat} ${d.m.ad} — ${s === "ok" ? "alındı" : s === "skip" ? "atlandı" : s === "late" ? "alınmadı" : "bekliyor"}`; });
+  return `${benMi(pid) ? "Bugünkü ilaçlarım" : gorunenAd(p) + " için bugünkü ilaçlar"} (${tarihYaz(g)}): ${ok}/${ds.length} alındı\n${satir.join("\n")}\n(MediTime)`;
+}
+let AF = null;
+function aileFormu(pid = S.aktif) {
+  const p = prof(pid), a = p.aile || {};
+  AF = { pid, gec: a.gecikme || 30 };
+  sheetAc(`<div class="sh-head"><h3>Aile bildirimi</h3><button class="closex" onclick="sheetKapat()" aria-label="Kapat">${ic("x", 18)}</button></div>
+    <p style="color:var(--ink2)">${benMi(pid) ? "Bir dozunu" : esc(gorunenAd(p)) + " bir dozunu"} geciktirirse, seçtiğin kişiye WhatsApp'tan haber verebilmen için uygulamada bir düğme çıkar. Günün özetini de gönderebilirsin.</p>
+    <p class="hint" style="margin-bottom:.4rem">Mesaj kendiliğinden gitmez: WhatsApp hazır yazılmış mesajla açılır, sen “Gönder”e basarsın.</p>
+    <div class="fg"><label>Kime haber verilsin?</label><span class="ac">Örneğin kızın, oğlun ya da eşin.</span><input class="inp" id="afAd" maxlength="20" placeholder="Adı" value="${esc(a.ad || "")}"></div>
+    <div class="fg"><label>Telefon numarası</label><span class="ac">WhatsApp kullandığı numara.</span><input class="inp" id="afTel" type="tel" inputmode="tel" maxlength="20" placeholder="0532 123 45 67" value="${esc(a.tel || "")}"></div>
+    <div class="fg"><label>Ne kadar gecikince?</label><span class="ac">İlaç saatinden bu kadar sonra hâlâ “Aldım” denmemişse haber verme düğmesi çıkar.</span>
+      <div class="chips" id="afGec">${[15, 30, 60].map(n => `<button class="${AF.gec === n ? "on" : ""}" onclick="AF.gec=${n};this.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===this))">${n} dakika</button>`).join("")}</div></div>
+    <button class="btn gold" style="margin-top:1rem" onclick="aileKaydet()">Kaydet</button>
+    ${a.tel ? `<button class="btn danger" style="margin-top:.6rem" onclick="delete prof('${pid}').aile;kaydet();sheetKapat(true);ciz();toast('Aile bildirimi kapatıldı')">Aile bildirimini kapat</button>` : ""}`);
+}
+function aileKaydet() {
+  const ad = $("afAd").value.trim().slice(0, 20), tel = $("afTel").value.trim();
+  if (!ad) { toast("Kişinin adını yaz"); return; }
+  if (!telDuzelt(tel)) { toast("Telefon numarasını kontrol et (örn. 0532 123 45 67)"); return; }
+  prof(AF.pid).aile = { ad, tel, gecikme: AF.gec };
+  kaydet(); sheetKapat(true); ciz(); toast(`Aile bildirimi açıldı: ${ad}`);
+}
+function aileGeciken(pid) {
+  const p = prof(pid), a = p.aile, g = bugun(), sd = simdiDk();
+  if (!a?.tel) return [];
+  return dozlar(pid, g, false).filter(d => !kayitAl(d) && sd - dk(d.saat) >= (a.gecikme || 30) && !S.haber[`${g}|${pid}|${d.key}|aileTik`]);
+}
+function aileTik(pid, key) { S.haber[`${bugun()}|${pid}|${key}|aileTik`] = 1; kaydet(); setTimeout(ciz, 400); }
+
+// ---------- Reçete ----------
+function receteKalan(m) { return m.receteBitis ? gunFark(bugun(), m.receteBitis) : null; }
+function receteYaz(k) { return k > 1 ? `${k} gün sonra bitiyor` : k === 1 ? "yarın bitiyor" : k === 0 ? "bugün bitiyor" : "süresi doldu"; }
+
+// ---------- İlaç etkileşimi ----------
+const riskli = j => (j?.etkilesimler || []).some(e => e.seviye !== "düşük");
+async function etkilesimKontrol(otomatik) {
+  const p = prof();
+  const adlar = [...new Set(p.ilaclar.filter(aktifIlac).map(m => `${m.ad}${m.guc ? " " + m.guc : ""}`))];
+  if (adlar.length < 2) { if (!otomatik) toast("Kontrol için en az iki ilaç gerekli"); return; }
+  const anahtar = adlar.slice().sort().join("|");
+  if (p.etkilesim?.anahtar === anahtar) {
+    if (!otomatik || riskli(p.etkilesim.sonuc)) etkilesimGoster(p.etkilesim.sonuc, adlar);
+    return;
+  }
+  if (otomatik) toast("İlaçlarının birlikte kullanımı kontrol ediliyor…"); else etkilesimGoster(null, adlar);
+  try {
+    const r = await fetch("/api/ilac", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ islem: "etkilesim", ilaclar: adlar }) });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.hata || "Kontrol yapılamadı");
+    p.etkilesim = { anahtar, sonuc: j, t: Date.now() }; kaydet();
+    if (!otomatik || riskli(j)) etkilesimGoster(j, adlar);
+    else toast("Bilinen önemli bir etkileşim bulunmadı");
+  } catch (e) {
+    if (!otomatik) etkilesimGoster({ hata: e.message === "Failed to fetch" ? "İnternet bağlantısı yok gibi görünüyor." : e.message }, adlar);
+  }
+}
+function etkilesimGoster(j, adlar) {
+  if (j) $("toast").classList.remove("show");
+  const SEV = { "yüksek": ["Yüksek risk", "t-late"], "orta": ["Dikkat", "t-now"], "düşük": ["Düşük", "t-wait"] };
+  let ic_ = `<p class="hint" style="margin-top:0">Kontrol edilen ilaçlar: ${adlar.map(esc).join(", ")}</p>`;
+  if (!j) ic_ += `<div class="shimmer"></div><div class="shimmer" style="width:80%"></div><div class="shimmer" style="width:60%"></div>`;
+  else if (j.hata) ic_ += `<div class="notice n-warn"><div class="ni">${ic("info", 18)}</div><div class="nt"><b>${esc(j.hata)}</b></div></div><button class="btn line" onclick="prof().etkilesim=null;etkilesimKontrol()">Tekrar dene</button>`;
+  else {
+    ic_ += j.etkilesimler.length
+      ? j.etkilesimler.map(e => `<div class="et"><span class="tag ${SEV[e.seviye][1]}">${SEV[e.seviye][0]}</span><b>${esc(e.ilaclar.join(" + "))}</b><p>${esc(e.aciklama)}</p>${e.oneri ? `<p><strong>Ne yapmalı:</strong> ${esc(e.oneri)}</p>` : ""}</div>`).join("")
+      : `<div class="empty" style="margin-top:.6rem"><div class="caps">Sonuç</div><h3>Bilinen önemli bir etkileşim bulunmadı</h3><p>Yine de yeni bir ilaca başlarken eczacına kullandığın diğer ilaçları söylemeyi unutma.</p></div>`;
+    if (j.tanimadiklarim?.length) ic_ += `<p class="hint">Tanınamayan ilaçlar: ${j.tanimadiklarim.map(esc).join(", ")}. Adlarını kontrol edebilirsin.</p>`;
+  }
+  ic_ += `<p class="hint" style="margin-top:1rem">Bu, yapay zekânın hazırladığı genel bir kontroldür; eksik ya da hatalı olabilir. İlaçlarını bırakmadan veya değiştirmeden önce mutlaka doktoruna ya da eczacına danış.</p>
+    <div class="btns" style="margin-top:.8rem"><button class="btn line" onclick="sheetKapat()">Kapat</button><button class="btn gold" onclick="sheetKapat();eczaneAc()">Eczane bul</button></div>`;
+  const acik = $("etIc");
+  if (acik) acik.innerHTML = ic_;
+  else sheetAc(`<div class="sh-head"><h3>İlaç etkileşimleri</h3><button class="closex" onclick="sheetKapat()" aria-label="Kapat">${ic("x", 18)}</button></div><div id="etIc">${ic_}</div>`);
+}
+
 // ---------- ECZANELER (konum) ----------
 const ILLER = ["Adana","Adıyaman","Afyonkarahisar","Ağrı","Aksaray","Amasya","Ankara","Antalya","Ardahan","Artvin","Aydın","Balıkesir","Bartın","Batman","Bayburt","Bilecik","Bingöl","Bitlis","Bolu","Burdur","Bursa","Çanakkale","Çankırı","Çorum","Denizli","Diyarbakır","Düzce","Edirne","Elazığ","Erzincan","Erzurum","Eskişehir","Gaziantep","Giresun","Gümüşhane","Hakkari","Hatay","Iğdır","Isparta","İstanbul","İzmir","Kahramanmaraş","Karabük","Karaman","Kars","Kastamonu","Kayseri","Kırıkkale","Kırklareli","Kırşehir","Kilis","Kocaeli","Konya","Kütahya","Malatya","Manisa","Mardin","Mersin","Muğla","Muş","Nevşehir","Niğde","Ordu","Osmaniye","Rize","Sakarya","Samsun","Siirt","Sinop","Sivas","Şanlıurfa","Şırnak","Tekirdağ","Tokat","Trabzon","Tunceli","Uşak","Van","Yalova","Yozgat","Zonguldak"];
 const EDEVLET = "https://www.turkiye.gov.tr/saglik-titck-nobetci-eczane-sorgulama";
@@ -1777,6 +1913,7 @@ function profilMenu() {
       return `<button class="prof ${p.id === S.aktif ? "on" : ""}" onclick="profilSec('${p.id}')"><span class="avatar" style="background:${esc(p.renk)}">${esc(basHarf(gorunenAd(p)))}</span>
         <span class="pb"><b>${esc(gorunenAd(p))}</b><small>${p.ilaclar.length} ilaç · bugün ${ok}/${ds.length}</small></span>${p.id === S.aktif ? `<span style="color:var(--gold)">${ic("check", 22, 2.4)}</span>` : ""}</button>`; }).join("")}
     <button class="btn soft" style="margin-top:.4rem" onclick="profilEkle()">${ic("plus", 20)} Kişi ekle</button>
+    <button class="btn line" style="margin-top:.55rem" onclick="sheetKapat(true);aileFormu()">${ic("phone", 18)} ${esc(gorunenAd(prof()))} için aile bildirimi</button>
     ${S.profiller.length > 1 ? `<button class="btn line" style="margin-top:.55rem" onclick="profilDuzenle()">${ic("edit", 18)} ${esc(prof().ad)} kişisini düzenle</button>` : ""}`);
 }
 function profilSec(id) { S.aktif = id; ui.gun = bugun(); kaydet(); sheetKapat(true); ciz(); toast(`${prof().ad} seçildi`); }
@@ -1804,11 +1941,18 @@ function ayarlarAc() {
   sheetAc(`<div class="sh-head"><h3>Ayarlar</h3><button class="closex" onclick="sheetKapat()">${ic("x", 18)}</button></div>
     <div class="card"><div class="lbl">Sen</div>
       ${satir("user", "Adın", esc(S.ayar.isim || "Belirtilmedi"), ic("chevR", 18), "isimDegis()")}
+      ${satir("phone", "Aile bildirimi", prof().aile?.tel ? `${esc(prof().aile.ad)} · ${prof().aile.gecikme} dk gecikince` : "Doz gecikince WhatsApp'tan haber ver", ic("chevR", 18), "sheetKapat(true);aileFormu()")}
       ${satir("users", "Aile", `${S.profiller.length} kişi`, ic("chevR", 18), "sheetKapat(true);profilMenu()")}</div>
     <div class="card"><div class="lbl">Hatırlatma</div>
       ${satir("bell", "Bildirimler", n === "granted" ? "Açık" : n === "denied" ? "Kapalı — telefonun ayarlarından açabilirsin" : n === "yok" ? "iPhone'da önce ana ekrana ekle" : "Henüz izin verilmedi", n === "default" ? `<button class="pill-btn" onclick="bildirimIzni()">Aç</button>` : "")}
       ${satir("volume", "Sesli uyarı", "Saat gelince zil çalsın", `<button class="sw ${S.ayar.ses ? "on" : ""}" onclick="event.stopPropagation();S.ayar.ses=!S.ayar.ses;kaydet();this.classList.toggle('on')"></button>`)}
       <div style="padding:.3rem 0 .6rem"><div class="chips">${[["kristal", "Kristal"], ["yumusak", "Yumuşak"], ["klasik", "Klasik"]].map(([k, a]) => `<button class="${S.ayar.zil === k ? "on" : ""}" onclick="S.ayar.zil='${k}';kaydet();zil(true);this.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===this))">${a}</button>`).join("")}</div></div>
+      ${satir("konus", "Sesli okuma", "Saat gelince ilacın adını ve dozunu sesli okusun", konusVar() ? `<button class="sw ${S.ayar.konus !== false ? "on" : ""}" onclick="event.stopPropagation();S.ayar.konus=S.ayar.konus===false;kaydet();this.classList.toggle('on')"></button>` : "")}
+      ${konusVar() ? `<div style="padding:.3rem 0 .7rem"><div class="chips">${[["normal", "Normal hız"], ["yavas", "Yavaş"]].map(([k, a]) => `<button class="${(S.ayar.konusHiz || "normal") === k ? "on" : ""}" onclick="S.ayar.konusHiz='${k}';kaydet();this.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===this))">${a}</button>`).join("")}<button onclick="konusDene()">${ic("volume", 16)} Dinle</button></div>
+        <p class="hint">Uygulama açıkken çalışır. Ses gelmiyorsa telefonun sessizde olmadığından emin ol. iPhone'da Türkçe ses yoksa: Ayarlar → Erişilebilirlik → Seslendirilen İçerik → Sesler → Türkçe.</p></div>` : `<p class="hint">Bu tarayıcı sesli okumayı desteklemiyor.</p>`}
+      ${satir("clock", "İlaçtan önce hatırlat", "Seçtiğin her süre için ayrı bildirim gelir", "")}
+      <div style="padding:.1rem 0 .7rem"><div class="chips">${ONCE_SECENEK.map(n => `<button class="${onceListe().includes(n) ? "on" : ""}" onclick="onceTog(${n},this)">${n} dk önce</button>`).join("")}</div>
+        <p class="hint">Hiçbirini seçmezsen sadece ilaç saatinde hatırlatırım. Uygulama kapalıyken de gelmesi için aşağıdan takvime ekle.</p></div>
       ${satir("clock", "Deneme", "Hatırlatma ekranını gör", `<button class="pill-btn" onclick="denemeAlarm()">Dene</button>`)}</div>
     <div class="card"><div class="lbl">Uygulama kapalıyken</div>
       <p class="muted" style="font-weight:500;font-size:.9rem;margin-bottom:.8rem">Telefonun kendi takvimi, uygulama kapalıyken bile ilaç saatlerini ve randevularını hatırlatır. İlaçlarını değiştirdikten sonra bir kez daha bas, açılan ekranda <b>“Tümünü ekle”</b> de.</p>
@@ -1850,6 +1994,7 @@ function sheetKapat(hepsi) {
 }
 function toast(m) { const t = $("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(t._z); t._z = setTimeout(() => t.classList.remove("show"), 2800); }
 function kutla(e, b, a) {
+  if (document.querySelector(".celebrate")) return; // aynı anda tek kutlama
   konfeti();
   const d = document.createElement("div"); d.className = "celebrate";
   d.innerHTML = `<div class="box"><div class="md">${e}</div><div class="eb">Yeni başarı</div><h3>${esc(b)}</h3><p>${esc(a)}</p><button class="btn gold">Teşekkürler</button></div>`;
@@ -1872,7 +2017,44 @@ function konfeti() {
 
 // ---------- Ses ve bildirim ----------
 let sesCtx;
-function sesHazir() { try { sesCtx ||= new (window.AudioContext || window.webkitAudioContext)(); if (sesCtx.state === "suspended") sesCtx.resume(); } catch {} }
+// ---------- Sesli okuma (telefonun Türkçe sesiyle) ----------
+const konusVar = () => "speechSynthesis" in window;
+let konusHazir = false;
+function trSes() { try { return speechSynthesis.getVoices().find(v => /^tr/i.test(v.lang)) || null; } catch { return null; } }
+const BIRIM_OKU = { ml: "mililitre", mg: "miligram", mcg: "mikrogram", g: "gram", iu: "ünite" };
+function birimOku(t) {
+  return String(t || "").replace(/(\d)[.,](\d)/g, "$1 virgül $2").replace(/(\d)\s*(mcg|mg|ml|iu|g)\b/gi, (m, n, b) => `${n} ${BIRIM_OKU[b.toLowerCase()]}`).replace(/%\s*(\d)/g, "yüzde $1");
+}
+function miktarOku(m) {
+  const x = m.miktar || 1, t = Math.floor(x), yarim = x - t >= 0.5;
+  const sayi = yarim ? (t ? `${t} buçuk` : "yarım") : String(t);
+  return `${sayi} ${BIRIM_OKU[String(m.birim || "").toLowerCase()] || m.birim || ""}`.trim();
+}
+function alarmMetni(liste) {
+  const ben = gorunenAd(prof(S.profiller[0].id)), ad = ben !== "Ben" ? ben : "";
+  const parca = liste.map(x => [S.profiller.length > 1 && x.pid !== S.profiller[0].id ? gorunenAd(prof(x.pid)) + " için" : "",
+    birimOku(x.m.ad + (x.m.guc ? " " + x.m.guc : "")), miktarOku(x.m), x.m.nasil && x.m.nasil !== NASIL[0] ? x.m.nasil.toLocaleLowerCase("tr") : ""].filter(Boolean).join(", "));
+  return `${ad ? ad + ", " : ""}${liste.length === 1 ? "ilaç zamanı" : liste.length + " ilacın zamanı geldi"}. ${parca.join(". ")}.`;
+}
+function konus(metin, zorla) {
+  if ((S.ayar.konus === false && !zorla) || !konusVar()) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(metin);
+    u.lang = "tr-TR"; const v = trSes(); if (v) u.voice = v;
+    u.rate = S.ayar.konusHiz === "yavas" ? 0.78 : 0.95; u.volume = 1;
+    speechSynthesis.speak(u);
+  } catch {}
+}
+function konusDene() {
+  const m = prof().ilaclar[0] || { ad: "Coraspin", guc: "100 mg", miktar: 1, birim: "tablet", nasil: "Tok karnına" };
+  konus(alarmMetni([{ pid: S.aktif, m }]), true);
+  if (konusVar() && !trSes()) setTimeout(() => toast("Telefonunda Türkçe ses bulunamadı; okuma farklı bir dilde olabilir"), 600);
+}
+function sesHazir() {
+  // iPhone sesli okumaya ancak bir dokunuştan sonra izin verir: ilk dokunuşta sessizce hazırla
+  if (konusVar() && !konusHazir) { try { const u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); konusHazir = true; } catch {} }
+  try { sesCtx ||= new (window.AudioContext || window.webkitAudioContext)(); if (sesCtx.state === "suspended") sesCtx.resume(); } catch {} }
 document.addEventListener("pointerdown", sesHazir, { passive: true });
 function zil(zorla) {
   if (!S.ayar.ses && !zorla) return;
@@ -1923,10 +2105,12 @@ function alarmGoster(liste) {
       <button class="btn line" style="background:none;border:0" onclick="alarmAtla()">Bu sefer atla</button></div>`;
   document.body.appendChild(d);
   zil(); titret([400, 200, 400, 200, 400]);
+  const metin = alarmMetni(liste);
+  setTimeout(() => $("alarmEl") && konus(metin), S.ayar.ses ? 1800 : 300);
   clearInterval(alarmSes); let n = 0;
-  alarmSes = setInterval(() => { if (++n > 8 || !$("alarmEl")) return clearInterval(alarmSes); zil(); titret([300, 150, 300]); }, 5000);
+  alarmSes = setInterval(() => { if (++n > 8 || !$("alarmEl")) return clearInterval(alarmSes); zil(); titret([300, 150, 300]); if (n === 6) setTimeout(() => $("alarmEl") && konus(metin), S.ayar.ses ? 1800 : 300); }, 5000);
 }
-function alarmKapat() { clearInterval(alarmSes); $("alarmEl")?.remove(); aktifAlarm = []; }
+function alarmKapat() { clearInterval(alarmSes); try { konusVar() && speechSynthesis.cancel(); } catch {} $("alarmEl")?.remove(); aktifAlarm = []; }
 function alarmAldim() { const g = bugun(); aktifAlarm.forEach(x => !x.deneme && al(x.pid, x.key, g, true)); alarmKapat(); toast("Kaydedildi. Kendine iyi bak."); ciz(); }
 function alarmAtla() { const g = bugun(); aktifAlarm.forEach(x => !x.deneme && atla(x.pid, x.key, g)); alarmKapat(); ciz(); }
 function alarmErtele() { const g = bugun(); aktifAlarm.forEach(x => { if (!x.deneme) S.ertele[g + "|" + x.pid + "|" + x.key] = Date.now() + 10 * 60000; }); kaydet(); alarmKapat(); toast("10 dakika sonra tekrar hatırlatacağım"); }
@@ -1954,6 +2138,38 @@ function kontrol() {
     else if (f >= 15 && !S.haber[ek + "|2"]) { S.haber[ek + "|2"] = 1; vade.push(d); }
   }
   let degisti = vade.length > 0;
+  // İlaç saatinden önce (60 / 30 / 5 dk …) hatırlatma: sadece en yakın süre için, daha uzunlar atlanır
+  const once = onceListe().slice().sort((a, b) => a - b), onGrup = {};
+  if (once.length) for (const p of S.profiller) for (const d of dozlar(p.id, g, false)) {
+    if (kayitAl(d)) continue;
+    const fark = dk(d.saat) - sd, o = once.find(n => fark > 0 && fark <= n);
+    if (o == null) continue;
+    const ek = `${g}|${p.id}|${d.key}|once`;
+    if (S.haber[ek + o]) continue;
+    once.filter(n => n >= o).forEach(n => S.haber[ek + n] = 1);
+    (onGrup[d.saat] ||= []).push(d);
+  }
+  for (const [saat, l] of Object.entries(onGrup)) {
+    degisti = true;
+    const kalan = dk(saat) - sd, cok = S.profiller.length > 1;
+    bildirimGonder(`${kalan} dk sonra: ${l.length === 1 ? l[0].m.ad : l.length + " ilaç"}`,
+      l.map(x => `${x.saat} · ${x.m.ad} ${x.m.guc || ""} — ${miktarYaz(x.m)}${x.m.nasil !== NASIL[0] ? " (" + x.m.nasil + ")" : ""}${cok ? " · " + gorunenAd(prof(x.pid)) : ""}`).join("\n"), "once-" + g + "-" + saat);
+    toast(`${kalan} dakika sonra ${l.map(x => x.m.ad).join(", ")} zamanı`);
+  }
+  // Aile bildirimi: doz gecikince bir kez haber ver
+  for (const p of S.profiller) for (const d of aileGeciken(p.id)) {
+    const ek = `${g}|${p.id}|${d.key}|aile`;
+    if (S.haber[ek]) continue;
+    S.haber[ek] = 1; degisti = true;
+    bildirimGonder(`${d.m.ad} dozu henüz alınmadı`, `${d.saat} dozu ${sureYaz(sd - dk(d.saat))} gecikti. ${yonelme(p.aile.ad)} haber vermek için uygulamayı aç.`, "aile-" + d.key);
+  }
+  // Reçete: 7, 3, 1 gün kala ve bittiği gün
+  for (const p of S.profiller) for (const m of p.ilaclar.filter(aktifIlac)) {
+    const k = receteKalan(m), ek = `${g}|rc|${m.id}`;
+    if (k == null || ![7, 3, 1, 0].includes(k) || S.haber[ek]) continue;
+    S.haber[ek] = 1; degisti = true;
+    bildirimGonder(`${m.ad} reçetesi ${receteYaz(k)}`, "Doktorundan yeni reçete almayı unutma.", "rc-" + m.id);
+  }
   if (vade.length) {
     const yeni = vade.filter(x => !aktifAlarm.some(a => a.key === x.key && a.pid === x.pid));
     if (yeni.length) {
@@ -1986,12 +2202,14 @@ function takvimeEkle() {
   for (const p of S.profiller) {
     const on = S.profiller.length > 1 ? p.ad + ": " : "";
     for (const x of p.ilaclar.filter(x => aktifIlac(x) && x.plan !== "gerekirse"))
-      m.push({ a: on + x.ad + (x.guc ? " " + x.guc : ""), d: miktarYaz(x), n: x.nasil !== NASIL[0] ? x.nasil : "", s: x.saatler, g: x.plan === "gunler" ? x.gunler : null, r: x.plan === "aralik" ? x.aralik : 0, bs: x.baslangic, b: x.bitis || "", i: x.id });
+      m.push({ a: on + x.ad + (x.guc ? " " + x.guc : ""), d: miktarYaz(x), n: x.nasil !== NASIL[0] ? x.nasil : "", s: x.saatler, g: x.plan === "gunler" ? x.gunler : null, r: x.plan === "aralik" ? x.aralik : 0, bs: x.baslangic, b: x.bitis || "", i: x.id, rc: x.receteBitis || "" });
     for (const x of p.randevular.filter(x => new Date(x.t) > Date.now()))
       r.push({ b: on + [x.doktor, x.bolum].filter(Boolean).join(" · "), y: x.yer, t: x.t, i: x.id });
   }
   if (!m.length && !r.length) { toast("Önce bir ilaç veya randevu ekle"); return; }
-  const b64 = btoa(unescape(encodeURIComponent(JSON.stringify({ m, r })))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  for (const p of S.profiller) for (const x of p.ilaclar.filter(x => aktifIlac(x) && x.plan === "gerekirse" && x.receteBitis))
+    m.push({ a: (S.profiller.length > 1 ? p.ad + ": " : "") + x.ad, s: [], i: x.id, rc: x.receteBitis });
+  const b64 = btoa(unescape(encodeURIComponent(JSON.stringify({ m, r, o: onceListe() })))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   S.ayar.takvimVar = true; kaydet();
   location.href = "/api/takvim?v=" + b64;
 }

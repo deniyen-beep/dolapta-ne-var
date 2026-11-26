@@ -68,6 +68,11 @@ GEMINI_API_KEY=anahtarın npm run dev
 Özellikler:
 - Gerçekçi ilaç çizimleri (tablet, film tablet, kapsül, yumuşak kapsül, şurup, damla, iğne, inhaler, krem, saşe) ve renk seçimi
 - Her gün / belirli günler / birkaç günde bir / gerektiğinde planları; süre (kür) ve aç-tok bilgisi
+- İlaçtan önce hatırlatma (varsayılan 60, 30 ve 5 dk; Ayarlar'dan seçilir) — takvim dosyasına da ek alarm olarak eklenir
+- Aile bildirimi: doz gecikince WhatsApp'tan hazır mesajla haber verme ve günün özetini gönderme (mesaj kullanıcı “Gönder”e basınca gider)
+- İlaç etkileşimi kontrolü (yapay zekâ, `api/ilac.js` → `etkilesim`): yeni ilaç eklenince otomatik, İlaçlar sekmesinden elle
+- Reçete bitiş hatırlatıcısı: 7, 3, 1 gün kala ve bittiği gün; takvime de eklenir
+- Sesli okuma: saat gelince ilacın adı, gücü, dozu ve nasıl alınacağı telefonun Türkçe sesiyle okunur (Ayarlar'dan açılıp kapanır, yavaş hız seçilebilir)
 - Hatırlatma ekranı ve bildirim: Aldım, 10 dk ertele, Atla; içilmezse 15 dk sonra tekrar
 - Haftalık takvim şeridi, günün bölümlerine (sabah/öğle/akşam/gece) göre plan, sıradaki doz geri sayımı
 - Stok takibi ("kaç gün yeter"), azalınca uyarı, eczane bulma

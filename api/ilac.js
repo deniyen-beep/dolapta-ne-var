@@ -1,6 +1,7 @@
 // MediTime — yapay zekâ servisi
 // POST { islem: "tara", resim: "data:image/jpeg;base64,..." } → ilaç kutusunun fotoğrafından ad, güç, form, adet
 // POST { islem: "bilgi", ad: "Parol 500 mg" }                → ilaç hakkında hastaya yönelik genel bilgi
+// POST { islem: "etkilesim", ilaclar: ["Coraspin", "Parol"] }  → ilaçlar arasındaki bilinen etkileşimler
 // Hiçbir bilgi kaydedilmez.
 import { sinirKontrol } from "./_limit.js";
 import { gemini, hataCevabi, temizMetin } from "./_gemini.js";
@@ -66,6 +67,30 @@ SADECE şu JSON nesnesini döndür:
         yan_etkiler: liste(r.yan_etkiler, 5, 80),
         dikkat: liste(r.dikkat, 4)
       });
+    }
+
+    if (b.islem === "etkilesim") {
+      const ilaclar = [...new Set((Array.isArray(b.ilaclar) ? b.ilaclar : []).map(x => temizMetin(x, 60)).filter(Boolean))].slice(0, 15);
+      if (ilaclar.length < 2) return res.status(400).json({ hata: "Kontrol için en az iki ilaç gerekli." });
+      const sinir = sinirKontrol(req, "ilac-etkilesim", 20, 5);
+      if (sinir) return res.status(429).json({ hata: sinir });
+
+      const prompt = `Bir hasta şu ilaçları birlikte kullanıyor (Türkiye'de satılan ticari adlar olabilir): ${ilaclar.map(x => `"${x}"`).join(", ")}.
+Bu ilaçların BİRBİRİYLE bilinen, kaynaklarda yer alan önemli etkileşimlerini listele. Uydurma; emin olmadığın etkileşimi yazma. Doz önerme, ilacı bırakmayı önerme.
+Sade, sakin, hastanın anlayacağı bir Türkçe kullan.
+SADECE şu JSON nesnesini döndür:
+{"etkilesimler": [{"ilaclar": [listedeki adlarla tam olarak iki ilaç], "seviye": "yüksek" | "orta" | "düşük", "aciklama": ne olabileceği (1-2 kısa cümle), "oneri": ne yapmalı (kısa; örn. "Doktoruna veya eczacına danış", "Aralarında 2 saat bırak")}],
+ "tanimadiklarim": [tanımadığın ilaç adları]}
+Bilinen önemli etkileşim yoksa "etkilesimler" boş dizi olsun.`;
+      const r = await gemini({ parts: [{ text: prompt }], temperature: 0.1, maxTokens: 1500, timeout: 45000 });
+      const sev = ["yüksek", "orta", "düşük"];
+      const etkilesimler = (Array.isArray(r?.etkilesimler) ? r.etkilesimler : []).slice(0, 12).map(e => ({
+        ilaclar: (Array.isArray(e.ilaclar) ? e.ilaclar : []).map(x => temizMetin(x, 60)).filter(Boolean).slice(0, 2),
+        seviye: sev.includes(String(e.seviye).toLocaleLowerCase("tr")) ? String(e.seviye).toLocaleLowerCase("tr") : "orta",
+        aciklama: temizMetin(e.aciklama, 260), oneri: temizMetin(e.oneri, 140)
+      })).filter(e => e.ilaclar.length === 2 && e.aciklama);
+      etkilesimler.sort((a, b) => sev.indexOf(a.seviye) - sev.indexOf(b.seviye));
+      return res.status(200).json({ etkilesimler, tanimadiklarim: liste(r?.tanimadiklarim, 10, 60) });
     }
 
     return res.status(400).json({ hata: "Bilinmeyen işlem." });
