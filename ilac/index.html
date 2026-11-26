@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>İlaç Saatim</title>
+<title>MediTime · İlaçlarını Unutma</title>
 <meta name="description" content="İlaçlarını, ölçümlerini ve doktor randevularını tek yerde takip et. Saati gelince hatırlatsın.">
 <meta name="theme-color" content="#0E1530">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="İlaç Saatim">
+<meta name="apple-mobile-web-app-title" content="MediTime">
 <link rel="apple-touch-icon" sizes="180x180" href="/ilac/apple-touch-icon.png">
 <link rel="icon" type="image/png" href="/ilac/icon-192.png">
 <link rel="manifest" href="/ilac/manifest.json">
@@ -369,16 +369,16 @@ textarea.inp{min-height:5rem;resize:vertical}
 .alarm .btn.line{background:rgba(255,255,255,.07);color:#F4EFE3;border-color:rgba(241,219,168,.2)}
 
 /* Karşılama */
-.onb{position:fixed;inset:0;z-index:95;display:flex;flex-direction:column;justify-content:flex-end;color:#F4EFE3;overflow:auto;
+.onb{position:fixed;inset:0;z-index:95;display:flex;flex-direction:column;justify-content:flex-start;color:#F4EFE3;overflow:auto;
   background:radial-gradient(70% 45% at 50% 25%,rgba(241,219,168,.3),transparent 70%),linear-gradient(170deg,#0B1230,#151F45 50%,#05070F);padding:calc(1rem + env(safe-area-inset-top)) 1.4rem calc(1.6rem + env(safe-area-inset-bottom))}
-.onb .art{flex:1;display:flex;align-items:center;justify-content:center;position:relative;min-height:15rem;margin-top:1.2rem}
+.onb .art{flex:1 0 auto;display:flex;align-items:center;justify-content:center;position:relative;min-height:11rem;margin:.2rem 0 .6rem}
 .onb .art .p{position:absolute;animation:float 6s ease-in-out infinite}
-.onb h1{font-family:Fraunces,serif;font-weight:600;font-size:2.5rem;line-height:1.05;letter-spacing:-.02em}
+.onb h1{font-family:Fraunces,serif;font-weight:600;font-size:2.05rem;line-height:1.05;letter-spacing:-.02em}
 .onb h1 em{font-style:italic;color:#E6CF9C}
-.onb p{color:rgba(244,239,227,.75);font-weight:500;margin:.7rem 0 1.3rem}
+.onb p{color:rgba(244,239,227,.75);font-weight:500;margin:.5rem 0 1rem}
 .onb .inp{background:rgba(255,255,255,.08);border-color:rgba(241,219,168,.25);color:#fff;margin-bottom:.8rem}
 .onb .inp::placeholder{color:rgba(244,239,227,.5)}
-.onb ul{list-style:none;display:grid;gap:.5rem;margin-bottom:1.3rem}
+.onb ul{list-style:none;display:grid;gap:.4rem;margin-bottom:1rem}
 .onb li{display:flex;gap:.6rem;align-items:center;font-weight:600;font-size:.92rem;color:rgba(244,239,227,.88)}
 .onb li .i{color:#E6CF9C}
 
@@ -434,7 +434,7 @@ textarea.inp{min-height:5rem;resize:vertical}
 <script>
 "use strict";
 /* =========================================================
-   İlaç Saatim — tek sayfalık uygulama
+   MediTime — tek sayfalık uygulama
    Bütün bilgiler sadece bu telefonda (localStorage) saklanır.
    ========================================================= */
 
@@ -1499,7 +1499,7 @@ function doktorRaporu() {
     ${olc.length ? `<h2>Son ölçümler</h2><table><tr><th>Ölçüm</th><th>Değerler (en yeniden eskiye)</th></tr>${olc.map(([o, l]) => `<tr><td><b>${o.ad}</b><br><span style="color:#777">${o.birim}</span></td><td>${l.map(x => { const t = new Date(x.t); return `${esc(olcumDeger(x))} <span style="color:#888">(${t.getDate()} ${AY_K[t.getMonth()]}${x.baglam ? ", " + esc(x.baglam) : ""})</span>`; }).join(" · ")}</td></tr>`).join("")}</table>` : ""}
     ${rv.length ? `<h2>Yaklaşan randevular</h2><table>${rv.map(r => `<tr><td>${randevuZaman(r)}</td><td><b>${esc(r.doktor || "")}</b> ${esc(r.bolum || "")}</td><td>${esc(r.yer || "")}</td></tr>`).join("")}</table>` : ""}
     <h2>Notlarım</h2><div style="min-height:70px;border:1px dashed #ccc;border-radius:8px;padding:8px;color:#666">${ilac.filter(m => m.not).map(m => `<div><b>${esc(m.ad)}:</b> ${esc(m.not)}</div>`).join("") || "&nbsp;"}</div>
-    <p style="margin-top:18px;color:#888;font-size:11px">Bu rapor İlaç Saatim uygulamasında kişinin kendi girdiği bilgilerden hazırlanmıştır.</p></div>
+    <p style="margin-top:18px;color:#888;font-size:11px">Bu rapor MediTime uygulamasında kişinin kendi girdiği bilgilerden hazırlanmıştır.</p></div>
     <div class="rbar"><button class="btn gold" onclick="window.print()">${ic("print", 20)} PDF / Yazdır</button><button class="btn line" onclick="document.getElementById('rapor').remove()">Kapat</button></div>`;
   document.body.appendChild(div);
   if (!S.ayar.raporYapti) { S.ayar.raporYapti = true; kaydet(); rozetKontrol(); }
@@ -1578,7 +1578,7 @@ function ayarlarAc() {
     <div class="card"><div class="lbl">Güvenlik</div>
       ${satir("shield", "Gizlilik", "Hiçbir sağlık bilgin sunucuya kaydedilmez", "")}
       <button class="btn danger" style="margin-top:.5rem" onclick="hepsiniSil()">${ic("trash", 18)} Bütün bilgileri sil</button></div>
-    <div class="foot">İlaç Saatim bir hatırlatma aracıdır, tıbbi tavsiye vermez. İlacının dozu ve saati için her zaman doktoruna veya eczacına danış.</div>`, true);
+    <div class="foot">MediTime bir hatırlatma aracıdır, tıbbi tavsiye vermez. İlacının dozu ve saati için her zaman doktoruna veya eczacına danış.</div>`, true);
 }
 function isimDegis() { const a = prompt("Sana nasıl hitap edeyim?", S.ayar.isim || ""); if (a == null) return; S.ayar.isim = a.trim().slice(0, 20); kaydet(); sheetKapat(true); ciz(); ayarlarAc(); }
 function hepsiniSil() {
@@ -1750,7 +1750,7 @@ function takvimeEkle() {
 }
 function yedekIndir() {
   const blob = new Blob([JSON.stringify({ uygulama: "ilac-saatim", surum: 2, veri: S }, null, 1)], { type: "application/json" });
-  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `ilac-saatim-yedek-${bugun()}.json`;
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `meditime-yedek-${bugun()}.json`;
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000);
   toast("Yedek indirildi");
 }
@@ -1764,7 +1764,7 @@ $("yedekInp").onchange = function () {
     else throw 0;
     if (!confirm(`Yedekte ${yeni.profiller.length} kişi ve ${yeni.profiller.reduce((s, p) => s + p.ilaclar.length, 0)} ilaç var. Şimdiki bilgilerin yerine yüklensin mi?`)) return;
     S = yeni; kaydet(); sheetKapat(true); ciz(); toast("Yedek yüklendi ✓");
-  }).catch(() => toast("Bu dosya bir İlaç Saatim yedeği değil"));
+  }).catch(() => toast("Bu dosya bir MediTime yedeği değil"));
 };
 let kurulum = null;
 addEventListener("beforeinstallprompt", e => { e.preventDefault(); kurulum = e; });
@@ -1778,7 +1778,7 @@ function karsilama() {
       <div class="p" style="right:3%;top:2%;animation-delay:-3s">${hap("tablet", "#F4F1EA", null, 64)}</div>
       <div class="p" style="right:2%;bottom:0;animation-delay:-2s">${hap("yumusak", "#E3C27F", null, 72)}</div>
       <div class="p" style="left:4%;bottom:2%;animation-delay:-4s">${hap("oval", "#9FB4EA", null, 60)}</div>
-      <img src="/ilac/icon-512.png" alt="İlaç Saatim" style="width:9.5rem;height:9.5rem;position:relative;filter:drop-shadow(0 24px 40px rgba(0,0,0,.55)) drop-shadow(0 0 30px rgba(120,150,230,.25))">
+      <img src="/ilac/logo.png" alt="MediTime" style="width:10rem;height:10rem;position:relative;filter:drop-shadow(0 24px 40px rgba(0,0,0,.55)) drop-shadow(0 0 30px rgba(120,150,230,.25))">
     </div>
     <div style="max-width:520px;margin:0 auto;width:100%">
       <h1>İlaçların <em>tam zamanında</em>, aklın rahat.</h1>

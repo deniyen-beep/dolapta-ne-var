@@ -22,7 +22,7 @@ self.addEventListener("activate", e => {
 self.addEventListener("fetch", e => {
   const req = e.request;
   const url = new URL(req.url);
-  // API, istatistik, İlaç Saatim (kendi service worker'ı var) ve başka sitelere giden isteklere karışma
+  // API, istatistik, MediTime (kendi service worker'ı var) ve başka sitelere giden isteklere karışma
   if (req.method !== "GET" || url.origin !== location.origin || url.pathname.startsWith("/api/") || url.pathname.startsWith("/_vercel/") || url.pathname.startsWith("/ilac")) return;
   const sayfa = req.mode === "navigate" || url.pathname === "/" || url.pathname.endsWith(".html");
   e.respondWith(

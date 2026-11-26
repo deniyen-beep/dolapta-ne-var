@@ -1,4 +1,4 @@
-// İlaç Saatim — yapay zekâ servisi
+// MediTime — yapay zekâ servisi
 // POST { islem: "tara", resim: "data:image/jpeg;base64,..." } → ilaç kutusunun fotoğrafından ad, güç, form, adet
 // POST { islem: "bilgi", ad: "Parol 500 mg" }                → ilaç hakkında hastaya yönelik genel bilgi
 // Hiçbir bilgi kaydedilmez.

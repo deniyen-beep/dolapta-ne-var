@@ -54,7 +54,7 @@ GEMINI_API_KEY=anahtarın npm run dev
 
 ---
 
-# 💊 İlaç Saatim
+# 💊 MediTime — İlaçlarını Unutma
 
 İlaçlarını, ölçümlerini ve doktor randevularını takip eden, saati gelince hatırlatan şık bir uygulama. Adres: `https://<site-adresin>/ilac/`
 

@@ -1,14 +1,14 @@
 {
   "id": "/ilac/",
-  "name": "İlaç Saatim",
-  "short_name": "İlaç Saatim",
+  "name": "MediTime – İlaçlarını Unutma",
+  "short_name": "MediTime",
   "description": "İlaçlarını, ölçümlerini ve doktor randevularını tek yerde takip et. Saati gelince hatırlatsın.",
   "start_url": "/ilac/",
   "scope": "/ilac/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0E1530",
-  "theme_color": "#0E1530",
+  "background_color": "#080A14",
+  "theme_color": "#0B1128",
   "lang": "tr",
   "categories": [
     "health",
