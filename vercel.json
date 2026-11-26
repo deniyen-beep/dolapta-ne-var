@@ -4,7 +4,8 @@
     "api/malzeme.js": { "maxDuration": 60 },
     "api/sef.js": { "maxDuration": 60 },
     "api/hediye.js": { "maxDuration": 60 },
-    "api/kart.js": { "maxDuration": 30 }
+    "api/kart.js": { "maxDuration": 30 },
+    "api/ilgi.js": { "maxDuration": 60 }
   },
   "headers": [
     { "source": "/sw.js", "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }] },
