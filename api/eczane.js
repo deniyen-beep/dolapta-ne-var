@@ -8,6 +8,9 @@ import { sinirKontrol } from "./_limit.js";
 const UA = "MediTime/1.0 (eczane arama)";
 const OVERPASS = ["https://overpass-api.de/api/interpreter", "https://overpass.private.coffee/api/interpreter"];
 const temiz = (s, n = 60) => String(s ?? "").replace(/\s+/g, " ").trim().slice(0, n);
+// "BAĞDAT SEDA ECZANESİ" → "Bağdat Seda Eczanesi" (sadece tamamı büyük harfle yazılmışsa)
+const duzelt = t => !t || t !== t.toLocaleUpperCase("tr") || !/[A-ZÇĞİÖŞÜ]{3}/.test(t) ? t
+  : t.toLocaleLowerCase("tr").replace(/(^|[\s(/.-])(\p{L})/gu, (m, a, h) => a + h.toLocaleUpperCase("tr"));
 const sayi = (v, min, max) => { const n = parseFloat(v); return Number.isFinite(n) && n >= min && n <= max ? n : null; };
 
 async function getJson(url, secenek = {}, sure = 12000) {
@@ -121,8 +124,8 @@ async function nobetciCek(anahtar, il, ilce) {
     kaynak: "collectapi",
     eczaneler: liste.slice(0, 40).map(x => {
       const [la, lo] = String(x.loc || x.konum || "").split(",").map(Number);
-      return { ad: temiz(x.name || x.eczaneAdi || x.ad || "Eczane", 60), adres: temiz(x.address || x.adres || "", 140), tel: temiz(x.phone || x.telefon || "", 30),
-        ilce: temiz(x.dist || x.ilce || "", 40), lat: Number.isFinite(la) ? la : null, lon: Number.isFinite(lo) ? lo : null };
+      return { ad: duzelt(temiz(x.name || x.eczaneAdi || x.ad || "Eczane", 60)), adres: duzelt(temiz(x.address || x.adres || "", 140)), tel: temiz(x.phone || x.telefon || "", 30),
+        ilce: duzelt(temiz(x.dist || x.ilce || "", 40)), lat: Number.isFinite(la) ? la : null, lon: Number.isFinite(lo) ? lo : null };
     })
   };
 }
