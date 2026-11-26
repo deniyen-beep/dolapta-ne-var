@@ -1,4 +1,4 @@
-// İlaç Saatim — takvim dosyası servisi
+// MediTime — takvim dosyası servisi
 // İlaç listesini alır, telefonun takvimine eklenebilen tekrarlayan ve alarmlı bir .ics dosyası döndürür.
 // Böylece uygulama kapalıyken bile telefonun kendi takvimi ilaç saatini hatırlatır.
 // Hiçbir şey kaydedilmez; veri sadece bu isteğin adresinde gelir.
@@ -39,7 +39,7 @@ export default function handler(req, res) {
   const simdi = new Date();
   const bugun = `${simdi.getUTCFullYear()}${iki(simdi.getUTCMonth() + 1)}${iki(simdi.getUTCDate())}`;
   const damga = simdi.toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
-  const satirlar = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Ilac Saatim//TR", "CALSCALE:GREGORIAN", "METHOD:PUBLISH", "X-WR-CALNAME:İlaç Saatim"];
+  const satirlar = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//MediTime//TR", "CALSCALE:GREGORIAN", "METHOD:PUBLISH", "X-WR-CALNAME:MediTime"];
 
   for (const m of liste.slice(0, 40)) {
     const ad = temiz(m?.a, 40);
@@ -66,7 +66,7 @@ export default function handler(req, res) {
         "DURATION:PT10M",
         kural,
         `SUMMARY:${ics("💊 " + ad + (doz ? " — " + doz : ""))}`,
-        `DESCRIPTION:${ics(aciklama + " (İlaç Saatim)")}`,
+        `DESCRIPTION:${ics(aciklama + " (MediTime)")}`,
         "TRANSP:TRANSPARENT",
         "BEGIN:VALARM",
         "ACTION:DISPLAY",
@@ -92,7 +92,7 @@ export default function handler(req, res) {
       "DURATION:PT1H",
       `SUMMARY:${ics("🩺 " + baslik)}`,
       ...(yer ? [`LOCATION:${ics(yer)}`] : []),
-      `DESCRIPTION:${ics("İlaç Saatim randevusu")}`,
+      `DESCRIPTION:${ics("MediTime randevusu")}`,
       "BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:${ics("Yarın: " + baslik)}`, "TRIGGER:-P1D", "END:VALARM",
       "BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:${ics("1 saat sonra: " + baslik)}`, "TRIGGER:-PT1H", "END:VALARM",
       "END:VEVENT"
@@ -102,7 +102,7 @@ export default function handler(req, res) {
 
   res.statusCode = 200;
   res.setHeader("Content-Type", "text/calendar; charset=utf-8");
-  res.setHeader("Content-Disposition", 'inline; filename="ilac-saatim.ics"');
+  res.setHeader("Content-Disposition", 'inline; filename="meditime.ics"');
   res.setHeader("Cache-Control", "no-store");
   res.end(satirlar.map(katla).join("\r\n") + "\r\n");
 }
