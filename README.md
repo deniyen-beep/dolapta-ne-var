@@ -68,6 +68,7 @@ GEMINI_API_KEY=anahtarın npm run dev
 Özellikler:
 - Gerçekçi ilaç çizimleri (tablet, film tablet, kapsül, yumuşak kapsül, şurup, damla, iğne, inhaler, krem, saşe) ve renk seçimi
 - Her gün / belirli günler / birkaç günde bir / gerektiğinde planları; süre (kür) ve aç-tok bilgisi
+- Sesli okuma: saat gelince ilacın adı, gücü, dozu ve nasıl alınacağı telefonun Türkçe sesiyle okunur (Ayarlar'dan açılıp kapanır, yavaş hız seçilebilir)
 - Hatırlatma ekranı ve bildirim: Aldım, 10 dk ertele, Atla; içilmezse 15 dk sonra tekrar
 - Haftalık takvim şeridi, günün bölümlerine (sabah/öğle/akşam/gece) göre plan, sıradaki doz geri sayımı
 - Stok takibi ("kaç gün yeter"), azalınca uyarı, eczane bulma
