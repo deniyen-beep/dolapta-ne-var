@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>İlaç Saatim</title>
+<meta name="description" content="İlaçlarını ekle, saati gelince hatırlatsın. İçtiklerini işaretle, hiçbir dozu kaçırma.">
+<meta name="theme-color" content="#0F766E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="İlaç Saatim">
+<link rel="apple-touch-icon" sizes="180x180" href="/ilac/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/ilac/icon-192.png">
+<link rel="manifest" href="/ilac/manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F2F7F6; --card:#FFFFFF; --ink:#12302C; --muted:#5E7773; --line:#D9E6E3; --field:#F7FBFA;
+    --teal:#0F766E; --teal2:#14B8A6; --teal-bg:#DDF3EF;
+    --ok:#15803D; --ok-bg:#DCFCE7; --late:#B91C1C; --late-bg:#FEE2E2; --now:#B45309; --now-bg:#FEF3C7;
+    --skip:#6B7280; --skip-bg:#EEF0F2; --shadow:0 6px 24px rgba(15,60,55,.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0B1513; --card:#13211E; --ink:#E6F2EF; --muted:#94ADA8; --line:#24413B; --field:#0F1B19;
+      --teal:#2DD4BF; --teal2:#5EEAD4; --teal-bg:#123A35;
+      --ok:#4ADE80; --ok-bg:#12301F; --late:#F87171; --late-bg:#3A1717; --now:#FBBF24; --now-bg:#3A2C10;
+      --skip:#9CA3AF; --skip-bg:#222A2C; --shadow:0 6px 24px rgba(0,0,0,.35);
+    }
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{background:var(--bg)}
+  body{font-family:Nunito,system-ui,sans-serif;color:var(--ink);background:var(--bg);min-height:100vh;
+    padding:env(safe-area-inset-top) 0 calc(170px + env(safe-area-inset-bottom));font-size:17px;line-height:1.4}
+  .wrap{max-width:560px;margin:0 auto;padding:0 16px}
+  header{padding:22px 0 10px;display:flex;align-items:center;gap:12px}
+  header img{width:46px;height:46px;border-radius:13px;box-shadow:var(--shadow)}
+  header h1{font-size:26px;font-weight:900;letter-spacing:-.4px}
+  header p{color:var(--muted);font-size:15px;font-weight:600}
+  h2{font-size:21px;font-weight:900;margin:22px 0 12px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow)}
+  .muted{color:var(--muted)}
+  button{font:inherit;cursor:pointer}
+  .btn{border:0;border-radius:16px;padding:15px 18px;font-weight:800;font-size:17px;background:var(--teal);color:#fff;width:100%;display:flex;align-items:center;justify-content:center;gap:8px}
+  @media (prefers-color-scheme: dark){ .btn{color:#062421} }
+  .btn.ghost{background:var(--teal-bg);color:var(--teal)}
+  .btn.light{background:var(--field);color:var(--ink);border:1px solid var(--line)}
+  .btn.danger{background:var(--late-bg);color:var(--late)}
+  .btn:disabled{opacity:.5}
+  .row{display:flex;gap:10px;align-items:center}
+  .row > *{flex:1}
+
+  /* Özet halkası */
+  .summary{display:flex;align-items:center;gap:18px}
+  .ring{width:96px;height:96px;flex:0 0 96px;position:relative}
+  .ring svg{transform:rotate(-90deg)}
+  .ring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900}
+  .summary h3{font-size:20px;font-weight:900}
+  .next{margin-top:6px;font-weight:700;color:var(--teal)}
+
+  /* Doz listesi */
+  .dose{display:flex;align-items:center;gap:14px;padding:14px;border-radius:18px;background:var(--card);border:1px solid var(--line);margin-bottom:10px;box-shadow:var(--shadow)}
+  .dose .time{font-size:21px;font-weight:900;min-width:64px;text-align:center}
+  .dose .dot{width:12px;height:46px;border-radius:8px;flex:0 0 12px}
+  .dose .info{flex:1;min-width:0}
+  .dose .name{font-weight:900;font-size:18px;overflow-wrap:anywhere}
+  .dose .sub{color:var(--muted);font-size:14px;font-weight:600}
+  .badge{display:inline-block;font-size:12px;font-weight:800;padding:3px 9px;border-radius:99px;margin-top:4px}
+  .b-ok{background:var(--ok-bg);color:var(--ok)} .b-late{background:var(--late-bg);color:var(--late)}
+  .b-now{background:var(--now-bg);color:var(--now)} .b-wait{background:var(--teal-bg);color:var(--teal)}
+  .b-skip{background:var(--skip-bg);color:var(--skip)}
+  .take{border:0;border-radius:14px;padding:12px 14px;font-weight:900;font-size:16px;background:var(--teal);color:#fff;white-space:nowrap}
+  @media (prefers-color-scheme: dark){ .take{color:#062421} }
+  .take.done{background:var(--ok-bg);color:var(--ok)}
+  .take.skipped{background:var(--skip-bg);color:var(--skip)}
+  .dose.is-ok{opacity:.75}
+
+  /* İlaç kartları */
+  .med{display:flex;gap:14px;align-items:center;cursor:pointer}
+  .pill{width:48px;height:48px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:24px;flex:0 0 48px}
+  .med .info{flex:1;min-width:0}
+  .med .name{font-weight:900;font-size:18px;overflow-wrap:anywhere}
+  .med .sub{color:var(--muted);font-size:14px;font-weight:600}
+  .low{color:var(--late);font-weight:800;font-size:14px}
+  .chev{color:var(--muted);font-size:22px}
+
+  .empty{text-align:center;padding:34px 18px}
+  .empty .big{font-size:54px}
+  .empty p{color:var(--muted);margin:8px 0 18px;font-weight:600}
+
+  /* Alt menü */
+  nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);
+    padding:8px 8px calc(8px + env(safe-area-inset-bottom));display:flex;justify-content:center;z-index:20}
+  nav .in{display:flex;max-width:560px;width:100%}
+  nav button{flex:1;border:0;background:none;color:var(--muted);font-weight:800;font-size:12px;padding:6px 0;border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:2px}
+  nav button span{font-size:23px;line-height:1.1}
+  nav button.on{color:var(--teal);background:var(--teal-bg)}
+  .fab{position:fixed;right:max(16px, calc(50% - 264px));bottom:calc(88px + env(safe-area-inset-bottom));width:62px;height:62px;border-radius:20px;border:0;
+    background:var(--teal);color:#fff;font-size:34px;font-weight:700;box-shadow:0 10px 30px rgba(15,118,110,.35);z-index:19}
+  @media (prefers-color-scheme: dark){ .fab{color:#062421} }
+
+  /* Form (alttan açılan pencere) */
+  .sheet-bg{position:fixed;inset:0;background:rgba(5,20,18,.45);z-index:40;display:none;align-items:flex-end;justify-content:center}
+  .sheet-bg.open{display:flex}
+  .sheet{background:var(--bg);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:26px 26px 0 0;
+    padding:10px 16px calc(20px + env(safe-area-inset-bottom));animation:up .22s ease}
+  @keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+  .grip{width:44px;height:5px;border-radius:9px;background:var(--line);margin:4px auto 10px}
+  .sheet h3{font-size:22px;font-weight:900;margin-bottom:14px}
+  label.l{display:block;font-weight:800;font-size:15px;margin:16px 0 8px}
+  input[type=text],input[type=number],input[type=time],input[type=date]{width:100%;border:1px solid var(--line);background:var(--card);color:var(--ink);
+    border-radius:14px;padding:13px 14px;font:700 17px Nunito,system-ui,sans-serif;outline:none;min-height:52px}
+  input:focus{border-color:var(--teal);box-shadow:0 0 0 4px var(--teal-bg)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chips button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:9px 14px;font-weight:800;font-size:15px}
+  .chips button.on{background:var(--teal);border-color:var(--teal);color:#fff}
+  @media (prefers-color-scheme: dark){ .chips button.on{color:#062421} }
+  .times{display:flex;flex-direction:column;gap:8px}
+  .times .row button{flex:0 0 52px;height:52px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--late);font-size:20px;font-weight:900}
+  .colors{display:flex;gap:10px;flex-wrap:wrap}
+  .colors button{width:40px;height:40px;border-radius:50%;border:3px solid transparent}
+  .colors button.on{border-color:var(--ink)}
+  .hint{font-size:13px;color:var(--muted);font-weight:600;margin-top:6px}
+
+  /* Hatırlatma penceresi */
+  .alarm-bg{position:fixed;inset:0;background:rgba(5,20,18,.6);z-index:60;display:none;align-items:center;justify-content:center;padding:16px}
+  .alarm-bg.open{display:flex}
+  .alarm{background:var(--card);border-radius:28px;padding:26px 20px;width:100%;max-width:420px;text-align:center;animation:pop .25s ease}
+  @keyframes pop{from{transform:scale(.9);opacity:0}to{transform:none;opacity:1}}
+  .alarm .big{font-size:60px;animation:shake 1.2s ease infinite}
+  @keyframes shake{0%,100%{transform:rotate(0)}10%,30%{transform:rotate(-12deg)}20%,40%{transform:rotate(12deg)}50%{transform:rotate(0)}}
+  .alarm h3{font-size:24px;font-weight:900;margin:6px 0 4px}
+  .alarm .list{margin:12px 0 18px;text-align:left}
+  .alarm .list div{padding:10px 12px;border-radius:14px;background:var(--field);border:1px solid var(--line);margin-bottom:8px;font-weight:800}
+  .alarm .list small{display:block;color:var(--muted);font-weight:600}
+  .alarm .btn{margin-top:8px}
+
+  /* Geçmiş */
+  .bars{display:flex;align-items:flex-end;gap:8px;height:150px;margin-top:8px}
+  .bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%}
+  .bar .col{flex:1;width:100%;background:var(--field);border:1px solid var(--line);border-radius:10px;display:flex;align-items:flex-end;overflow:hidden}
+  .bar .fill{width:100%;background:var(--teal2);border-radius:8px 8px 0 0}
+  .bar small{font-weight:800;color:var(--muted);font-size:12px}
+  .hist-day{padding:12px 0;border-bottom:1px solid var(--line)}
+  .hist-day:last-child{border-bottom:0}
+  .hist-day b{display:block;margin-bottom:4px}
+  .hist-day span{display:inline-block;font-size:14px;font-weight:700;margin:2px 8px 2px 0}
+
+  .set{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .set:last-child{border-bottom:0}
+  .set .t{flex:1}
+  .set .t b{display:block}
+  .set .t small{color:var(--muted);font-weight:600}
+  .switch{width:56px;height:32px;border-radius:99px;border:0;background:var(--line);position:relative;flex:0 0 56px}
+  .switch::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .switch.on{background:var(--teal)}
+  .switch.on::after{left:27px}
+  .small-btn{border:0;border-radius:12px;padding:10px 14px;font-weight:800;background:var(--teal-bg);color:var(--teal);white-space:nowrap}
+  .note{font-size:13px;color:var(--muted);font-weight:600;text-align:center;margin:18px 8px 0}
+  .toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);
+    padding:12px 18px;border-radius:14px;font-weight:800;z-index:80;opacity:0;transition:.25s;pointer-events:none;max-width:90vw;text-align:center}
+  .toast.show{opacity:1}
+  .banner{background:var(--now-bg);color:var(--now);border-radius:16px;padding:12px 14px;font-weight:700;font-size:15px;margin-bottom:12px;display:flex;gap:10px;align-items:center}
+  .banner button{flex:0 0 auto}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="/ilac/icon-192.png" alt="">
+    <div><h1>İlaç Saatim</h1><p id="today"></p></div>
+  </header>
+
+  <!-- BUGÜN -->
+  <section id="v-bugun">
+    <div id="notifBanner" class="banner" hidden>
+      <div style="flex:1">🔔 Saat gelince haber verebilmem için bildirimlere izin ver.</div>
+      <button class="small-btn" onclick="bildirimIzni()">İzin ver</button>
+    </div>
+    <div id="summary"></div>
+    <div id="doses"></div>
+  </section>
+
+  <!-- İLAÇLARIM -->
+  <section id="v-ilaclar" hidden>
+    <h2>İlaçlarım</h2>
+    <div id="meds"></div>
+  </section>
+
+  <!-- GEÇMİŞ -->
+  <section id="v-gecmis" hidden>
+    <h2>Son 7 gün</h2>
+    <div class="card"><div id="rate" style="font-weight:900;font-size:18px"></div><div class="bars" id="bars"></div></div>
+    <div class="card" id="histList"></div>
+  </section>
+
+  <!-- AYARLAR -->
+  <section id="v-ayarlar" hidden>
+    <h2>Hatırlatmalar</h2>
+    <div class="card">
+      <div class="set"><div class="t"><b>Bildirimler</b><small id="notifState"></small></div><button class="small-btn" id="notifBtn" onclick="bildirimIzni()">İzin ver</button></div>
+      <div class="set"><div class="t"><b>Sesli uyarı</b><small>Saat gelince zil çalsın</small></div><button class="switch" id="sesSw" onclick="ayarDegis('ses')"></button></div>
+      <div class="set"><div class="t"><b>Deneme</b><small>Hatırlatmanın nasıl göründüğünü gör</small></div><button class="small-btn" onclick="denemeAlarm()">Dene</button></div>
+    </div>
+    <div class="card">
+      <b style="font-size:18px">📅 Telefon kapalıyken de hatırlatsın</b>
+      <p class="muted" style="font-size:15px;margin:6px 0 12px;font-weight:600">Uygulama kapalıyken telefonun kendi takvimi seni uyarır. İlaçlarını ekledikten veya değiştirdikten sonra bir kez bas, açılan ekranda <b>“Tümünü ekle”</b> de.</p>
+      <button class="btn" onclick="takvimeEkle()">Takvimime ekle</button>
+    </div>
+    <h2>Yedek</h2>
+    <div class="card">
+      <p class="muted" style="font-size:15px;margin-bottom:12px;font-weight:600">Bilgilerin sadece bu telefonda saklanır. Telefon değiştirirken yedeği indirip yeni telefonda yükleyebilirsin.</p>
+      <div class="row"><button class="btn ghost" onclick="yedekIndir()">⬇️ Yedeği indir</button><button class="btn ghost" onclick="document.getElementById('yedekDosya').click()">⬆️ Yedeği yükle</button></div>
+      <input type="file" id="yedekDosya" accept="application/json,.json" hidden onchange="yedekYukle(this)">
+    </div>
+    <h2>Telefona yükle</h2>
+    <div class="card">
+      <button class="btn" id="installBtn" hidden onclick="yukle()">📲 Uygulamayı telefonuna yükle</button>
+      <p class="muted" id="installHelp" style="font-size:15px;font-weight:600">
+        <b>iPhone:</b> Safari'de alttaki Paylaş ⬆️ düğmesi → <b>Ana Ekrana Ekle</b>.<br>
+        <b>Android:</b> Chrome menüsü ⋮ → <b>Uygulamayı yükle</b>.<br>
+        iPhone'da bildirimlerin gelmesi için uygulamayı ana ekrandan açman gerekir.
+      </p>
+    </div>
+    <p class="note">⚕️ İlaç Saatim yalnızca hatırlatma aracıdır, tıbbi tavsiye vermez. İlacının dozunu ve saatini her zaman doktoruna veya eczacına danış.</p>
+  </section>
+</div>
+
+<button class="fab" id="fab" onclick="formAc()" aria-label="İlaç ekle">+</button>
+
+<nav><div class="in">
+  <button data-v="bugun" class="on"><span>🗓️</span>Bugün</button>
+  <button data-v="ilaclar"><span>💊</span>İlaçlarım</button>
+  <button data-v="gecmis"><span>📊</span>Geçmiş</button>
+  <button data-v="ayarlar"><span>⚙️</span>Ayarlar</button>
+</div></nav>
+
+<!-- İlaç formu -->
+<div class="sheet-bg" id="sheetBg" onclick="if(event.target===this)formKapat()">
+  <div class="sheet">
+    <div class="grip"></div>
+    <h3 id="formTitle">İlaç ekle</h3>
+    <label class="l" for="fAd">İlacın adı</label>
+    <input type="text" id="fAd" maxlength="40" placeholder="Örn: Coraspin" autocomplete="off">
+    <label class="l" for="fDoz">Ne kadar?</label>
+    <input type="text" id="fDoz" maxlength="30" placeholder="Örn: 1 tablet, 5 ml, 2 damla" autocomplete="off">
+    <label class="l">Nasıl alınır?</label>
+    <div class="chips" id="fNasil"></div>
+    <label class="l">Günde kaç kez?</label>
+    <div class="chips" id="fKac"></div>
+    <label class="l">Saatler</label>
+    <div class="times" id="fSaatler"></div>
+    <button class="btn light" style="margin-top:8px" onclick="saatEkle()">+ Saat ekle</button>
+    <label class="l">Hangi günler?</label>
+    <div class="chips" id="fGunTip"></div>
+    <div class="chips" id="fGunler" style="margin-top:8px"></div>
+    <label class="l" for="fBitis">Ne zamana kadar? <span class="muted">(isteğe bağlı)</span></label>
+    <input type="date" id="fBitis">
+    <div class="hint">Antibiyotik gibi belli süre kullanılan ilaçlar için. Boş bırakırsan her zaman devam eder.</div>
+    <label class="l" for="fStok">Kutuda kaç doz kaldı? <span class="muted">(isteğe bağlı)</span></label>
+    <input type="number" id="fStok" min="0" max="9999" inputmode="numeric" placeholder="Örn: 28">
+    <div class="hint">“İçtim”e her bastığında bir azalır; azalınca seni uyarırım.</div>
+    <label class="l">Renk</label>
+    <div class="colors" id="fRenk"></div>
+    <div style="height:20px"></div>
+    <button class="btn" onclick="kaydet()">Kaydet</button>
+    <button class="btn danger" id="silBtn" style="margin-top:10px" onclick="sil()">İlacı sil</button>
+    <button class="btn light" style="margin-top:10px" onclick="formKapat()">Vazgeç</button>
+  </div>
+</div>
+
+<!-- Hatırlatma -->
+<div class="alarm-bg" id="alarmBg">
+  <div class="alarm">
+    <div class="big">⏰</div>
+    <h3>İlaç zamanı!</h3>
+    <div class="muted" id="alarmTime" style="font-weight:700"></div>
+    <div class="list" id="alarmList"></div>
+    <button class="btn" onclick="alarmIctim()">✅ İçtim</button>
+    <button class="btn ghost" onclick="alarmErtele()">⏰ 10 dakika sonra hatırlat</button>
+    <button class="btn light" onclick="alarmAtla()">Bu dozu atla</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------- Ayarlar ve veri ----------
+const RENKLER = ["#14B8A6","#3B82F6","#8B5CF6","#EC4899","#F97316","#EAB308","#22C55E","#64748B"];
+const NASIL = ["Fark etmez","Aç karnına","Tok karnına","Yemekle birlikte","Yatmadan önce"];
+const GUN_KISA = ["Paz","Pzt","Sal","Çar","Per","Cum","Cmt"];
+const GUN_UZUN = ["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
+const AYLAR = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+const HAZIR = { 1:["09:00"], 2:["09:00","21:00"], 3:["08:00","14:00","20:00"], 4:["08:00","12:00","16:00","20:00"] };
+const GEC_DK = 30;          // saatinden bu kadar dakika sonra "gecikti" sayılır
+const TEKRAR_DK = 15;       // içilmezse bu kadar dakika sonra bir kez daha hatırlat
+
+function oku(k, v){ try { const x = localStorage.getItem(k); return x ? JSON.parse(x) : v; } catch { return v; } }
+function yaz(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+
+let ilaclar = oku("is_ilaclar", []);
+let kayit = oku("is_kayit", {});        // { "2026-11-26": { "id@09:00": {d:"ok"|"skip", t:zaman} } }
+let ayar = oku("is_ayar", { ses: true });
+let haberler = oku("is_haber", {});     // gönderilen hatırlatmalar
+let ertele = oku("is_ertele", {});      // { "gün|id@saat": zaman }
+
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+const iki = n => String(n).padStart(2, "0");
+const gunAnahtar = d => `${d.getFullYear()}-${iki(d.getMonth()+1)}-${iki(d.getDate())}`;
+const dk = s => { const [h, m] = s.split(":").map(Number); return h*60 + m; };
+const simdiDk = () => { const d = new Date(); return d.getHours()*60 + d.getMinutes(); };
+const $ = id => document.getElementById(id);
+
+function kaydetHepsi(){ yaz("is_ilaclar", ilaclar); yaz("is_kayit", kayit); yaz("is_ayar", ayar); yaz("is_haber", haberler); yaz("is_ertele", ertele); }
+
+function toast(m){ const t = $("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(t._z); t._z = setTimeout(() => t.classList.remove("show"), 2400); }
+
+// O gün içilmesi gereken dozlar
+function gununDozlari(tarih){
+  const g = tarih.getDay(), anahtar = gunAnahtar(tarih), liste = [];
+  for (const m of ilaclar) {
+    if (m.gunler && !m.gunler.includes(g)) continue;
+    if (m.bitis && anahtar > m.bitis) continue;
+    if (m.baslangic && anahtar < m.baslangic) continue;
+    for (const s of m.saatler) liste.push({ m, saat: s, key: `${m.id}@${s}` });
+  }
+  return liste.sort((a, b) => a.saat.localeCompare(b.saat) || a.m.ad.localeCompare(b.m.ad, "tr"));
+}
+
+function durum(doz, gun){
+  const k = (kayit[gun] || {})[doz.key];
+  if (k) return k.d;
+  if (gun !== gunAnahtar(new Date())) return gun < gunAnahtar(new Date()) ? "missed" : "wait";
+  const fark = simdiDk() - dk(doz.saat);
+  if (fark >= GEC_DK) return "late";
+  if (fark >= 0) return "now";
+  return "wait";
+}
+
+// ---------- Ekranlar ----------
+function ciz(){
+  const d = new Date();
+  $("today").textContent = `${GUN_UZUN[d.getDay()]}, ${d.getDate()} ${AYLAR[d.getMonth()]}`;
+  bugunCiz(); ilacCiz(); gecmisCiz(); ayarCiz();
+}
+
+function bugunCiz(){
+  const gun = gunAnahtar(new Date());
+  const dozlar = gununDozlari(new Date());
+  if (!ilaclar.length) {
+    $("summary").innerHTML = "";
+    $("doses").innerHTML = `<div class="card empty"><div class="big">💊</div><h3 style="font-size:20px;font-weight:900">Hoş geldin!</h3>
+      <p>İlk ilacını ekle, saati gelince sana hatırlatayım.</p><button class="btn" onclick="formAc()">+ İlaç ekle</button></div>`;
+    return;
+  }
+  const icilen = dozlar.filter(x => durum(x, gun) === "ok").length;
+  const toplam = dozlar.length;
+  const oran = toplam ? icilen / toplam : 0;
+  const C = 2 * Math.PI * 40;
+  const sonraki = dozlar.find(x => ["wait","now","late"].includes(durum(x, gun)));
+  let altyazi;
+  if (!toplam) altyazi = "Bugün içmen gereken ilaç yok 🌿";
+  else if (icilen === toplam) altyazi = "Bugünkü bütün ilaçlarını içtin 🎉";
+  else if (sonraki) altyazi = durum(sonraki, gun) === "wait" ? `Sıradaki: <b>${esc(sonraki.saat)}</b> — ${esc(sonraki.m.ad)}` : `Şimdi: <b>${esc(sonraki.m.ad)}</b> (${esc(sonraki.saat)})`;
+  else altyazi = "Bugün için başka doz kalmadı";
+  $("summary").innerHTML = `<div class="card summary">
+    <div class="ring"><svg width="96" height="96"><circle cx="48" cy="48" r="40" fill="none" stroke="var(--teal-bg)" stroke-width="11"/>
+      <circle cx="48" cy="48" r="40" fill="none" stroke="var(--teal2)" stroke-width="11" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-oran)}" style="transition:stroke-dashoffset .5s"/></svg>
+      <b>${icilen}/${toplam}</b></div>
+    <div><h3>Bugün</h3><div class="muted" style="font-weight:700">${toplam ? `${icilen} doz içildi, ${toplam-icilen} kaldı` : ""}</div><div class="next">${altyazi}</div></div></div>`;
+
+  const etiket = { ok:["İçildi","b-ok"], skip:["Atlandı","b-skip"], late:["Gecikti","b-late"], now:["Saati geldi","b-now"], wait:["Bekliyor","b-wait"] };
+  $("doses").innerHTML = dozlar.map(x => {
+    const s = durum(x, gun), [et, cls] = etiket[s];
+    const dugme = s === "ok" ? `<button class="take done" onclick="geriAl('${x.key}')">✓ İçtim</button>`
+      : s === "skip" ? `<button class="take skipped" onclick="geriAl('${x.key}')">Atlandı</button>`
+      : `<button class="take" onclick="ictim('${x.key}')">İçtim</button>`;
+    return `<div class="dose ${s==="ok"?"is-ok":""}">
+      <div class="dot" style="background:${esc(x.m.renk)}"></div>
+      <div class="time">${esc(x.saat)}</div>
+      <div class="info"><div class="name">${esc(x.m.ad)}</div>
+        <div class="sub">${esc([x.m.doz, x.m.nasil !== NASIL[0] ? x.m.nasil : ""].filter(Boolean).join(" · "))}</div>
+        <span class="badge ${cls}">${et}</span></div>
+      ${dugme}</div>`;
+  }).join("");
+}
+
+function ilacCiz(){
+  if (!ilaclar.length) { $("meds").innerHTML = `<div class="card empty"><div class="big">📋</div><p>Henüz ilaç eklemedin.</p><button class="btn" onclick="formAc()">+ İlaç ekle</button></div>`; return; }
+  const bugun = gunAnahtar(new Date());
+  $("meds").innerHTML = ilaclar.map(m => {
+    const gunler = !m.gunler ? "Her gün" : m.gunler.length ? m.gunler.map(g => GUN_KISA[g]).join(", ") : "Gün seçilmedi";
+    const bitti = m.bitis && m.bitis < bugun;
+    const bitis = m.bitis ? (bitti ? " · <b>Süresi bitti</b>" : ` · ${tarihYaz(m.bitis)} tarihine kadar`) : "";
+    const stok = m.stok != null ? (m.stok <= 5 ? `<div class="low">⚠️ ${m.stok} doz kaldı — eczaneye uğra</div>` : `<div class="sub">Kutuda ${m.stok} doz var</div>`) : "";
+    return `<div class="card med" onclick="formAc('${m.id}')" style="${bitti ? "opacity:.6" : ""}">
+      <div class="pill" style="background:${esc(m.renk)}22;color:${esc(m.renk)}">💊</div>
+      <div class="info"><div class="name">${esc(m.ad)}</div>
+        <div class="sub">${esc(m.doz || "")}${m.doz ? " · " : ""}${m.saatler.map(esc).join(", ")}</div>
+        <div class="sub">${gunler}${m.nasil !== NASIL[0] ? " · " + esc(m.nasil) : ""}${bitis}</div>${stok}</div>
+      <div class="chev">›</div></div>`;
+  }).join("") + `<p class="note">Değiştirmek veya silmek için ilaca dokun.</p>`;
+}
+
+function tarihYaz(s){ const [y, a, g] = s.split("-").map(Number); return `${g} ${AYLAR[a-1]}`; }
+
+function gecmisCiz(){
+  const gunler = [];
+  for (let i = 6; i >= 0; i--) { const d = new Date(); d.setHours(12,0,0,0); d.setDate(d.getDate() - i); gunler.push(d); }
+  let tIc = 0, tTop = 0;
+  const veri = gunler.map(d => {
+    const g = gunAnahtar(d), dz = gununDozlari(d);
+    const bugunMu = g === gunAnahtar(new Date());
+    // Bugün için sadece saati gelmiş dozları say
+    const sayilan = bugunMu ? dz.filter(x => dk(x.saat) <= simdiDk() || (kayit[g]||{})[x.key]) : dz;
+    const ic = sayilan.filter(x => (kayit[g]||{})[x.key]?.d === "ok").length;
+    tIc += ic; tTop += sayilan.length;
+    return { d, g, dz, ic, top: sayilan.length };
+  });
+  $("rate").innerHTML = tTop ? `Dozların <span style="color:var(--teal)">%${Math.round(tIc/tTop*100)}</span>'ini zamanında işaretledin` : `Henüz kayıt yok`;
+  $("bars").innerHTML = veri.map(v => `<div class="bar"><div class="col"><div class="fill" style="height:${v.top ? Math.max(4, v.ic/v.top*100) : 0}%"></div></div><small>${GUN_KISA[v.d.getDay()]}</small></div>`).join("");
+  $("histList").innerHTML = veri.slice().reverse().map(v => {
+    const satir = v.dz.map(x => {
+      const k = (kayit[v.g]||{})[x.key];
+      const ikon = k?.d === "ok" ? "✅" : k?.d === "skip" ? "⏭️" : (v.g < gunAnahtar(new Date()) || dk(x.saat) + GEC_DK <= simdiDk()) ? "❌" : "⏳";
+      return `<span>${ikon} ${esc(x.saat)} ${esc(x.m.ad)}</span>`;
+    }).join("");
+    return `<div class="hist-day"><b>${GUN_UZUN[v.d.getDay()]}, ${v.d.getDate()} ${AYLAR[v.d.getMonth()]}</b>${satir || '<span class="muted">İlaç yok</span>'}</div>`;
+  }).join("");
+}
+
+function ayarCiz(){
+  $("sesSw").classList.toggle("on", !!ayar.ses);
+  const n = "Notification" in window ? Notification.permission : "yok";
+  $("notifState").textContent = n === "granted" ? "Açık ✓" : n === "denied" ? "Kapalı — telefonun ayarlarından açabilirsin" : n === "yok" ? "Bu tarayıcı desteklemiyor (iPhone'da ana ekrana ekleyip oradan aç)" : "Henüz izin verilmedi";
+  $("notifBtn").hidden = n !== "default";
+  $("notifBanner").hidden = !(n === "default" && ilaclar.length);
+}
+
+// ---------- Sekmeler ----------
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => sekme(b.dataset.v));
+function sekme(v){
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.v === v));
+  ["bugun","ilaclar","gecmis","ayarlar"].forEach(x => $("v-" + x).hidden = x !== v);
+  $("fab").hidden = !(v === "bugun" || v === "ilaclar");
+  ciz(); scrollTo(0, 0);
+}
+
+// ---------- İçtim / atla ----------
+function ictim(key, gun = gunAnahtar(new Date()), sessiz){
+  (kayit[gun] ||= {})[key] = { d: "ok", t: Date.now() };
+  const m = ilaclar.find(x => x.id === key.split("@")[0]);
+  if (m && m.stok != null) { m.stok = Math.max(0, m.stok - 1); if (m.stok === 5 || m.stok === 0) setTimeout(() => toast(`⚠️ ${m.ad}: ${m.stok} doz kaldı`), 600); }
+  kaydetHepsi(); ciz();
+  if (!sessiz) { toast("Aferin! 👏"); if (navigator.vibrate) navigator.vibrate(40); }
+}
+function atla(key, gun = gunAnahtar(new Date())){ (kayit[gun] ||= {})[key] = { d: "skip", t: Date.now() }; kaydetHepsi(); ciz(); }
+function geriAl(key){
+  const gun = gunAnahtar(new Date()), k = (kayit[gun]||{})[key];
+  if (!k) return;
+  if (!confirm(k.d === "ok" ? "“İçtim” işaretini geri alayım mı?" : "“Atlandı” işaretini geri alayım mı?")) return;
+  if (k.d === "ok") { const m = ilaclar.find(x => x.id === key.split("@")[0]); if (m && m.stok != null) m.stok++; }
+  delete kayit[gun][key]; kaydetHepsi(); ciz();
+}
+
+// ---------- Form ----------
+let duzen = null, fNasil, fGunler, fRenk;
+function chipler(el, liste, secili, coklu, onChange){
+  el.innerHTML = liste.map((x, i) => `<button type="button" data-i="${i}">${x}</button>`).join("");
+  const guncelle = () => el.querySelectorAll("button").forEach(b => b.classList.toggle("on", coklu ? secili.includes(+b.dataset.i) : secili === +b.dataset.i));
+  el.querySelectorAll("button").forEach(b => b.onclick = () => {
+    const i = +b.dataset.i;
+    if (coklu) { const j = secili.indexOf(i); j >= 0 ? secili.splice(j, 1) : secili.push(i); } else secili = i;
+    guncelle(); onChange && onChange(secili);
+  });
+  guncelle();
+  return () => secili;
+}
+function saatleriCiz(saatler){
+  $("fSaatler").innerHTML = saatler.map((s, i) => `<div class="row"><input type="time" value="${s}" data-i="${i}"><button type="button" onclick="saatSil(${i})" aria-label="Saati sil" ${saatler.length < 2 ? "hidden" : ""}>✕</button></div>`).join("");
+}
+function okunanSaatler(){ return [...$("fSaatler").querySelectorAll("input")].map(i => i.value).filter(Boolean); }
+function saatEkle(){ const s = okunanSaatler(); const son = s.length ? dk(s[s.length-1]) : 480; const y = Math.min(son + 240, 23*60+30); s.push(`${iki(Math.floor(y/60))}:${iki(y%60)}`); saatleriCiz(s); kacGuncelle(); }
+function saatSil(i){ const s = okunanSaatler(); s.splice(i, 1); saatleriCiz(s); kacGuncelle(); }
+function kacGuncelle(){
+  const n = okunanSaatler().length;
+  $("fKac").querySelectorAll("button").forEach(b => b.classList.toggle("on", +b.dataset.i + 1 === n));
+}
+
+function formAc(id){
+  duzen = id ? ilaclar.find(m => m.id === id) : null;
+  const m = duzen || { ad:"", doz:"", nasil:NASIL[0], saatler:["09:00"], gunler:null, renk:RENKLER[ilaclar.length % RENKLER.length], stok:null, bitis:"" };
+  $("formTitle").textContent = duzen ? "İlacı düzenle" : "İlaç ekle";
+  $("silBtn").hidden = !duzen;
+  $("fAd").value = m.ad; $("fDoz").value = m.doz || ""; $("fStok").value = m.stok ?? ""; $("fBitis").value = m.bitis || "";
+  fNasil = chipler($("fNasil"), NASIL, Math.max(0, NASIL.indexOf(m.nasil)), false);
+  saatleriCiz([...m.saatler]);
+  $("fKac").innerHTML = ["1 kez","2 kez","3 kez","4 kez"].map((x, i) => `<button type="button" data-i="${i}">${x}</button>`).join("");
+  $("fKac").querySelectorAll("button").forEach(b => b.onclick = () => { saatleriCiz([...HAZIR[+b.dataset.i + 1]]); kacGuncelle(); });
+  kacGuncelle();
+  let tip = m.gunler ? 1 : 0;
+  const gunSecili = m.gunler ? [...m.gunler] : [1,2,3,4,5];
+  // Pazartesiden başlayan sıralama
+  const sira = [1,2,3,4,5,6,0];
+  const gunSec = sira.map((g, i) => gunSecili.includes(g) ? i : -1).filter(i => i >= 0);
+  fGunler = chipler($("fGunler"), sira.map(g => GUN_KISA[g]), gunSec, true);
+  fGunler.sira = sira;
+  $("fGunler").hidden = tip === 0;
+  const tipSec = chipler($("fGunTip"), ["Her gün","Belirli günler"], tip, false, v => { $("fGunler").hidden = v === 0; });
+  fGunler.tip = tipSec;
+  $("fRenk").innerHTML = RENKLER.map(r => `<button type="button" style="background:${r}" data-r="${r}" aria-label="Renk"></button>`).join("");
+  fRenk = m.renk;
+  const renkGuncelle = () => $("fRenk").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.r === fRenk));
+  $("fRenk").querySelectorAll("button").forEach(b => b.onclick = () => { fRenk = b.dataset.r; renkGuncelle(); });
+  renkGuncelle();
+  $("sheetBg").classList.add("open");
+  document.body.style.overflow = "hidden";
+  if (!duzen) setTimeout(() => $("fAd").focus(), 250);
+}
+function formKapat(){ $("sheetBg").classList.remove("open"); document.body.style.overflow = ""; }
+
+function kaydet(){
+  const ad = $("fAd").value.trim();
+  if (!ad) { toast("İlacın adını yaz"); $("fAd").focus(); return; }
+  const saatler = [...new Set(okunanSaatler())].sort();
+  if (!saatler.length) { toast("En az bir saat seç"); return; }
+  let gunler = null;
+  if (fGunler.tip() === 1) {
+    gunler = fGunler().map(i => fGunler.sira[i]).sort();
+    if (!gunler.length) { toast("En az bir gün seç"); return; }
+    if (gunler.length === 7) gunler = null;
+  }
+  const stokS = $("fStok").value.trim();
+  const veri = { ad, doz: $("fDoz").value.trim(), nasil: NASIL[fNasil()], saatler, gunler, renk: fRenk,
+    stok: stokS === "" ? null : Math.max(0, parseInt(stokS, 10) || 0), bitis: $("fBitis").value || "" };
+  if (duzen) Object.assign(duzen, veri);
+  else ilaclar.push({ id: Math.random().toString(36).slice(2, 9), baslangic: gunAnahtar(new Date()), ...veri });
+  kaydetHepsi(); formKapat(); ciz();
+  toast(duzen ? "Değişiklik kaydedildi" : "İlaç eklendi 💊");
+  if ("Notification" in window && Notification.permission === "default") setTimeout(bildirimIzni, 700);
+}
+function sil(){
+  if (!duzen || !confirm(`“${duzen.ad}” silinsin mi?`)) return;
+  ilaclar = ilaclar.filter(m => m !== duzen); kaydetHepsi(); formKapat(); ciz(); toast("İlaç silindi");
+}
+
+// ---------- Hatırlatma ----------
+let aktifAlarm = [];
+async function bildirimIzni(){
+  if (!("Notification" in window)) { toast("iPhone'da önce ana ekrana ekleyip oradan aç"); sekme("ayarlar"); return; }
+  try { await Notification.requestPermission(); } catch {}
+  ayarCiz();
+  if (Notification.permission === "granted") toast("Bildirimler açık 🔔");
+}
+function ayarDegis(k){ ayar[k] = !ayar[k]; kaydetHepsi(); ayarCiz(); if (k === "ses" && ayar.ses) zil(); }
+
+let sesCtx;
+function zil(){
+  if (!ayar.ses) return;
+  try {
+    sesCtx ||= new (window.AudioContext || window.webkitAudioContext)();
+    const t0 = sesCtx.currentTime;
+    [0, .35, .7, 1.4, 1.75, 2.1].forEach((t, i) => {
+      const o = sesCtx.createOscillator(), g = sesCtx.createGain();
+      o.type = "sine"; o.frequency.value = i % 3 === 2 ? 1046 : 880;
+      g.gain.setValueAtTime(0, t0 + t); g.gain.linearRampToValueAtTime(.25, t0 + t + .02); g.gain.exponentialRampToValueAtTime(.001, t0 + t + .3);
+      o.connect(g).connect(sesCtx.destination); o.start(t0 + t); o.stop(t0 + t + .32);
+    });
+  } catch {}
+}
+// iPhone'da ses ancak kullanıcı bir yere dokunduktan sonra çalabilir: ilk dokunuşta sesi hazırla
+document.addEventListener("pointerdown", () => { try { sesCtx ||= new (window.AudioContext || window.webkitAudioContext)(); sesCtx.resume(); } catch {} }, { once: true });
+
+async function bildirimGonder(dozlar){
+  if (!("Notification" in window) || Notification.permission !== "granted") return;
+  const baslik = dozlar.length === 1 ? `💊 ${dozlar[0].m.ad} zamanı` : `💊 ${dozlar.length} ilacın zamanı geldi`;
+  const govde = dozlar.map(x => `${x.saat} · ${x.m.ad}${x.m.doz ? " — " + x.m.doz : ""}${x.m.nasil !== NASIL[0] ? " (" + x.m.nasil + ")" : ""}`).join("\n");
+  const secenek = { body: govde, icon: "/ilac/icon-192.png", badge: "/ilac/icon-192.png", tag: "ilac-" + dozlar.map(x => x.key).join(","), renotify: true, requireInteraction: true, vibrate: [300, 150, 300, 150, 300], data: { url: "/ilac/" } };
+  try {
+    const reg = await navigator.serviceWorker?.getRegistration("/ilac/");
+    if (reg) return reg.showNotification(baslik, secenek);
+    new Notification(baslik, secenek);
+  } catch {}
+}
+
+function alarmGoster(dozlar){
+  aktifAlarm = dozlar;
+  $("alarmTime").textContent = "Saat " + dozlar[0].saat;
+  $("alarmList").innerHTML = dozlar.map(x => `<div><span style="color:${esc(x.m.renk)}">●</span> ${esc(x.m.ad)}<small>${esc([x.saat, x.m.doz, x.m.nasil !== NASIL[0] ? x.m.nasil : ""].filter(Boolean).join(" · "))}</small></div>`).join("");
+  $("alarmBg").classList.add("open");
+  zil(); if (navigator.vibrate) navigator.vibrate([300, 150, 300, 150, 300]);
+}
+function alarmKapat(){ $("alarmBg").classList.remove("open"); aktifAlarm = []; }
+function alarmIctim(){ const g = gunAnahtar(new Date()); aktifAlarm.forEach(x => !x.deneme && ictim(x.key, g, true)); alarmKapat(); toast("Aferin! 👏"); }
+function alarmAtla(){ aktifAlarm.forEach(x => !x.deneme && atla(x.key)); alarmKapat(); }
+function alarmErtele(){
+  const g = gunAnahtar(new Date());
+  aktifAlarm.forEach(x => { if (!x.deneme) ertele[g + "|" + x.key] = Date.now() + 10*60*1000; });
+  kaydetHepsi(); alarmKapat(); toast("10 dakika sonra tekrar hatırlatacağım");
+}
+function denemeAlarm(){
+  const ornek = ilaclar[0] ? { m: ilaclar[0], saat: ilaclar[0].saatler[0] } : { m: { ad: "Örnek ilaç", doz: "1 tablet", nasil: "Tok karnına", renk: RENKLER[0] }, saat: "09:00" };
+  alarmGoster([{ ...ornek, key: "deneme", deneme: true }]);
+  bildirimGonder([ornek]);
+}
+
+// Her 20 saniyede saati gelen dozları kontrol et
+function kontrol(){
+  const now = new Date(), g = gunAnahtar(now), sd = simdiDk();
+  // Eski günlerin hatırlatma kayıtlarını temizle
+  for (const k of Object.keys(haberler)) if (!k.startsWith(g)) delete haberler[k];
+  for (const k of Object.keys(ertele)) if (!k.startsWith(g)) delete ertele[k];
+  const vade = [];
+  for (const x of gununDozlari(now)) {
+    if ((kayit[g] || {})[x.key]) continue;
+    const fark = sd - dk(x.saat);
+    if (fark < 0 || fark > 120) continue;            // en fazla 2 saat geriye bak
+    const ek = g + "|" + x.key;
+    if (ertele[ek]) { if (Date.now() >= ertele[ek]) { delete ertele[ek]; vade.push(x); } continue; }
+    if (!haberler[ek + "|1"]) { haberler[ek + "|1"] = 1; vade.push(x); }
+    else if (fark >= TEKRAR_DK && !haberler[ek + "|2"]) { haberler[ek + "|2"] = 1; vade.push(x); }
+  }
+  if (vade.length) {
+    kaydetHepsi();
+    const yeni = vade.filter(x => !aktifAlarm.some(a => a.key === x.key));
+    if (yeni.length) { alarmGoster([...aktifAlarm.filter(a => !a.deneme), ...yeni]); bildirimGonder(yeni); }
+  }
+  bugunCiz();
+}
+
+// ---------- Takvim (uygulama kapalıyken hatırlatma) ----------
+function takvimeEkle(){
+  if (!ilaclar.length) { toast("Önce bir ilaç ekle"); return; }
+  const veri = ilaclar.map(m => ({ a: m.ad, d: m.doz, n: m.nasil !== NASIL[0] ? m.nasil : "", s: m.saatler, g: m.gunler, b: m.bitis || "", i: m.id }));
+  const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(veri)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  location.href = "/api/takvim?v=" + b64;
+}
+
+// ---------- Yedek ----------
+function yedekIndir(){
+  const blob = new Blob([JSON.stringify({ uygulama: "ilac-saatim", surum: 1, ilaclar, kayit }, null, 1)], { type: "application/json" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `ilac-saatim-yedek-${gunAnahtar(new Date())}.json`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+function yedekYukle(inp){
+  const f = inp.files[0]; inp.value = ""; if (!f) return;
+  f.text().then(t => {
+    const v = JSON.parse(t);
+    if (v.uygulama !== "ilac-saatim" || !Array.isArray(v.ilaclar)) throw 0;
+    if (!confirm(`Yedekte ${v.ilaclar.length} ilaç var. Şimdiki bilgilerin yerine yüklensin mi?`)) return;
+    ilaclar = v.ilaclar.filter(m => m && m.id && m.ad && Array.isArray(m.saatler)); kayit = v.kayit || {};
+    kaydetHepsi(); ciz(); toast("Yedek yüklendi ✓");
+  }).catch(() => toast("Bu dosya bir İlaç Saatim yedeği değil"));
+}
+
+// ---------- Yükleme ----------
+let kurulum;
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); kurulum = e; $("installBtn").hidden = false; });
+async function yukle(){ if (!kurulum) return; kurulum.prompt(); await kurulum.userChoice; kurulum = null; $("installBtn").hidden = true; }
+if (matchMedia("(display-mode: standalone)").matches || navigator.standalone) $("installHelp").textContent = "Uygulama telefonuna yüklü ✓";
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/ilac/sw.js", { scope: "/ilac/" }).catch(() => {});
+  navigator.serviceWorker.addEventListener("message", e => { if (e.data?.tip === "kontrol") kontrol(); });
+}
+
+ciz();
+kontrol();
+setInterval(kontrol, 20000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) { ciz(); kontrol(); } });
+</script>
+</body>
+</html>

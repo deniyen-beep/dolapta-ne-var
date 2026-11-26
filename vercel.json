@@ -1,15 +1,19 @@
 {
+  "redirects": [{ "source": "/ilac", "destination": "/ilac/", "permanent": false }],
   "functions": {
     "api/tarif.js": { "maxDuration": 60 },
     "api/malzeme.js": { "maxDuration": 60 },
     "api/sef.js": { "maxDuration": 60 },
     "api/hediye.js": { "maxDuration": 60 },
     "api/kart.js": { "maxDuration": 30 },
-    "api/ilgi.js": { "maxDuration": 60 }
+    "api/ilgi.js": { "maxDuration": 60 },
+    "api/takvim.js": { "maxDuration": 10 }
   },
   "headers": [
     { "source": "/sw.js", "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }] },
     { "source": "/", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] },
-    { "source": "/index.html", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }
+    { "source": "/index.html", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] },
+    { "source": "/ilac/sw.js", "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }, { "key": "Service-Worker-Allowed", "value": "/ilac/" }] },
+    { "source": "/ilac/", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }
   ]
 }
