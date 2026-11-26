@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>İlaç Saatim</title>
 <meta name="description" content="İlaçlarını, ölçümlerini ve doktor randevularını tek yerde takip et. Saati gelince hatırlatsın.">
-<meta name="theme-color" content="#0B3A32">
+<meta name="theme-color" content="#0E1530">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -19,20 +19,20 @@
 <style>
 :root{
   --bg:#F4F0E6; --bg2:#FBF8F1; --card:#FFFFFF; --card2:#FAF7F0; --field:#FBF9F4; --line:#E7DFCD; --line2:#EFE9DC;
-  --ink:#13241F; --ink2:#34463F; --muted:#7B8681;
-  --em:#0F4C42; --em2:#1B6B5C; --em-soft:#E4EFEA;
+  --ink:#141A2E; --ink2:#353D57; --muted:#7A8096;
+  --em:#1E2A55; --em2:#3A4C8A; --em-soft:#E7EAF4;
   --gold:#B48D45; --gold2:#E6CF9C; --gold-deep:#86672B; --gold-soft:#F6EEDB;
   --ok:#1E7A4C; --ok-soft:#E1F2E7; --warn:#A8701A; --warn-soft:#FAEFD8; --bad:#B23B3B; --bad-soft:#F8E4E1;
-  --shadow:0 1px 2px rgba(19,36,31,.04),0 10px 30px -8px rgba(19,36,31,.12);
-  --shadow-lg:0 24px 60px -12px rgba(11,40,34,.35);
-  --glass:rgba(255,253,248,.82); --scrim:rgba(8,22,19,.48);
+  --shadow:0 1px 2px rgba(20,26,46,.04),0 10px 30px -8px rgba(20,26,46,.12);
+  --shadow-lg:0 24px 60px -12px rgba(8,12,30,.4);
+  --glass:rgba(255,253,248,.82); --scrim:rgba(6,9,22,.5);
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-tema="acik"]){
-    --bg:#08110F; --bg2:#0D1916; --card:#101C19; --card2:#13211E; --field:#0C1715; --line:#1F302B; --line2:#1A2925;
+    --bg:#07080F; --bg2:#0C0F1C; --card:#10131F; --card2:#141826; --field:#0B0E19; --line:#242A3B; --line2:#1C2131;
     --ink:#EEEAE0; --ink2:#CBD1CB; --muted:#8B9994;
-    --em:#62C6AB; --em2:#86DAC2; --em-soft:#12302A;
+    --em:#93A9EC; --em2:#B3C3F2; --em-soft:#171F3C;
     --gold:#D9B66C; --gold2:#F1DBA8; --gold-deep:#E9C882; --gold-soft:#2A2314;
     --ok:#5DD39A; --ok-soft:#11301F; --warn:#F0B54A; --warn-soft:#322610; --bad:#F08A80; --bad-soft:#3A1A19;
     --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 32px -8px rgba(0,0,0,.55);
@@ -41,9 +41,9 @@
   }
 }
 :root[data-tema="koyu"]{
-  --bg:#08110F; --bg2:#0D1916; --card:#101C19; --card2:#13211E; --field:#0C1715; --line:#1F302B; --line2:#1A2925;
+  --bg:#07080F; --bg2:#0C0F1C; --card:#10131F; --card2:#141826; --field:#0B0E19; --line:#242A3B; --line2:#1C2131;
   --ink:#EEEAE0; --ink2:#CBD1CB; --muted:#8B9994;
-  --em:#62C6AB; --em2:#86DAC2; --em-soft:#12302A;
+  --em:#93A9EC; --em2:#B3C3F2; --em-soft:#171F3C;
   --gold:#D9B66C; --gold2:#F1DBA8; --gold-deep:#E9C882; --gold-soft:#2A2314;
   --ok:#5DD39A; --ok-soft:#11301F; --warn:#F0B54A; --warn-soft:#322610; --bad:#F08A80; --bad-soft:#3A1A19;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 32px -8px rgba(0,0,0,.55);
@@ -83,14 +83,14 @@ input,textarea,select{font:inherit;color:inherit}
 .day .dr{position:relative;width:2.1rem;height:2.1rem;display:grid;place-items:center}
 .day .dr svg{position:absolute;inset:0;transform:rotate(-90deg)}
 .day .dr b{font-size:.92rem;font-weight:800;position:relative}
-.day.sel{background:linear-gradient(180deg,#14594C,#0C3F36);box-shadow:0 8px 20px -8px rgba(12,63,54,.7)}
+.day.sel{background:linear-gradient(180deg,#22305F,#111A3A);box-shadow:0 8px 20px -8px rgba(17,26,58,.7)}
 .day.sel .dn{color:var(--gold2)} .day.sel .dr b{color:#fff}
 .day.today:not(.sel) .dr b{color:var(--gold-deep)}
 .day.today::after{content:"";position:absolute;bottom:.18rem;width:4px;height:4px;border-radius:50%;background:var(--gold)}
 
 /* Ana kart */
 .hero{position:relative;overflow:hidden;border-radius:28px;padding:1.35rem 1.35rem 1.1rem;color:#F4EFE3;
-  background:radial-gradient(90% 70% at 100% 0%,rgba(230,207,156,.24),transparent 60%),radial-gradient(60% 60% at 0% 100%,rgba(98,198,171,.16),transparent 60%),linear-gradient(150deg,#0B3A32 0%,#105447 55%,#0A352E 100%);
+  background:radial-gradient(90% 70% at 100% 0%,rgba(230,207,156,.24),transparent 60%),radial-gradient(60% 60% at 0% 100%,rgba(120,150,230,.18),transparent 60%),linear-gradient(150deg,#0E1530 0%,#18234A 55%,#0B1128 100%);
   box-shadow:var(--shadow-lg);margin-bottom:1rem;isolation:isolate}
 .hero::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(140deg,rgba(241,219,168,.55),rgba(241,219,168,0) 40%,rgba(241,219,168,.25));
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
@@ -166,7 +166,7 @@ input,textarea,select{font:inherit;color:inherit}
 
 /* Düğmeler */
 .btn{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:1rem 1.2rem;border-radius:18px;font-weight:800;font-size:1rem;
-  background:linear-gradient(180deg,#16604F,#0D4238);color:#F6EEDB;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 10px 24px -10px rgba(13,66,56,.8)}
+  background:linear-gradient(180deg,#26356A,#121A3A);color:#F6EEDB;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 10px 24px -10px rgba(18,26,58,.8)}
 .btn.gold{background:linear-gradient(180deg,#F0D7A0,#C69E55);color:#2B210D;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 10px 24px -10px rgba(180,141,69,.9)}
 .btn.soft{background:var(--em-soft);color:var(--em);box-shadow:none}
 .btn.line{background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:none}
@@ -218,7 +218,7 @@ input[type=date].inp,input[type=time].inp{min-width:0;width:100%;-webkit-appeara
 textarea.inp{min-height:5rem;resize:vertical}
 .chips{display:flex;flex-wrap:wrap;gap:.45rem}
 .chips button{padding:.6rem .9rem;border-radius:99px;border:1px solid var(--line);background:var(--field);font-weight:700;font-size:.88rem;color:var(--ink2);transition:.15s}
-.chips button.on{background:linear-gradient(180deg,#16604F,#0D4238);border-color:transparent;color:#F6EEDB}
+.chips button.on{background:linear-gradient(180deg,#26356A,#121A3A);border-color:transparent;color:#F6EEDB}
 .forms{display:grid;grid-template-columns:repeat(5,1fr);gap:.45rem}
 .forms button{display:flex;flex-direction:column;align-items:center;gap:.15rem;padding:.5rem .1rem .45rem;border-radius:16px;border:1px solid var(--line);background:var(--field);font-size:.66rem;font-weight:700;color:var(--muted);line-height:1.15;text-align:center}
 .forms button.on{border-color:var(--gold);background:var(--gold-soft);color:var(--gold-deep);box-shadow:0 0 0 3px var(--gold-soft)}
@@ -232,7 +232,7 @@ textarea.inp{min-height:5rem;resize:vertical}
 .trow .inp{flex:1}
 .trow button{width:3.2rem;border-radius:14px;border:1px solid var(--line);background:var(--field);color:var(--bad);display:grid;place-items:center}
 .preview{display:flex;align-items:center;gap:1rem;padding:1rem;border-radius:24px;margin-bottom:.8rem;color:#F4EFE3;position:relative;overflow:hidden;
-  background:radial-gradient(70% 90% at 15% 50%,rgba(241,219,168,.25),transparent 70%),linear-gradient(150deg,#0B3A32,#105447)}
+  background:radial-gradient(70% 90% at 15% 50%,rgba(241,219,168,.25),transparent 70%),linear-gradient(150deg,#0E1530,#18234A)}
 .preview .pv{width:5.2rem;height:5.2rem;display:grid;place-items:center;flex:0 0 auto}
 .preview b{display:block;font-family:Fraunces,serif;font-size:1.35rem;font-weight:600;line-height:1.2;overflow-wrap:anywhere}
 .preview span{color:rgba(244,239,227,.7);font-size:.85rem;font-weight:600}
@@ -245,7 +245,7 @@ textarea.inp{min-height:5rem;resize:vertical}
 
 /* Detay */
 .dhero{text-align:center;padding:1.4rem 1rem 1.2rem;border-radius:28px;margin-bottom:.9rem;color:#F4EFE3;position:relative;overflow:hidden;
-  background:radial-gradient(55% 55% at 50% 38%,rgba(241,219,168,.3),transparent 70%),linear-gradient(160deg,#0B3A32,#115649 60%,#0A332C)}
+  background:radial-gradient(55% 55% at 50% 38%,rgba(241,219,168,.3),transparent 70%),linear-gradient(160deg,#0E1530,#1A2550 60%,#0B1230)}
 .dhero .stage{width:8.5rem;height:8.5rem;margin:0 auto .3rem;display:grid;place-items:center;animation:float 5s ease-in-out infinite}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .dhero h2{font-family:Fraunces,serif;font-weight:600;font-size:1.8rem;line-height:1.15;overflow-wrap:anywhere}
@@ -323,7 +323,7 @@ textarea.inp{min-height:5rem;resize:vertical}
 .set .st small{color:var(--muted);font-weight:500;font-size:.8rem}
 .sw{width:3.3rem;height:2rem;border-radius:99px;background:var(--line);position:relative;flex:0 0 auto;transition:.2s}
 .sw::after{content:"";position:absolute;top:3px;left:3px;width:1.6rem;height:1.6rem;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 2px 6px rgba(0,0,0,.25)}
-.sw.on{background:linear-gradient(180deg,#16604F,#0D4238)}
+.sw.on{background:linear-gradient(180deg,#26356A,#121A3A)}
 .sw.on::after{left:calc(100% - 1.6rem - 3px)}
 .prof{display:flex;align-items:center;gap:.8rem;padding:.75rem;border-radius:18px;border:1px solid var(--line);background:var(--card);margin-bottom:.5rem;width:100%;text-align:left}
 .prof.on{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-soft)}
@@ -352,7 +352,7 @@ textarea.inp{min-height:5rem;resize:vertical}
 
 /* Hatırlatma ekranı */
 .alarm{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(1.5rem + env(safe-area-inset-top)) 1.3rem calc(1.5rem + env(safe-area-inset-bottom));color:#F4EFE3;text-align:center;
-  background:radial-gradient(60% 45% at 50% 32%,rgba(241,219,168,.28),transparent 70%),linear-gradient(170deg,#0A332C,#0E4B40 50%,#071F1B);animation:fade .3s ease;overflow:auto}
+  background:radial-gradient(60% 45% at 50% 32%,rgba(241,219,168,.28),transparent 70%),linear-gradient(170deg,#0B1230,#141E42 50%,#05070F);animation:fade .3s ease;overflow:auto}
 .alarm .rings{position:relative;width:11rem;height:11rem;display:grid;place-items:center;margin-bottom:1rem;flex:0 0 auto}
 .alarm .rings i{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(241,219,168,.5);animation:ripple 2.4s ease-out infinite}
 .alarm .rings i:nth-child(2){animation-delay:.8s} .alarm .rings i:nth-child(3){animation-delay:1.6s}
@@ -370,8 +370,8 @@ textarea.inp{min-height:5rem;resize:vertical}
 
 /* Karşılama */
 .onb{position:fixed;inset:0;z-index:95;display:flex;flex-direction:column;justify-content:flex-end;color:#F4EFE3;overflow:auto;
-  background:radial-gradient(70% 45% at 50% 25%,rgba(241,219,168,.3),transparent 70%),linear-gradient(170deg,#0A332C,#0F4F43 50%,#071F1B);padding:calc(1rem + env(safe-area-inset-top)) 1.4rem calc(1.6rem + env(safe-area-inset-bottom))}
-.onb .art{flex:1;display:flex;align-items:center;justify-content:center;position:relative;min-height:14rem}
+  background:radial-gradient(70% 45% at 50% 25%,rgba(241,219,168,.3),transparent 70%),linear-gradient(170deg,#0B1230,#151F45 50%,#05070F);padding:calc(1rem + env(safe-area-inset-top)) 1.4rem calc(1.6rem + env(safe-area-inset-bottom))}
+.onb .art{flex:1;display:flex;align-items:center;justify-content:center;position:relative;min-height:15rem;margin-top:1.2rem}
 .onb .art .p{position:absolute;animation:float 6s ease-in-out infinite}
 .onb h1{font-family:Fraunces,serif;font-weight:600;font-size:2.5rem;line-height:1.05;letter-spacing:-.02em}
 .onb h1 em{font-style:italic;color:#E6CF9C}
@@ -383,7 +383,7 @@ textarea.inp{min-height:5rem;resize:vertical}
 .onb li .i{color:#E6CF9C}
 
 .toast{position:fixed;left:50%;bottom:calc(6.8rem + env(safe-area-inset-bottom));transform:translate(-50%,20px);z-index:99;opacity:0;pointer-events:none;transition:.3s cubic-bezier(.2,.9,.3,1);
-  background:#13241F;color:#F4EFE3;padding:.8rem 1.1rem;border-radius:16px;font-weight:700;font-size:.92rem;box-shadow:0 14px 30px -10px rgba(0,0,0,.5);max-width:90vw;text-align:center;border:1px solid rgba(241,219,168,.2)}
+  background:#141A2E;color:#F4EFE3;padding:.8rem 1.1rem;border-radius:16px;font-weight:700;font-size:.92rem;box-shadow:0 14px 30px -10px rgba(0,0,0,.5);max-width:90vw;text-align:center;border:1px solid rgba(241,219,168,.2)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:98}
 .celebrate{position:fixed;inset:0;z-index:97;display:grid;place-items:center;background:var(--scrim);animation:fade .2s;padding:1.2rem}
@@ -397,10 +397,10 @@ textarea.inp{min-height:5rem;resize:vertical}
 /* Doktor raporu (yazdırma) */
 #rapor{position:fixed;inset:0;z-index:96;background:#fff;color:#111;overflow:auto;padding:1.2rem 1rem 6rem}
 #rapor .rp{max-width:760px;margin:0 auto;font-size:13px}
-#rapor .rh{display:flex;align-items:center;gap:12px;border-bottom:2px solid #0F4C42;padding-bottom:12px;margin-bottom:14px}
+#rapor .rh{display:flex;align-items:center;gap:12px;border-bottom:2px solid #1E2A55;padding-bottom:12px;margin-bottom:14px}
 #rapor .rh img{width:44px;height:44px;border-radius:11px}
-#rapor h1{font-family:Fraunces,serif;font-size:24px;font-weight:600;color:#0F4C42}
-#rapor h2{font-family:Fraunces,serif;font-size:16px;margin:18px 0 8px;color:#0F4C42}
+#rapor h1{font-family:Fraunces,serif;font-size:24px;font-weight:600;color:#1E2A55}
+#rapor h2{font-family:Fraunces,serif;font-size:16px;margin:18px 0 8px;color:#1E2A55}
 #rapor table{width:100%;border-collapse:collapse}
 @media screen and (max-width:700px){#rapor table{display:block;overflow-x:auto;white-space:nowrap}#rapor h1{font-size:20px}}
 #rapor th,#rapor td{border-bottom:1px solid #e3e3e3;padding:6px 6px;text-align:left;vertical-align:top}
@@ -626,7 +626,7 @@ const BOLUMLER = [
   { k: "sabah", ad: "Sabah", ic: "sunrise", a: 240, b: 660 }, { k: "ogle", ad: "Öğle", ic: "sun", a: 660, b: 960 },
   { k: "aksam", ad: "Akşam", ic: "sunset", a: 960, b: 1260 }, { k: "gece", ad: "Gece", ic: "moon", a: 1260, b: 1680 }
 ];
-const PROFIL_RENK = ["#0F5C4F", "#9A6B2F", "#6B4FA0", "#B0475C", "#2F6FA8", "#4D7A3A"];
+const PROFIL_RENK = ["#26356A", "#9A6B2F", "#6B4FA0", "#B0475C", "#2F6FA8", "#4D7A3A"];
 const OLCUM = {
   tansiyon: { ad: "Tansiyon", birim: "mmHg", ic: "activity", renk: "#C2564B", iki: true, et: ["Büyük", "Küçük"] },
   seker: { ad: "Kan şekeri", birim: "mg/dL", ic: "drop", renk: "#B0475C", baglam: ["Aç", "Tok", "Rastgele"] },
@@ -1492,7 +1492,7 @@ function doktorRaporu() {
   const rv = p.randevular.filter(r => new Date(r.t) > Date.now()).sort((a, b) => a.t.localeCompare(b.t));
   const div = document.createElement("div"); div.id = "rapor";
   div.innerHTML = `<div class="rp"><div class="rh"><img src="/ilac/icon-192.png" alt=""><div style="flex:1"><h1>İlaç ve Sağlık Raporu</h1><div style="color:#666">${[gorunenAd(p) === "Ben" ? "" : esc(gorunenAd(p)), `${d.getDate()} ${AY[d.getMonth()]} ${d.getFullYear()}`].filter(Boolean).join(" · ")}</div></div>
-      <div style="text-align:right"><div style="font-family:Fraunces,serif;font-size:26px;color:#0F4C42">%${u30.oran == null ? "—" : Math.round(u30.oran * 100)}</div><div style="font-size:11px;color:#666">30 günlük ilaç uyumu</div></div></div>
+      <div style="text-align:right"><div style="font-family:Fraunces,serif;font-size:26px;color:#1E2A55">%${u30.oran == null ? "—" : Math.round(u30.oran * 100)}</div><div style="font-size:11px;color:#666">30 günlük ilaç uyumu</div></div></div>
     <h2>Kullandığım ilaçlar</h2>
     ${ilac.length ? `<table><tr><th>İlaç</th><th>Doz</th><th>Sıklık</th><th>Saatler</th><th>Nasıl</th><th>Başlangıç</th><th>30 gün</th></tr>
       ${ilac.map(m => { const u = uyum(p.id, 30, m.id); return `<tr><td><b>${esc(m.ad)}</b> ${esc(m.guc || "")}<br><span style="color:#777">${esc((FORMLAR.find(f => f.k === m.form) || FORMLAR[0]).ad)}</span></td><td>${esc(miktarYaz(m))}</td><td>${esc(planYaz(m))}</td><td>${m.plan === "gerekirse" ? "—" : esc(m.saatler.join(", "))}</td><td>${esc(m.nasil)}</td><td>${m.baslangic ? tarihYaz(m.baslangic, true) : "—"}${m.bitis ? "<br>→ " + tarihYaz(m.bitis, true) : ""}</td><td>${u.oran == null ? "—" : "%" + Math.round(u.oran * 100)}</td></tr>`; }).join("")}</table>` : "<p>Kayıtlı ilaç yok.</p>"}
@@ -1612,7 +1612,7 @@ function kutla(e, b, a) {
 function konfeti() {
   const c = $("confetti"), x = c.getContext("2d");
   c.width = innerWidth * devicePixelRatio; c.height = innerHeight * devicePixelRatio; x.scale(devicePixelRatio, devicePixelRatio);
-  const renk = ["#F1DBA8", "#C9A256", "#62C6AB", "#FFFFFF", "#E8A87C", "#1B6B5C"];
+  const renk = ["#F1DBA8", "#C9A256", "#93A9EC", "#FFFFFF", "#E8A87C", "#3A4C8A"];
   const parca = Array.from({ length: 110 }, () => ({ x: innerWidth / 2 + (Math.random() - .5) * 80, y: innerHeight * .35, vx: (Math.random() - .5) * 12, vy: -Math.random() * 12 - 4, r: Math.random() * 6 + 3, a: Math.random() * 6, va: (Math.random() - .5) * .3, c: renk[Math.floor(Math.random() * renk.length)] }));
   let k = 0;
   (function kare() {
@@ -1774,11 +1774,11 @@ async function yukle() { if (!kurulum) return; kurulum.prompt(); await kurulum.u
 function karsilama() {
   const d = document.createElement("div"); d.className = "onb"; d.id = "onb";
   d.innerHTML = `<div class="art">
-      <div class="p" style="left:8%;top:18%;animation-delay:-1s">${hap("kapsul", "#F29B4B", "#F4F1EA", 96)}</div>
-      <div class="p" style="right:6%;top:6%;animation-delay:-3s">${hap("tablet", "#F4F1EA", null, 78)}</div>
-      <div class="p" style="right:22%;bottom:4%;animation-delay:-2s">${hap("yumusak", "#F5CF5B", null, 88)}</div>
-      <div class="p" style="left:24%;bottom:10%;animation-delay:-4s">${hap("oval", "#9AD2EE", null, 70)}</div>
-      <img src="/ilac/icon-512.png" alt="" style="width:6.5rem;height:6.5rem;border-radius:1.6rem;box-shadow:0 20px 50px -10px rgba(0,0,0,.6),0 0 0 1px rgba(241,219,168,.3);position:relative">
+      <div class="p" style="left:2%;top:4%;animation-delay:-1s">${hap("kapsul", "#E9CFA4", "#1E2A55", 84)}</div>
+      <div class="p" style="right:3%;top:2%;animation-delay:-3s">${hap("tablet", "#F4F1EA", null, 64)}</div>
+      <div class="p" style="right:2%;bottom:0;animation-delay:-2s">${hap("yumusak", "#E3C27F", null, 72)}</div>
+      <div class="p" style="left:4%;bottom:2%;animation-delay:-4s">${hap("oval", "#9FB4EA", null, 60)}</div>
+      <img src="/ilac/icon-512.png" alt="İlaç Saatim" style="width:9.5rem;height:9.5rem;position:relative;filter:drop-shadow(0 24px 40px rgba(0,0,0,.55)) drop-shadow(0 0 30px rgba(120,150,230,.25))">
     </div>
     <div style="max-width:520px;margin:0 auto;width:100%">
       <h1>İlaçların <em>tam zamanında</em>, aklın rahat.</h1>
