@@ -26,8 +26,26 @@ export function tercihKurallari(tercih) {
   ].filter(Boolean).join("\n");
 }
 
-export const temizListe = (liste, max = 30) =>
-  (Array.isArray(liste) ? liste : []).map(m => String(m).trim().slice(0, 40)).filter(Boolean).slice(0, max);
+export const temizMetin = (m, max = 40) => String(m ?? "").replace(/\s+/g, " ").trim().slice(0, max);
+
+export const temizListe = (liste, max = 30, uzunluk = 40) =>
+  (Array.isArray(liste) ? liste : []).map(m => String(m).trim().slice(0, uzunluk)).filter(Boolean).slice(0, max);
+
+// Ne Alsam? uygulaması bu projenin yapay zekâ servislerini kullanır (ayrı bir sitede çalışır)
+const IZINLI = /^https:\/\/ne-alsam[a-z0-9-]*\.vercel\.app$|^http:\/\/localhost(:\d+)?$/;
+// Başka siteden gelen isteğe izin verir; ön kontrol (OPTIONS) isteğiyse cevaplayıp true döndürür
+export function cors(req, res) {
+  const origin = req.headers?.origin || "";
+  if (IZINLI.test(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Access-Control-Max-Age", "86400");
+  }
+  if (req.method === "OPTIONS") { res.status(204).end(); return true; }
+  return false;
+}
 
 // Gemini'ye sorar; json=true ise ayrıştırılmış JSON döndürür, değilse düz metin
 export async function gemini({ parts, json = true, temperature = 0.9, maxTokens = 4096, timeout = 50000 }) {
