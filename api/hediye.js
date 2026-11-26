@@ -76,12 +76,24 @@ SADECE geçerli bir JSON dizisi döndür. Her öğe şu alanlara sahip olsun:
 ${SEMA}
 Hepsi Türkçe olsun.`;
 
-  const sor = model => gemini({ parts: [{ text: prompt }], temperature: 1.1, maxTokens: 4096, model, timeout: model ? 32000 : 25000 });
+  // Sırayla dene: daha yaratıcı model → hızlı model → eski sağlam model (her modelin kotası ayrı)
+  const MODELLER = ["gemini-flash-latest", "gemini-flash-lite-latest", "gemini-2.0-flash"];
+  const basla = Date.now(); let sonHata = null, fikirler = null;
   try {
-    let fikirler;
-    // Daha yaratıcı model önce; olmazsa hızlı modele düş
-    try { fikirler = await sor("gemini-flash-latest"); }
-    catch (e) { if (e?.status === 500 && /GEMINI_API_KEY/.test(e.message)) throw e; fikirler = await sor(); }
+    for (const model of MODELLER) {
+      const kalan = 54000 - (Date.now() - basla);
+      if (kalan < 8000) break;
+      try {
+        const j = await gemini({ parts: [{ text: prompt }], temperature: 1.1, maxTokens: 8192, model, timeout: Math.min(30000, kalan) });
+        if (Array.isArray(j) && j.some(f => f && f.ad)) { fikirler = j; break; }
+        sonHata = new Error("Boş cevap");
+      } catch (e) {
+        if (/GEMINI_API_KEY/.test(e?.message || "")) throw e;
+        console.error("hediye: model başarısız", model, e?.ust || e?.status, e?.message);
+        sonHata = e;
+      }
+    }
+    if (!fikirler) throw (sonHata && sonHata.status ? sonHata : new Error("Fikir üretilemedi"));
     const liste = (Array.isArray(fikirler) ? fikirler : [])
       .filter(f => f && f.ad)
       .slice(0, 8)
