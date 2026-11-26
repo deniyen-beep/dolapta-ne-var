@@ -7,8 +7,8 @@
   "scope": "/ilac/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#080A14",
-  "theme_color": "#0B1128",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
   "lang": "tr",
   "categories": [
     "health",
