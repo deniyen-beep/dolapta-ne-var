@@ -92,10 +92,28 @@ async function overpassEczane(lat, lon) {
   }).filter(e => e.lat && e.lon);
 }
 
+// Nöbet her sabah 08.30'da (Türkiye saati) değişir: listeyi o saate kadar sakla (ücretsiz planda ayda 100 istek var)
+function nobetSuresi() {
+  const tr = new Date(Date.now() + 3 * 3600e3);
+  const dk = tr.getUTCHours() * 60 + tr.getUTCMinutes();
+  const kalan = (dk < 510 ? 510 - dk : 1440 - dk + 510) * 60;
+  const gun = new Date(tr.getTime() - (dk < 510 ? 864e5 : 0)).toISOString().slice(0, 10);
+  return { kalan: Math.max(300, kalan), gun };
+}
+const nobetBellek = new Map();
+
 // Nöbetçi eczaneler: CollectAPI (anahtar Vercel'de COLLECTAPI_KEY olarak tanımlanır)
 async function nobetci(il, ilce) {
   const anahtar = process.env.COLLECTAPI_KEY;
   if (!anahtar || !il) return { yok: true };
+  const { gun } = nobetSuresi(), anahtarB = `${il}|${ilce}|${gun}`.toLocaleLowerCase("tr");
+  if (nobetBellek.has(anahtarB)) return nobetBellek.get(anahtarB);
+  const sonuc = await nobetciCek(anahtar, il, ilce);
+  if (sonuc.eczaneler.length) { nobetBellek.set(anahtarB, sonuc); if (nobetBellek.size > 500) nobetBellek.delete(nobetBellek.keys().next().value); }
+  return sonuc;
+}
+
+async function nobetciCek(anahtar, il, ilce) {
   const url = `https://api.collectapi.com/health/dutyPharmacy?il=${encodeURIComponent(il)}${ilce ? "&ilce=" + encodeURIComponent(ilce) : ""}`;
   const j = await getJson(url, { headers: { authorization: anahtar.startsWith("apikey") ? anahtar : "apikey " + anahtar, "content-type": "application/json" } });
   const liste = Array.isArray(j?.result) ? j.result : Array.isArray(j?.data) ? j.data : [];
@@ -129,7 +147,8 @@ export default async function handler(req, res) {
     }
     if (q.islem === "nobetci") {
       const r = await nobetci(temiz(q.il, 40), temiz(q.ilce, 40));
-      res.setHeader("Cache-Control", "public, s-maxage=900, max-age=300");
+      const sure = r.eczaneler?.length ? nobetSuresi().kalan : 300;
+      res.setHeader("Cache-Control", `public, s-maxage=${sure}, max-age=${Math.min(sure, 1800)}`);
       return res.status(200).json(r);
     }
     return res.status(400).json({ hata: "Bilinmeyen işlem." });
