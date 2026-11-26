@@ -56,11 +56,20 @@ GEMINI_API_KEY=anahtarın npm run dev
 
 # 💊 İlaç Saatim
 
-İlaçlarını ekle, saati gelince hatırlatsın. Adres: `https://<site-adresin>/ilac/`
+İlaçlarını, ölçümlerini ve doktor randevularını takip eden, saati gelince hatırlatan şık bir uygulama. Adres: `https://<site-adresin>/ilac/`
 
 - Ön yüz: `ilac/index.html` (ayrı bir telefona yüklenebilir uygulama; kendi ikonu, `manifest.json` ve `sw.js` dosyası var)
-- Takvim servisi: `api/takvim.js` — ilaç listesinden telefonun takvimine eklenebilen, alarmlı ve her gün tekrarlayan bir takvim dosyası üretir. Böylece uygulama kapalıyken de telefon hatırlatır. Hiçbir bilgi sunucuda saklanmaz.
-- Yapay zekâ anahtarı gerekmez. Bütün bilgiler sadece kişinin kendi telefonunda durur (Ayarlar → Yedek ile taşınabilir).
+- Takvim servisi: `api/takvim.js` — ilaç saatlerini ve randevuları telefonun takvimine alarmlı olarak ekler; uygulama kapalıyken de hatırlatılır.
+- Yapay zekâ servisi: `api/ilac.js` — ilaç kutusunun fotoğrafından ad/güç/adet okur ve ilaç hakkında genel bilgi verir (`GEMINI_API_KEY` ile; kişi başı günlük sınırlı).
+- Bütün sağlık bilgileri sadece kişinin kendi telefonunda durur (Ayarlar → Yedek ile taşınabilir).
 
-Özellikler: günde birkaç saat, belirli günler, bitiş tarihi (kür), aç/tok bilgisi, "İçtim / 10 dk ertele / Atla",
-içilmezse 15 dk sonra bir daha hatırlatma, kutuda kalan doz takibi, son 7 günün geçmişi, gece modu.
+Özellikler:
+- Gerçekçi ilaç çizimleri (tablet, film tablet, kapsül, yumuşak kapsül, şurup, damla, iğne, inhaler, krem, saşe) ve renk seçimi
+- Her gün / belirli günler / birkaç günde bir / gerektiğinde planları; süre (kür) ve aç-tok bilgisi
+- Hatırlatma ekranı ve bildirim: Aldım, 10 dk ertele, Atla; içilmezse 15 dk sonra tekrar
+- Haftalık takvim şeridi, günün bölümlerine (sabah/öğle/akşam/gece) göre plan, sıradaki doz geri sayımı
+- Stok takibi ("kaç gün yeter"), azalınca uyarı, eczane bulma
+- Aile: annen, baban, çocuğun için ayrı listeler
+- Sağlık: tansiyon, şeker, nabız, kilo, ateş, oksijen ölçümleri ve grafikleri; doktor randevuları
+- Rapor: 30 günlük uyum, 5 haftalık ısı haritası, seri ve başarı rozetleri, doktora gösterilecek PDF rapor
+- Açık/koyu tema, büyük yazı, üç farklı zil sesi

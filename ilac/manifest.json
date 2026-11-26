@@ -2,18 +2,61 @@
   "id": "/ilac/",
   "name": "İlaç Saatim",
   "short_name": "İlaç Saatim",
-  "description": "İlaçlarını ekle, saati gelince hatırlatsın. İçtiklerini işaretle, hiçbir dozu kaçırma.",
+  "description": "İlaçlarını, ölçümlerini ve doktor randevularını tek yerde takip et. Saati gelince hatırlatsın.",
   "start_url": "/ilac/",
   "scope": "/ilac/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#F2F7F6",
-  "theme_color": "#0F766E",
+  "background_color": "#0B3A32",
+  "theme_color": "#0B3A32",
   "lang": "tr",
-  "categories": ["health", "medical", "lifestyle"],
+  "categories": [
+    "health",
+    "medical",
+    "lifestyle"
+  ],
   "icons": [
-    { "src": "/ilac/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/ilac/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/ilac/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "/ilac/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/ilac/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/ilac/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "İlaç ekle",
+      "short_name": "İlaç ekle",
+      "url": "/ilac/?ekle=ilac",
+      "icons": [
+        {
+          "src": "/ilac/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Ölçüm ekle",
+      "short_name": "Ölçüm",
+      "url": "/ilac/?ekle=olcum",
+      "icons": [
+        {
+          "src": "/ilac/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
   ]
 }
