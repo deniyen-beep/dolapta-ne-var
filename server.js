@@ -10,12 +10,13 @@ import hediye from "./api/hediye.js";
 import kart from "./api/kart.js";
 import ilgi from "./api/ilgi.js";
 import takvim from "./api/takvim.js";
+import ilac from "./api/ilac.js";
 
 const PORT = process.env.PORT || 3000;
-const TYPES = { ".jpg": "image/jpeg", ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".json": "application/json", ".png": "image/png" };
+const TYPES = { ".jpg": "image/jpeg", ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".json": "application/json", ".png": "image/png", ".svg": "image/svg+xml" };
 
 http.createServer(async (req, res) => {
-  const api = req.url.startsWith("/api/tarif") ? tarif : req.url.startsWith("/api/malzeme") ? malzeme : req.url.startsWith("/api/sef") ? sef : req.url.startsWith("/api/hediye") ? hediye : req.url.startsWith("/api/kart") ? kart : req.url.startsWith("/api/ilgi") ? ilgi : req.url.startsWith("/api/takvim") ? takvim : null;
+  const api = req.url.startsWith("/api/tarif") ? tarif : req.url.startsWith("/api/malzeme") ? malzeme : req.url.startsWith("/api/sef") ? sef : req.url.startsWith("/api/hediye") ? hediye : req.url.startsWith("/api/kart") ? kart : req.url.startsWith("/api/ilgi") ? ilgi : req.url.startsWith("/api/takvim") ? takvim : req.url.startsWith("/api/ilac") ? ilac : null;
   if (api) {
     req.query = Object.fromEntries(new URL(req.url, "http://x").searchParams);
     let raw = "";
