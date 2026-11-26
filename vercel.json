@@ -8,7 +8,8 @@
     "api/kart.js": { "maxDuration": 30 },
     "api/ilgi.js": { "maxDuration": 60 },
     "api/takvim.js": { "maxDuration": 10 },
-    "api/ilac.js": { "maxDuration": 60 }
+    "api/ilac.js": { "maxDuration": 60 },
+    "api/eczane.js": { "maxDuration": 40 }
   },
   "headers": [
     { "source": "/sw.js", "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }] },

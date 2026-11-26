@@ -62,6 +62,8 @@ GEMINI_API_KEY=anahtarın npm run dev
 - Takvim servisi: `api/takvim.js` — ilaç saatlerini ve randevuları telefonun takvimine alarmlı olarak ekler; uygulama kapalıyken de hatırlatılır.
 - Yapay zekâ servisi: `api/ilac.js` — ilaç kutusunun fotoğrafından ad/güç/adet okur ve ilaç hakkında genel bilgi verir (`GEMINI_API_KEY` ile; kişi başı günlük sınırlı).
 - Bütün sağlık bilgileri sadece kişinin kendi telefonunda durur (Ayarlar → Yedek ile taşınabilir).
+- Eczane servisi: `api/eczane.js` — kullanıcı izin verirse konumuna, vermezse seçtiği il ve ilçeye göre yakındaki eczaneleri (OpenStreetMap) bulur. Konum saklanmaz.
+- **Nöbetçi eczaneler (isteğe bağlı):** collectapi.com'dan "Nöbetçi Eczane" API anahtarı alıp Vercel'e `COLLECTAPI_KEY` olarak eklersen nöbetçi eczaneler uygulamanın içinde listelenir. Anahtar yoksa uygulama e-Devlet'in resmî nöbetçi eczane sayfasını ve haritayı açar.
 
 Özellikler:
 - Gerçekçi ilaç çizimleri (tablet, film tablet, kapsül, yumuşak kapsül, şurup, damla, iğne, inhaler, krem, saşe) ve renk seçimi
@@ -71,5 +73,6 @@ GEMINI_API_KEY=anahtarın npm run dev
 - Stok takibi ("kaç gün yeter"), azalınca uyarı, eczane bulma
 - Aile: annen, baban, çocuğun için ayrı listeler
 - Sağlık: tansiyon, şeker, nabız, kilo, ateş, oksijen ölçümleri ve grafikleri; doktor randevuları
+- Eczaneler: konum izninin ne için istendiğini açıklayan ekran, yakındaki eczaneler (uzaklık, adres, telefon, yol tarifi), nöbetçi eczaneler
 - Rapor: 30 günlük uyum, 5 haftalık ısı haritası, seri ve başarı rozetleri, doktora gösterilecek PDF rapor
 - Açık/koyu tema, büyük yazı, üç farklı zil sesi

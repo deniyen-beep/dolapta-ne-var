@@ -1,6 +1,6 @@
 // MediTime (İlaç Saatim) — service worker
 // Uygulamanın telefona yüklenebilmesi, internet yokken açılması ve bildirim düğmelerinin çalışması için.
-const CACHE = "ilac-v6";
+const CACHE = "ilac-v7";
 const SHELL = ["/ilac/", "/ilac/manifest.json", "/ilac/icon-192.png", "/ilac/icon-512.png", "/ilac/apple-touch-icon.png", "/ilac/logo.png"];
 
 self.addEventListener("install", e => {
